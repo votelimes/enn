@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29020.237
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NeuralNet", "NeuralNet.vcxproj", "{7586175D-A93C-4107-BA03-B9074306CEBC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7586175D-A93C-4107-BA03-B9074306CEBC}.Debug|x64.ActiveCfg = Debug|x64
+		{7586175D-A93C-4107-BA03-B9074306CEBC}.Debug|x64.Build.0 = Debug|x64
+		{7586175D-A93C-4107-BA03-B9074306CEBC}.Debug|x86.ActiveCfg = Debug|Win32
+		{7586175D-A93C-4107-BA03-B9074306CEBC}.Debug|x86.Build.0 = Debug|Win32
+		{7586175D-A93C-4107-BA03-B9074306CEBC}.Release|x64.ActiveCfg = Release|x64
+		{7586175D-A93C-4107-BA03-B9074306CEBC}.Release|x64.Build.0 = Release|x64
+		{7586175D-A93C-4107-BA03-B9074306CEBC}.Release|x86.ActiveCfg = Release|Win32
+		{7586175D-A93C-4107-BA03-B9074306CEBC}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {975E587E-3317-42EB-9E75-34D15C8D5B7E}
+	EndGlobalSection
+EndGlobal
