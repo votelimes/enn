@@ -22,5 +22,7 @@ public: NeuralNet(size_t inputNodesCount, size_t hiddenNodesCount, size_t output
 
 private: int ProduceResult(double *inputData, double *expectedResult);
 
+private: double ActivationFunction(double &value);
+
 };
 

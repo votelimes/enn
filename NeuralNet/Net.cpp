@@ -37,13 +37,25 @@
  int NeuralNet::ProduceResult(double* inputData, double* expectedResult)
  {
 	 double tmp;
-
 	 
 	 
-	 for (size_t i = 1; i < nodesWeights.size(); i++)
+	 for (size_t i = 1; i < nodesWeights.size() - 1; i++)
 	 {
-			
+		 for (size_t j = 0; j < nodesWeights[i].size(); j++)
+		 {
+
+		 }
 	 }
+
+	 for (size_t i = 0; i < nodesWeights[nodesWeights.size()].size(); i++)
+	 {
+		 nodesValues[nodesWeights[nodesWeights.size()].size()];
+	 }	
 	 
 	 return 0;
  }
+ double NeuralNet::ActivationFunction(double &value)
+ {
+	 return tanh(value);
+ }
+
