@@ -8,14 +8,17 @@
 	
 	re.seed(time(0));
 	
-	nodesWeights.resize(hiddenLayersCount+2);
+	nodesWeights.resize(hiddenLayersCount + 2);
+	nodesValues.resize(hiddenLayersCount + 2);
 	
 	nodesWeights[0].resize(inputNodesCount);
+	nodesValues[0].resize(inputNodesCount);
 	
 	nodesWeights[hiddenLayersCount + 1];
+	nodesValues[hiddenLayersCount + 1];
 
 
-	for (size_t i = 0; i < (hiddenLayersCount < 2 ? 1 : hiddenLayersCount); i++)
+	for (size_t i = 0; i < hiddenLayersCount + 2; i++)
 	{
 		for (size_t j = 0; j < nodesWeights[i].size(); j++)
 		{
