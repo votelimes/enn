@@ -4,6 +4,7 @@
 #include <random>
 #include <ctime>
 #include <iostream>
+#include "Windows.h"
 
 
  class NeuralNet
@@ -17,13 +18,13 @@ private: std::vector<std::vector<double>> *nodesValues;
 
 private: double learningRate;
 
-private: double nodeInputCount;
+private: size_t nodeInputCount;
 
-private: double nodeHiddenCount;
+private: size_t nodeHiddenCount;
 
-private: double nodeOutputCount;
+private: size_t nodeOutputCount;
 
-private: double layerHiddenCount;
+private: size_t layerHiddenCount;
     //SECTION: FUNCTIONS
 
 public: NeuralNet(size_t inputNodesCount, size_t hiddenNodesCount, size_t outputNodesCount, size_t hiddenLayersCount);

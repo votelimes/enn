@@ -2,7 +2,6 @@
 
  NeuralNet::NeuralNet(size_t inputNodesCount, size_t hiddenNodesCount, size_t outputNodesCount, size_t hiddenLayersCount) // hiddenNodesCount should be the largest
 {
-
 	this->learningRate = 0.1;
 	this->nodeInputCount = inputNodesCount;	
 	this->nodeHiddenCount = hiddenNodesCount;
@@ -24,10 +23,10 @@
 			}
 		}
 	}
-		
-	(*nodesValues)[0].resize(inputNodesCount);
+
+	(*nodesValues)[0].resize(inputNodesCount, 0);
 	(*nodesValues)[0].shrink_to_fit();
-	(*nodesValues)[nodesValues->size() - 1].resize(outputNodesCount);
+	(*nodesValues)[nodesValues->size() - 1].resize(outputNodesCount, 0);
 	(*nodesValues)[nodesValues->size() - 1].shrink_to_fit();
 
 	(*nodesWeights)[0].resize(inputNodesCount);
@@ -35,11 +34,9 @@
 	(*nodesWeights)[nodesWeights->size() - 1].resize(outputNodesCount);
 	(*nodesWeights)[nodesWeights->size() - 1].shrink_to_fit();
 
-	for (size_t i = 0; i < hiddenLayersCount; i++)
-	{	
-		(*nodesWeights)[0][i].resize(outputNodesCount);
-		(*nodesWeights)[0][i].shrink_to_fit();
-		(*nodesWeights)[nodesWeights->size() - 1][i].resize(outputNodesCount);
+	for (size_t i = 0; i < (*nodesWeights)[nodesWeights->size() - 1].size(); i++)
+	{
+		(*nodesWeights)[nodesWeights->size() - 1][i].resize(nodeOutputCount, RandomFunc());
 		(*nodesWeights)[nodesWeights->size() - 1][i].shrink_to_fit();
 	}
 
@@ -68,11 +65,10 @@
 
  double RandomFunc()
  {
-	 std::uniform_real_distribution<double> unif(0, 1);
-
-	 std::default_random_engine re;
-
-	 re.seed(time(0));
-	 
-	 return unif(re);
+	 double rv;
+	 std::random_device rd;
+	 std::mt19937 gen(rd());
+	 std::uniform_real_distribution<double> uid(0.0, 1.0);
+	 rv = uid(gen);
+	 return rv > 0 ? rv = uid(gen) : rv;
  }
