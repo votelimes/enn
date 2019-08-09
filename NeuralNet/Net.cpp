@@ -17,18 +17,18 @@
 	this->nodesWeights = new std::vector<std::vector<std::vector<double>>>(hiddenLayersCount+1, std::vector<std::vector<double>>(hiddenNodesCount, std::vector<double>(hiddenNodesCount, unif(re))));
 	this->nodesValues = new std::vector<std::vector<double>>(hiddenLayersCount+2, std::vector<double>(hiddenNodesCount, 0));
 
-	nodesValues[0].resize(inputNodesCount);
-	nodesValues[0].shrink_to_fit();
-	nodesValues[hiddenLayersCount + 1].resize(outputNodesCount);
-	nodesValues[hiddenLayersCount + 1].shrink_to_fit();
+	(*nodesValues)[0].resize(inputNodesCount);
+	(*nodesValues)[0].shrink_to_fit();
+	(*nodesValues)[hiddenLayersCount + 1].resize(outputNodesCount);
+	(*nodesValues)[hiddenLayersCount + 1].shrink_to_fit();
 
-	nodesWeights[0].resize(inputNodesCount);
-	nodesWeights[0].shrink_to_fit();
+	(*nodesWeights)[0].resize(inputNodesCount);
+	(*nodesWeights)[0].shrink_to_fit();
 
 	for (size_t i = 0; i < hiddenLayersCount; i++)
 	{	
-		nodesWeights[nodesWeights->size() - 1][i].resize(outputNodesCount);
-		nodesWeights[nodesWeights->size() - 1][i].shrink_to_fit();
+		(*nodesWeights)[nodesWeights->size() - 1][i].resize(outputNodesCount);
+		(*nodesWeights)[nodesWeights->size() - 1][i].shrink_to_fit();
 	}
 
 	//nodesWeights[i][j] = unif(re);
