@@ -22,9 +22,13 @@
 	nodesValues[hiddenLayersCount + 1].resize(outputNodesCount);
 	nodesValues[hiddenLayersCount + 1].shrink_to_fit();
 
+	nodesWeights[0].resize(inputNodesCount);
+	nodesWeights[0].shrink_to_fit();
+
 	for (size_t i = 0; i < hiddenLayersCount; i++)
 	{	
-		nodesWeights[hiddenLayersCount]
+		nodesWeights[nodesWeights->size() - 1][i].resize(outputNodesCount);
+		nodesWeights[nodesWeights->size() - 1][i].shrink_to_fit();
 	}
 
 	//nodesWeights[i][j] = unif(re);
