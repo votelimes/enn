@@ -3,6 +3,7 @@
 #include <vector>
 #include <random>
 #include <ctime>
+#include <iostream>
 
 
  class NeuralNet
@@ -32,4 +33,6 @@ private: int ProduceResult(double *inputData, double *expectedResult);
 private: double ActivationFunction(double &value);
 
 };
+
+ double RandomFunc();
 

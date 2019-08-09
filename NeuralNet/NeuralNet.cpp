@@ -6,7 +6,7 @@
 
 int main()
 {
-	NeuralNet newNet(3, 5, 2, 1);
+	NeuralNet newNet(2, 5, 1, 1);
 }
 
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
