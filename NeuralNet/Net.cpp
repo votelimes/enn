@@ -3,7 +3,7 @@
  NeuralNet::NeuralNet(size_t inputNodesCount, size_t hiddenNodesCount, size_t outputNodesCount, size_t hiddenLayersCount) // hiddenNodesCount should be the largest
 {	 
 	//Fill variables:
-	 this->learningRate = 0.1;
+	this->learningRate = 0.1;
 	this->nodeInputCount = inputNodesCount;	
 	this->nodeHiddenCount = hiddenNodesCount;
 	this->nodeOutputCount = outputNodesCount;
@@ -44,7 +44,7 @@
  {
 	 double tmp = 0;
 
-	 for (size_t i = 0; i < (*nodesWeights).size() - 1; i++)
+	 for (size_t i = 0; i < (*nodesWeights).size(); i++)
 	 {
 		 for (size_t j = 0; j < (*nodesValues)[i + 1].size(); j++)
 		 {
@@ -52,10 +52,35 @@
 			 {
 				 tmp = tmp + ((*nodesWeights)[i][k][j] * (*nodesValues)[i][k]);
 			 }
-			 (*nodesValues)[i + 1][j] = tmp;
+			 if (i == (*nodesWeights).size() - 1) {
+				 (*nodesValues)[i + 1][j] = ActivationFunction(tmp);
+			 }
+			 else {
+				 (*nodesValues)[i + 1][j] = tmp;
+			 }
 			 tmp = 0;
 		 }
-	 }	
+	 }
+ }
+
+ int NeuralNet::SetData(std::vector<double>& inputData, bool ignoreWarnings) // Return value is difference between network input layer size() and input data size();
+ {
+	 //Options:
+	 bool flag1 = true;
+	 if (inputData.size() != (*nodesValues)[0].size()) {
+		 if (!ignoreWarnings) {
+			 std::cout << "\n Warning! Storage size and input data size do not match, errors are possible. " << std::endl;
+			 std::cin.get();
+		 }
+		 flag1 = false;
+	 }
+
+	 //Core part:
+	 for (size_t i = 0; i < (*nodesValues)[0].size() && i < inputData.size(); i++)
+	 {
+		 (*nodesValues)[0][i] = inputData[i];
+	 }
+	 return flag1 ? 0 : (*nodesValues)[0].size() - inputData.size();
  }
  
  double NeuralNet::ActivationFunction(double &value)
@@ -70,6 +95,5 @@
 	 std::mt19937 gen(rd());
 	 std::uniform_real_distribution<double> uid(0.0, 1.0);
 	 rv = uid(gen);
-	 std::cout << rv << std::endl;
 	 return rv > 0 ? rv = uid(gen) : rv;
  }

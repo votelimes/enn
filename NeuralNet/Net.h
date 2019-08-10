@@ -29,7 +29,9 @@ private: size_t layerHiddenCount;
 
 public: NeuralNet(size_t inputNodesCount, size_t hiddenNodesCount, size_t outputNodesCount, size_t hiddenLayersCount);
 
-private: void ProduceResult();
+public: void ProduceResult();
+
+public: int SetData(std::vector<double>& inputData, bool ignoreWarnings); // Return value is difference between network input layer size() and input data size();
 
 private: double ActivationFunction(double &value);
 
