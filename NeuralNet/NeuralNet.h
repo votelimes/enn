@@ -2,6 +2,6 @@
 #include <iostream>
 
 #define inputNodes 2
-#define hiddenNodes 10
-#define outputNodes 3
-#define hiddenNodesLayers 2
+#define hiddenNodes 5
+#define outputNodes 7
+#define hiddenNodesLayers 1
