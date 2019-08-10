@@ -29,7 +29,7 @@ private: size_t layerHiddenCount;
 
 public: NeuralNet(size_t inputNodesCount, size_t hiddenNodesCount, size_t outputNodesCount, size_t hiddenLayersCount);
 
-private: int ProduceResult(double *inputData, double *expectedResult);
+private: void ProduceResult();
 
 private: double ActivationFunction(double &value);
 

@@ -39,23 +39,25 @@
 	}
 	//
 }
-
- int NeuralNet::ProduceResult(double* inputData, double* expectedResult)
+ 
+ void NeuralNet::ProduceResult()
  {
 	 double tmp = 0;
-	 
-	 
-	/* for (size_t i = 0; i < nodesValues.size() - 1; i++)
+
+	 for (size_t i = 0; i < (*nodesWeights).size() - 1; i++)
 	 {
-		 for (size_t j = 0; j < nodesValues[i].size(); j++)
+		 for (size_t j = 0; j < (*nodesValues)[i + 1].size(); j++)
 		 {
-			 tmp = tmp + (nodesWeights[i][j] * nodesValues[i][j]);
+			 for (size_t k = 0; k < (*nodesWeights)[i].size(); k++)
+			 {
+				 tmp = tmp + ((*nodesWeights)[i][k][j] * (*nodesValues)[i][k]);
+			 }
+			 (*nodesValues)[i + 1][j] = tmp;
+			 tmp = 0;
 		 }
-	 }*/
-	
-	 
-	 return 0;
+	 }	
  }
+ 
  double NeuralNet::ActivationFunction(double &value)
  {
 	 return tanh(value);
