@@ -40,7 +40,7 @@
 	//
 }
  
- void NeuralNet::ProduceResult()
+ void NeuralNet::produceResult()
  {
 	 double tmp = 0;
 
@@ -53,14 +53,19 @@
 				 tmp = tmp + ((*nodesWeights)[i][k][j] * (*nodesValues)[i][k]);
 			 }
 			 
-			 (*nodesValues)[i + 1][j] = ActivationFunction(tmp);
+			 (*nodesValues)[i + 1][j] = activationFunction(tmp);
 
 			 tmp = 0;
 		 }
 	 }
  }
 
- int NeuralNet::SetData(std::vector<double>& inputData, bool ignoreWarnings) // Return value is difference between network input layer size() and input data size();
+ void NeuralNet::study()
+ {
+
+ }
+
+ int NeuralNet::setData(std::vector<double>& inputData, bool ignoreWarnings) // Return value is difference between network input layer size() and input data size();
  {
 	 //Options:
 	 bool flag1 = true;
@@ -80,7 +85,7 @@
 	 return flag1 ? 0 : (*nodesValues)[0].size() - inputData.size();
  }
  
- double NeuralNet::ActivationFunction(double &value)
+ double NeuralNet::activationFunction(double &value)
  {
 	 return tanh(value);
  }
