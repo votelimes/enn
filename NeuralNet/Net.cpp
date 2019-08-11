@@ -92,7 +92,13 @@
 	 {
 		 for (size_t j = 0; j < (*nodesErrorValues)[i].size(); j++)
 		 {
+			 for (size_t k = 0; k < (*nodesErrorValues)[i + 1].size(); k++)
+			 {
+				 tmp = tmp + ((*nodesWeights)[i][j][k] * (*nodesErrorValues)[i + 1][k]);
+			 }
 
+			 (*nodesErrorValues)[i][j] = tmp;
+			 tmp = 0;
 		 }
 	 }
 
