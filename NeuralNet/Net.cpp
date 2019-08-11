@@ -12,15 +12,15 @@
 	//Create and normalize arrays
 	this->nodesWeights = new std::vector<std::vector<std::vector<double>>>(hiddenLayersCount + 1, std::vector<std::vector<double>>(hiddenNodesCount, std::vector<double>(hiddenNodesCount, 0)));
 	this->nodesValues = new std::vector<std::vector<double>>(hiddenLayersCount+2, std::vector<double>(hiddenNodesCount, 0));
-	this->errorsValues  = new std::vector<std::vector<double>>(hiddenLayersCount + 1, std::vector<double>(hiddenNodesCount, 0));
+	this->nodesErrorValues  = new std::vector<std::vector<double>>(hiddenLayersCount + 1, std::vector<double>(hiddenNodesCount, 0));
 
 	(*nodesValues)[0].resize(inputNodesCount, 0);
 	(*nodesValues)[0].shrink_to_fit();
 	(*nodesValues)[nodesValues->size() - 1].resize(outputNodesCount, 0);
 	(*nodesValues)[nodesValues->size() - 1].shrink_to_fit();
 
-	(*errorsValues)[errorsValues->size() - 1].resize(outputNodesCount, 0);
-	(*errorsValues)[errorsValues->size() - 1].shrink_to_fit();
+	(*nodesErrorValues)[nodesErrorValues->size() - 1].resize(outputNodesCount, 0);
+	(*nodesErrorValues)[nodesErrorValues->size() - 1].shrink_to_fit();
 
 	(*nodesWeights)[0].resize(inputNodesCount);
 	(*nodesWeights)[0].shrink_to_fit();
@@ -64,24 +64,54 @@
 	 }
  }
 
- void NeuralNet::backPropogation(std::vector<double>& expectedValues)
+ int NeuralNet::backPropogation(std::vector<double>& expectedValues, bool ignoreWarnings)
  {
+   //Options:
+	 
+	 bool flag1 = true;
+	 if (expectedValues.size() != (*nodesValues)[(*nodesErrorValues).size() - 1].size()) {
+		 if (!ignoreWarnings) {
+			 std::cout << "\n Warning! Storage size and expected values data size does not match, errors are possible. " << std::endl;
+			 std::cin.get();
+		 }
+		 flag1 = false;
+	 }
+	
+   //Core part:
 
+	 double tmp = 0;
+	  
+	 //Calculate error procent for output layer:
+	 
+	 for (size_t i = 0; i < (*nodesValues)[(*nodesValues).size() - 1].size() && i < expectedValues.size(); i++)
+	 {
+		 (*nodesErrorValues)[(*nodesErrorValues).size() - 1][i] = expectedValues[i] - (*nodesValues)[(*nodesValues).size() - 1][i];
+	 }
+	 
+	 for (size_t i = (*nodesErrorValues).size() - 2; i > 0; i--)
+	 {
+		 for (size_t j = 0; j < (*nodesErrorValues)[i].size(); j++)
+		 {
+
+		 }
+	 }
+
+	 return flag1 ? 0 : (*nodesValues)[0].size() - expectedValues.size();
  }
 
  int NeuralNet::setData(std::vector<double>& inputData, bool ignoreWarnings) // Return value is difference between network input layer size() and input data size();
  {
-	 //Options:
+   //Options:
 	 bool flag1 = true;
 	 if (inputData.size() != (*nodesValues)[0].size()) {
 		 if (!ignoreWarnings) {
-			 std::cout << "\n Warning! Storage size and input data size do not match, errors are possible. " << std::endl;
+			 std::cout << "\n Warning! Storage size and input data size does not match, errors are possible. " << std::endl;
 			 std::cin.get();
 		 }
 		 flag1 = false;
 	 }
 
-	 //Core part:
+   //Core part:
 	 for (size_t i = 0; i < (*nodesValues)[0].size() && i < inputData.size(); i++)
 	 {
 		 (*nodesValues)[0][i] = inputData[i];
