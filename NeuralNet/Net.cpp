@@ -40,7 +40,7 @@
 	//
 }
  
- void NeuralNet::produceResult()
+ void NeuralNet::forwardPropogation()
  {
 	 double tmp = 0;
 
@@ -60,7 +60,7 @@
 	 }
  }
 
- void NeuralNet::study()
+ void NeuralNet::backPropogation()
  {
 
  }

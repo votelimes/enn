@@ -9,7 +9,7 @@ int main()
 	std::vector<double> data = { 1, 2, 5 };
 	NeuralNet newNet(inputNodes, hiddenNodes, outputNodes, hiddenNodesLayers);
 	std::cout << newNet.setData(data, 1) << std::endl;
-	newNet.produceResult();
+	newNet.forwardPropogation();
 }
 
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
