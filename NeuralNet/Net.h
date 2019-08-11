@@ -12,9 +12,11 @@
 
     //SECTION: DATA
 
-private: std::vector<std::vector<std::vector<double>>> *nodesWeights;
+private: std::vector<std::vector<std::vector<double>>>* nodesWeights;
 
-private: std::vector<std::vector<double>> *nodesValues;
+private: std::vector<std::vector<double>>* nodesValues;
+
+private: std::vector<std::vector<double>>* errorsValues;
 
 private: double learningRate;
 
@@ -32,7 +34,7 @@ public: NeuralNet(size_t inputNodesCount, size_t hiddenNodesCount, size_t output
 
 public: void forwardPropogation();
 
-public: void backPropogation();
+public: void backPropogation(std::vector<double>& expectedValues);
 
 public: int setData(std::vector<double>& inputData, bool ignoreWarnings); // Return value is difference between network input layer size() and input data size();
 

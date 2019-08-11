@@ -12,11 +12,15 @@
 	//Create and normalize arrays
 	this->nodesWeights = new std::vector<std::vector<std::vector<double>>>(hiddenLayersCount + 1, std::vector<std::vector<double>>(hiddenNodesCount, std::vector<double>(hiddenNodesCount, 0)));
 	this->nodesValues = new std::vector<std::vector<double>>(hiddenLayersCount+2, std::vector<double>(hiddenNodesCount, 0));
+	this->errorsValues  = new std::vector<std::vector<double>>(hiddenLayersCount + 1, std::vector<double>(hiddenNodesCount, 0));
 
 	(*nodesValues)[0].resize(inputNodesCount, 0);
 	(*nodesValues)[0].shrink_to_fit();
 	(*nodesValues)[nodesValues->size() - 1].resize(outputNodesCount, 0);
 	(*nodesValues)[nodesValues->size() - 1].shrink_to_fit();
+
+	(*errorsValues)[errorsValues->size() - 1].resize(outputNodesCount, 0);
+	(*errorsValues)[errorsValues->size() - 1].shrink_to_fit();
 
 	(*nodesWeights)[0].resize(inputNodesCount);
 	(*nodesWeights)[0].shrink_to_fit();
@@ -60,7 +64,7 @@
 	 }
  }
 
- void NeuralNet::backPropogation()
+ void NeuralNet::backPropogation(std::vector<double>& expectedValues)
  {
 
  }
