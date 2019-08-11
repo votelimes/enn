@@ -38,7 +38,7 @@ public: int backPropogation(std::vector<double>& expectedValues, bool ignoreWarn
 
 public: int setData(std::vector<double>& inputData, bool ignoreWarnings); // Return value is difference between network input layer size() and input data size();
 
-private: double activationFunction(double &value);
+private: double activationFunction(double &value, bool returnDerivativereturnDerivativeValueInstead);
 
 };
 

@@ -57,7 +57,7 @@
 				 tmp = tmp + ((*nodesWeights)[i][k][j] * (*nodesValues)[i][k]);
 			 }
 			 
-			 (*nodesValues)[i + 1][j] = activationFunction(tmp);
+			 (*nodesValues)[i + 1][j] = activationFunction(tmp, false);
 
 			 tmp = 0;
 		 }
@@ -102,6 +102,17 @@
 		 }
 	 }
 
+	 //Adjust weights:
+
+	 for (size_t i = 0; i < (*nodesWeights).size(); i++)
+	 {	
+		 for (size_t j = 0; j < (*nodesValues)[i + 1].size(); j++)
+		 {
+				
+		 }
+	 }
+
+   //return a differece between expected values collection size and output layer size
 	 return flag1 ? 0 : (*nodesValues)[0].size() - expectedValues.size();
  }
 
@@ -125,8 +136,13 @@
 	 return flag1 ? 0 : (*nodesValues)[0].size() - inputData.size();
  }
  
- double NeuralNet::activationFunction(double &value)
+ double NeuralNet::activationFunction(double &value, bool returnDerivativeValueInstead)
  {
+	 if (returnDerivativeValueInstead) {
+		 
+		 return 1 - pow(tanh(value), 2);
+	 }
+
 	 return tanh(value);
  }
 
