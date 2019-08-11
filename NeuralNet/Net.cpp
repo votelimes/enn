@@ -52,16 +52,9 @@
 			 {
 				 tmp = tmp + ((*nodesWeights)[i][k][j] * (*nodesValues)[i][k]);
 			 }
-			
-			 if (i == (*nodesWeights).size() - 1) {
-				 
-				 (*nodesValues)[i + 1][j] = ActivationFunction(tmp);
-			 }
 			 
-			 else {
-				 
-				 (*nodesValues)[i + 1][j] = tmp;
-			 }
+			 (*nodesValues)[i + 1][j] = ActivationFunction(tmp);
+
 			 tmp = 0;
 		 }
 	 }
