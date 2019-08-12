@@ -11,6 +11,7 @@ int main()
 	
 	NeuralNet newNet(inputNodes, hiddenNodes, outputNodes, hiddenNodesLayers);
 	
-	std::cout << newNet.setData(inpData, 1) << std::endl;
+	newNet.setData(inpData, true);
 	newNet.forwardPropogation();
+	newNet.backPropogation(expValues, true);
 }

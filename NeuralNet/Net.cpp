@@ -88,19 +88,19 @@
 		 (*nodesErrorValues)[(*nodesErrorValues).size() - 1][i] = expectedValues[i] - (*nodesValues)[(*nodesValues).size() - 1][i];
 	 }
 	 
-	 for (size_t i = (*nodesErrorValues).size() - 2; i > 0; i--)
+	 for (size_t i = (*nodesValues).size() - 2; i > 0; i--)
 	 {
-		 for (size_t j = 0; j < (*nodesErrorValues)[i].size(); j++)
+		 for (size_t j = 0; j < (*nodesValues)[i].size(); j++)
 		 {
-			 for (size_t k = 0; k < (*nodesErrorValues)[i + 1].size(); k++)
+			 for (size_t k = 0; k < (*nodesValues)[i + 1].size(); k++)
 			 {
-				 tmp = tmp + ((*nodesWeights)[i][j][k] * (*nodesErrorValues)[i + 1][k]);
+				 tmp = tmp + ((*nodesWeights)[i][j][k] * (*nodesErrorValues)[i][k]);
 			 }
 
-			 (*nodesErrorValues)[i][j] = tmp;
+			 (*nodesErrorValues)[i - 1][j] = tmp;
 			 tmp = 0;
 		 }
-	 }
+	 } // tmp = tmp + ((*nodesWeights)[i][j][k] * (*nodesErrorValues)[i + 1][k]);
 
 	 //Adjust weights:
 
@@ -108,12 +108,12 @@
 	 {	
 		 for (size_t j = 0; j < (*nodesValues)[i + 1].size(); j++)
 		 {
-			 for (size_t k = 0; k < (*nodesValues)[i + 1].size(); k++)
-			 {
-				 (*nodesWeights)[i][k][j] = (*nodesWeights)[i][k][j] + (learningRate * (*nodesErrorValues)[i + 1][j] * activationFunction((*nodesValues)[i + 1][j], true) * (*nodesValues)[i][j]);
+			 for (size_t k = 0; k < (*nodesValues)[i].size(); k++)
+			 {	
+				 (*nodesWeights)[i][k][j] = (*nodesWeights)[i][k][j] + (learningRate * (*nodesErrorValues)[i][j] * activationFunction((*nodesValues)[i + 1][j], true) * (*nodesValues)[i][k]);
 			 }
 		 }
-	 }
+	 }//(*nodesWeights)[i][k][j] = (*nodesWeights)[i][k][j] + (learningRate * (*nodesErrorValues)[i][j] * activationFunction((*nodesValues)[i + 1][j], true) * (*nodesValues)[i][j]);
 
    //return a differece between expected values collection size and output layer size
 	 return flag1 ? 0 : (*nodesValues)[0].size() - expectedValues.size();
