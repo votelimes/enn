@@ -108,7 +108,10 @@
 	 {	
 		 for (size_t j = 0; j < (*nodesValues)[i + 1].size(); j++)
 		 {
-				
+			 for (size_t k = 0; k < (*nodesValues)[i + 1].size(); k++)
+			 {
+				 (*nodesWeights)[i][k][j] = (*nodesWeights)[i][k][j] + (learningRate * (*nodesErrorValues)[i + 1][j] * activationFunction((*nodesValues)[i + 1][j], true) * (*nodesValues)[i][j]);
+			 }
 		 }
 	 }
 
