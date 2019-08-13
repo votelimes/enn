@@ -6,12 +6,8 @@
 
 int main()
 {
-	std::vector<double> inpData = { 1, 2, 5 };
-	std::vector<double> expValues = { 1, 1, 0 };
-	
+	std::vector<std::vector<double>> examples(10000, std::vector<double>(2, 0));
 	NeuralNet newNet(inputNodes, hiddenNodes, outputNodes, hiddenNodesLayers);
-	
-	newNet.setData(inpData, true);
-	newNet.forwardPropogation();
-	newNet.backPropogation(expValues, true);
+
+
 }

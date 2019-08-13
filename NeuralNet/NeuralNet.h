@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 
-#define inputNodes 2
+#define inputNodes 1
 #define hiddenNodes 5
-#define outputNodes 3
+#define outputNodes 1
 #define hiddenNodesLayers 1

@@ -119,6 +119,14 @@
 	 return flag1 ? 0 : (*nodesValues)[0].size() - expectedValues.size();
  }
 
+ void NeuralNet::studyNetwork(std::vector<std::vector<double>>& examplesSet)
+ {
+	 for (size_t i = 0; i < examplesSet.size(); i++)
+	 {
+		 setData(examplesSet[i], false);
+	 }
+ }
+
  int NeuralNet::setData(std::vector<double>& inputData, bool ignoreWarnings) // Return value is difference between network input layer size() and input data size();
  {
    //Options:

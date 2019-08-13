@@ -32,11 +32,13 @@ private: size_t layerHiddenCount;
 
 public: NeuralNet(size_t inputNodesCount, size_t hiddenNodesCount, size_t outputNodesCount, size_t hiddenLayersCount);
 
-public: void forwardPropogation();
+private: void forwardPropogation();
 
-public: int backPropogation(std::vector<double>& expectedValues, bool ignoreWarnings);
+private: int backPropogation(std::vector<double>& expectedValues, bool ignoreWarnings);
 
-public: int setData(std::vector<double>& inputData, bool ignoreWarnings); // Return value is difference between network input layer size() and input data size();
+public: void studyNetwork(std::vector<std::vector<double>>& examplesSet);
+
+private: int setData(std::vector<double>& inputData, bool ignoreWarnings); // Return value is difference between network input layer size() and input data size();
 
 private: double activationFunction(double &value, bool returnDerivativereturnDerivativeValueInstead);
 
