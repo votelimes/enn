@@ -119,11 +119,13 @@
 	 return flag1 ? 0 : (*nodesValues)[0].size() - expectedValues.size();
  }
 
- void NeuralNet::studyNetwork(std::vector<std::vector<double>>& examplesSet)
+ void NeuralNet::studyNetwork(std::vector<std::vector<double>>& examplesSet, std::vector<std::vector<double>>& expectedValueslesSet)
  {
 	 for (size_t i = 0; i < examplesSet.size(); i++)
 	 {
-		 setData(examplesSet[i], false);
+		 setData(examplesSet[i], true);
+		 forwardPropogation();
+		 backPropogation(expectedValueslesSet[i], true);
 	 }
  }
 

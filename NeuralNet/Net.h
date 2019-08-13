@@ -36,7 +36,7 @@ private: void forwardPropogation();
 
 private: int backPropogation(std::vector<double>& expectedValues, bool ignoreWarnings);
 
-public: void studyNetwork(std::vector<std::vector<double>>& examplesSet);
+public: void studyNetwork(std::vector<std::vector<double>>& examplesSet, std::vector<std::vector<double>>& expectedValueslesSet);
 
 private: int setData(std::vector<double>& inputData, bool ignoreWarnings); // Return value is difference between network input layer size() and input data size();
 
