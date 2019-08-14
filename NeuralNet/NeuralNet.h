@@ -5,3 +5,5 @@
 #define hiddenNodes 5
 #define outputNodes 1
 #define hiddenNodesLayers 1
+
+#define examplesSIZE 1000
