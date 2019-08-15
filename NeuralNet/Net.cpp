@@ -1,6 +1,6 @@
 #include "Net.h"
 
- NeuralNet::NeuralNet(size_t inputNodesCount, size_t hiddenNodesCount, size_t outputNodesCount, size_t hiddenLayersCount) // hiddenNodesCount should be the largest
+nnet::NeuralNet::NeuralNet(size_t inputNodesCount, size_t hiddenNodesCount, size_t outputNodesCount, size_t hiddenLayersCount) // hiddenNodesCount should be the largest
 {	 
 	//Fill variables:
 	this->learningRate = 0.1;
@@ -27,7 +27,7 @@
 	//
 	for (size_t i = 0; i < (*nodesWeights)[nodesWeights->size() - 1].size(); i++)
 	{
-		(*nodesWeights)[nodesWeights->size() - 1][i].resize(nodeOutputCount, RandomFunc());
+		(*nodesWeights)[nodesWeights->size() - 1][i].resize(nodeOutputCount, afunctions::RandomFunc());
 		(*nodesWeights)[nodesWeights->size() - 1][i].shrink_to_fit();
 	}
 	//Weights initialization(random values) cicles:
@@ -37,14 +37,14 @@
 		{
 			for (size_t j = 0; j < (*nodesWeights)[i][k].size(); j++)
 			{
-				(*nodesWeights)[i][k][j] = RandomFunc();
+				(*nodesWeights)[i][k][j] = afunctions::RandomFunc();
 			}
 		}
 	}
 	//
 }
  
- void NeuralNet::forwardPropogation()
+ void nnet::NeuralNet::forwardPropogation()
  {
 	 double tmp = 0;
 
@@ -64,7 +64,7 @@
 	 }
  }
 
- int NeuralNet::backPropogation(std::vector<double>& expectedValues, bool ignoreWarnings)
+ int nnet::NeuralNet::backPropogation(std::vector<double>& expectedValues, bool ignoreWarnings)
  {
    //Options:
 	 
@@ -119,7 +119,7 @@
 	 return flag1 ? 0 : (*nodesValues)[0].size() - expectedValues.size();
  }
 
- void NeuralNet::studyNetwork(std::vector<std::vector<double>>& examplesSet, std::vector<std::vector<double>>& expectedValueslesSet)
+ void nnet::NeuralNet::studyNetwork(std::vector<std::vector<double>>& examplesSet, std::vector<std::vector<double>>& expectedValueslesSet)
  {
 	 for (size_t i = 0; i < examplesSet.size(); i++)
 	 {
@@ -129,7 +129,7 @@
 	 }
  }
 
- int NeuralNet::setData(std::vector<double>& inputData, bool ignoreWarnings) // Return value is difference between network input layer size() and input data size();
+ int nnet::NeuralNet::setData(std::vector<double>& inputData, bool ignoreWarnings) // Return value is difference between network input layer size() and input data size();
  {
    //Options:
 	 bool flag1 = true;
@@ -149,7 +149,8 @@
 	 return flag1 ? 0 : (*nodesValues)[0].size() - inputData.size();
  }
  
- double NeuralNet::activationFunction(double &value, bool returnDerivativeValueInstead)
+ template <typename T>
+ T nnet::NeuralNet::activationFunction(T& value, bool returnDerivativeValueInstead)
  {
 	 if (returnDerivativeValueInstead) {
 		 
@@ -159,7 +160,7 @@
 	 return tanh(value);
  }
 
- double RandomFunc()
+ double afunctions::RandomFunc()
  {
 	 double rv;
 	 std::random_device rd;

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef NEURAL_NET_H_
+#define NEURAL_NET_H_
+
 #include <iostream>
 
 #define inputNodes 1
@@ -7,3 +9,5 @@
 #define hiddenNodesLayers 1
 
 #define examplesSIZE 1000
+
+#endif
