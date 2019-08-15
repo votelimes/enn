@@ -5,10 +5,9 @@
 
 #include <vector>
 #include <random>
-#include <ctime>
 #include <iostream>
+#include <string>
 #include <fstream>
-#include <bitset>
 
 namespace nnet {
 	
@@ -33,19 +32,20 @@ namespace nnet {
 
 	public: NeuralNet(size_t inputNodesCount, size_t hiddenNodesCount, size_t outputNodesCount, size_t hiddenLayersCount);
 			
-			template <class T> int readWeightsFromFile(T& weightsStorageFileName);
+			int readWeightsFromFile(std::string weightsStorageFileName);
 
-			template <class T> int writeWeightsToFile(T& weightsStorageFileName);
+	        int writeWeightsToFile(std::string weightsStorageFileName);
 			
 			void studyNetwork(std::vector<std::vector<double>>& examplesSet, std::vector<std::vector<double>>& expectedValueslesSet);
 	
-	private: void forwardPropogation();
+  /*-----*/ void forwardPropogation();
 
-			 int backPropogation(std::vector<double>& expectedValues, bool ignoreWarnings);
+			 __int64 backPropogation(std::vector<double>& expectedValues, bool ignoreWarnings);
 
-			 int setData(std::vector<double>& inputData, bool ignoreWarnings); // Return value is difference between network input layer size() and input data size();
+			 __int64 setData(std::vector<double>& inputData, bool ignoreWarnings); // Return value is difference between network input layer size() and input data size();
 
-			 template <class T> T activationFunction(T& value, bool returnDerivativereturnDerivativeValueInstead);
+			 template <class T>
+			 T activationFunction(T value, bool returnDerivativereturnDerivativeValueInstead);
 
 	};
 
@@ -54,5 +54,7 @@ namespace afunctions {
 	
 	double RandomFunc();
 
-}  // namespace afunctions
+}
+
+// namespace afunctions
 #endif // NET_H_

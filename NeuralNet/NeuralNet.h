@@ -1,6 +1,8 @@
 #ifndef NEURAL_NET_H_
 #define NEURAL_NET_H_
 
+#include "Net.h"
+
 #include <iostream>
 
 #define inputNodes 1

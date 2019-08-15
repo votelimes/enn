@@ -2,7 +2,6 @@
 //
 
 #include "NeuralNet.h"
-#include "Net.h"
 
 int main()
 {
@@ -11,11 +10,13 @@ int main()
 	
 	nnet::NeuralNet newNet(inputNodes, hiddenNodes, outputNodes, hiddenNodesLayers);
 
-	for (auto i : examples)
+	newNet.writeWeightsToFile("");
+	
+	/*for (auto i : examples)
 	{
 		for (auto j : i) 
 		{
 
 		}
-	}
+	}*/
 }
