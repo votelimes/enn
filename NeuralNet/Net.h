@@ -7,50 +7,52 @@
 #include <random>
 #include <ctime>
 #include <iostream>
+#include <fstream>
+#include <bitset>
 
 namespace nnet {
 	
 	class NeuralNet
 	{
 
-		//SECTION: DATA
+	//SECTION: DATA
 
 	private: std::vector<std::vector<std::vector<double>>>* nodesWeights;
+	         std::vector<std::vector<double>>* nodesValues;
+	         std::vector<std::vector<double>>* nodesErrorValues;
+	
 
-	private: std::vector<std::vector<double>>* nodesValues;
+			 size_t inputNodesCount;
+			 size_t hiddenNodesCount;
+			 size_t outputNodesCount;
+	         size_t hiddenLayersCount;
 
-	private: std::vector<std::vector<double>>* nodesErrorValues;
-
-	private: double learningRate;
-
-	private: size_t nodeInputCount;
-
-	private: size_t nodeHiddenCount;
-
-	private: size_t nodeOutputCount;
-
-	private: size_t layerHiddenCount;
-
-			 //SECTION: FUNCTIONS
+			 double learningRate;
+	
+	//SECTION: METHODS
 
 	public: NeuralNet(size_t inputNodesCount, size_t hiddenNodesCount, size_t outputNodesCount, size_t hiddenLayersCount);
+			
+			template <class T> int readWeightsFromFile(T& weightsStorageFileName);
 
+			template <class T> int writeWeightsToFile(T& weightsStorageFileName);
+			
+			void studyNetwork(std::vector<std::vector<double>>& examplesSet, std::vector<std::vector<double>>& expectedValueslesSet);
+	
 	private: void forwardPropogation();
 
-	private: int backPropogation(std::vector<double>& expectedValues, bool ignoreWarnings);
+			 int backPropogation(std::vector<double>& expectedValues, bool ignoreWarnings);
 
-	public: void studyNetwork(std::vector<std::vector<double>>& examplesSet, std::vector<std::vector<double>>& expectedValueslesSet);
+			 int setData(std::vector<double>& inputData, bool ignoreWarnings); // Return value is difference between network input layer size() and input data size();
 
-	private: int setData(std::vector<double>& inputData, bool ignoreWarnings); // Return value is difference between network input layer size() and input data size();
-
-	private: template <typename T> T activationFunction(T& value, bool returnDerivativereturnDerivativeValueInstead);
+			 template <class T> T activationFunction(T& value, bool returnDerivativereturnDerivativeValueInstead);
 
 	};
 
-}
+} // namespace nnet
 namespace afunctions {
 	
 	double RandomFunc();
 
-}
-#endif
+}  // namespace afunctions
+#endif // NET_H_

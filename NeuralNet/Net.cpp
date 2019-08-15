@@ -4,10 +4,10 @@ nnet::NeuralNet::NeuralNet(size_t inputNodesCount, size_t hiddenNodesCount, size
 {	 
 	//Fill variables:
 	this->learningRate = 0.1;
-	this->nodeInputCount = inputNodesCount;	
-	this->nodeHiddenCount = hiddenNodesCount;
-	this->nodeOutputCount = outputNodesCount;
-	this->layerHiddenCount = hiddenLayersCount;
+	this->inputNodesCount = inputNodesCount;	
+	this->hiddenNodesCount = hiddenNodesCount;
+	this->outputNodesCount = outputNodesCount;
+	this->hiddenLayersCount = hiddenLayersCount;
 	//
 	//Create and normalize arrays
 	this->nodesWeights = new std::vector<std::vector<std::vector<double>>>(hiddenLayersCount + 1, std::vector<std::vector<double>>(hiddenNodesCount, std::vector<double>(hiddenNodesCount, 0)));
@@ -27,7 +27,7 @@ nnet::NeuralNet::NeuralNet(size_t inputNodesCount, size_t hiddenNodesCount, size
 	//
 	for (size_t i = 0; i < (*nodesWeights)[nodesWeights->size() - 1].size(); i++)
 	{
-		(*nodesWeights)[nodesWeights->size() - 1][i].resize(nodeOutputCount, afunctions::RandomFunc());
+		(*nodesWeights)[nodesWeights->size() - 1][i].resize(outputNodesCount, afunctions::RandomFunc());
 		(*nodesWeights)[nodesWeights->size() - 1][i].shrink_to_fit();
 	}
 	//Weights initialization(random values) cicles:
@@ -44,6 +44,33 @@ nnet::NeuralNet::NeuralNet(size_t inputNodesCount, size_t hiddenNodesCount, size
 	//
 }
  
+template<class T>
+ int nnet::NeuralNet::readWeightsFromFile(T& weightsStorageFileName)
+ {
+	 return 0;
+ }
+
+ template<class T>
+ int nnet::NeuralNet::writeWeightsToFile(T& weightsStorageFileName)
+ {
+	 std::fstream fs(weightsStorageFileName, std::ios::out | std::ios::in | std::ios::binary | std::ios::app);
+	 
+	// double a = 0;
+	 //fs.write(6, 310005);
+	 //fs.read(std::bitset);
+	 return 0;
+ }
+
+void nnet::NeuralNet::studyNetwork(std::vector<std::vector<double>>& examplesSet, std::vector<std::vector<double>>& expectedValueslesSet)
+ {
+	 for (size_t i = 0; i < examplesSet.size(); i++)
+	 {
+		 setData(examplesSet[i], true);
+		 forwardPropogation();
+		 backPropogation(expectedValueslesSet[i], true);
+	 }
+ }
+
  void nnet::NeuralNet::forwardPropogation()
  {
 	 double tmp = 0;
@@ -119,16 +146,6 @@ nnet::NeuralNet::NeuralNet(size_t inputNodesCount, size_t hiddenNodesCount, size
 	 return flag1 ? 0 : (*nodesValues)[0].size() - expectedValues.size();
  }
 
- void nnet::NeuralNet::studyNetwork(std::vector<std::vector<double>>& examplesSet, std::vector<std::vector<double>>& expectedValueslesSet)
- {
-	 for (size_t i = 0; i < examplesSet.size(); i++)
-	 {
-		 setData(examplesSet[i], true);
-		 forwardPropogation();
-		 backPropogation(expectedValueslesSet[i], true);
-	 }
- }
-
  int nnet::NeuralNet::setData(std::vector<double>& inputData, bool ignoreWarnings) // Return value is difference between network input layer size() and input data size();
  {
    //Options:
@@ -148,8 +165,8 @@ nnet::NeuralNet::NeuralNet(size_t inputNodesCount, size_t hiddenNodesCount, size
 	 }
 	 return flag1 ? 0 : (*nodesValues)[0].size() - inputData.size();
  }
- 
- template <typename T>
+
+ template <class T>
  T nnet::NeuralNet::activationFunction(T& value, bool returnDerivativeValueInstead)
  {
 	 if (returnDerivativeValueInstead) {

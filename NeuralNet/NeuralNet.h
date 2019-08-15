@@ -10,4 +10,4 @@
 
 #define examplesSIZE 1000
 
-#endif
+#endif // NEURAL_NET_H_
