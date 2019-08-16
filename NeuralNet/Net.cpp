@@ -1,6 +1,8 @@
 #include "Net.h"
 
-	nnet::NeuralNet::NeuralNet(size_t inputNodesCount, size_t hiddenNodesCount, size_t outputNodesCount, size_t hiddenLayersCount) // hiddenNodesCount should be the largest
+	
+	//Kernel class:
+	nnet::NeuralNet::NeuralNet(size_t inputNodesCount, size_t hiddenNodesCount, size_t outputNodesCount, size_t hiddenLayersCount) // //Kernel constructor, hiddenNodesCount should be the largest
 	{
 		//Fill variables:
 		
@@ -44,35 +46,53 @@
 			}
 		}
 		//
-	}
+	} // //Kernel constructor
 
-	int nnet::NeuralNet::readWeightsFromFile(std::string weightsStorageFileName)
+	__int64 nnet::NeuralNet::readWeightsFromFile(std::string weightsStorageFileName) //returns 2 if layers nodes count does not match, returns 1 if file can not be open, 0 if it opens
 	{
 		std::ifstream ifs;
 		nnet:nodesCountStorage rww;
-		std::vector<double> vec;
+
 		ifs.open(weightsStorageFileName, std::ios::binary);
+		if (!ifs.is_open()) {
+			return 1;
+		}
+		
 		ifs.read((char*)&rww, sizeof(rww));
+		if (!(rww == nodesCount)) {
+			return 2;
+		}
+
 		
 		return 0;
 	}
-
-	int nnet::NeuralNet::writeWeightsToFile(std::string weightsStorageFileName)
+	__int64 nnet::NeuralNet::writeWeightsToFile(std::string weightsStorageFileName) // returns 1 if file can not be open, 0 if it opens
 	{
 		std::ofstream ofs;
-		std::vector<double> vec = { 0.123456789, 0.0987654321, 0.3314, 0.015, 0.043014 };
 
-		ofs.open(weightsStorageFileName, std::ios::binary | std::ios::app);
+		ofs.open(weightsStorageFileName, std::ios::binary);
+		
+		if (!ofs.is_open()) {
+			return 1;
+		}
+		
 		ofs.write((char*)& this->nodesCount, sizeof(nodesCount));
-
-		/*for (size_t i = 0; i < vec.size(); i++)
+		
+		for (size_t i = 0; i < this->nodesCount.getHiddenLayersCount() + 1; i++)
 		{
-			ofs.write((char*)& vec[i], sizeof(double));
-		}*/
+			for (size_t j = 0; j < (*nodesValues)[i].size(); j++)
+			{
+				for (size_t k = 0; k < (*nodesValues)[i + 1].size(); k++)
+				{
+					ofs.write((char*)& (*nodesWeights)[i][j][k], sizeof(double));
+				}	
+			}
+		}
+		
 		ofs.close();
 		return 0;
 	}
-
+	
 	void nnet::NeuralNet::studyNetwork(std::vector<std::vector<double>>& examplesSet, std::vector<std::vector<double>>& expectedValueslesSet)
 	{
 		for (size_t i = 0; i < examplesSet.size(); i++)
@@ -82,7 +102,6 @@
 			backPropogation(expectedValueslesSet[i], true);
 		}
 	}
-
 	void nnet::NeuralNet::forwardPropogation()
 	{
 		double tmp = 0;
@@ -102,7 +121,6 @@
 			}
 		}
 	}
-
 	__int64 nnet::NeuralNet::backPropogation(std::vector<double>& expectedValues, bool ignoreWarnings)
 	{
 		//Options:
@@ -191,58 +209,57 @@
  
 	
 	
+
+	//Additional class: 
 	nnet::nodesCountStorage::nodesCountStorage()
 	{
 		this->inputNodesCount = 0;
 		this->hiddenNodesCount = 0;
 		this->outputNodesCount = 0;
 		this->hiddenLayersCount = 0;
-		this->classFlag = 1.55;
 	}
 
+	bool nnet::nodesCountStorage::operator==(const nodesCountStorage& rhs) const
+	{
+		return (inputNodesCount == rhs.inputNodesCount) && (hiddenNodesCount == rhs.hiddenNodesCount) && (outputNodesCount == rhs.outputNodesCount) && (hiddenLayersCount == rhs.hiddenLayersCount);
+	}
+	
 	size_t nnet::nodesCountStorage::getInputNodesCount()
 	{
 		return this->inputNodesCount;
 	}
-
 	size_t nnet::nodesCountStorage::getHiddenNodesCount()
 	{
 		return this->hiddenNodesCount;
 	}
-
 	size_t nnet::nodesCountStorage::getOutputNodesCount()
 	{
 		return this->outputNodesCount;
 	}
-
 	size_t nnet::nodesCountStorage::getHiddenLayersCount()
 	{
 		return this->hiddenLayersCount;
 	}
-
 	
 	void nnet::nodesCountStorage::setInputNodesCount(size_t value)
 	{
 		this->inputNodesCount = value;
 	}
-
 	void nnet::nodesCountStorage::setHiddenNodesCount(size_t value)
 	{
 		this->hiddenNodesCount = value;
 	}
-
 	void nnet::nodesCountStorage::setOutputNodesCount(size_t value)
 	{
 		this->outputNodesCount = value;
 	}
-
 	void nnet::nodesCountStorage::setHiddenLayersCount(size_t value)
 	{
 		this->hiddenLayersCount = value;
 	}
 	
 	
-	
+	//Additional functions:
 	double afunctions::RandomFunc()
  {
 	 double rv;
