@@ -3,11 +3,13 @@
 	nnet::NeuralNet::NeuralNet(size_t inputNodesCount, size_t hiddenNodesCount, size_t outputNodesCount, size_t hiddenLayersCount) // hiddenNodesCount should be the largest
 	{
 		//Fill variables:
+		
+		this->nodesCount.setInputNodesCount(inputNodesCount);
+		this->nodesCount.setHiddenNodesCount(hiddenNodesCount);
+		this->nodesCount.setOutputNodesCount(outputNodesCount);
+		this->nodesCount.setHiddenLayersCount(hiddenLayersCount);
 		this->learningRate = 0.1;
-		this->inputNodesCount = inputNodesCount;
-		this->hiddenNodesCount = hiddenNodesCount;
-		this->outputNodesCount = outputNodesCount;
-		this->hiddenLayersCount = hiddenLayersCount;
+		
 		//
 		//Create and normalize arrays
 		this->nodesWeights = new std::vector<std::vector<std::vector<double>>>(hiddenLayersCount + 1, std::vector<std::vector<double>>(hiddenNodesCount, std::vector<double>(hiddenNodesCount, 0)));
@@ -46,18 +48,28 @@
 
 	int nnet::NeuralNet::readWeightsFromFile(std::string weightsStorageFileName)
 	{
+		std::ifstream ifs;
+		nnet:nodesCountStorage rww;
+		std::vector<double> vec;
+		ifs.open(weightsStorageFileName, std::ios::binary);
+		ifs.read((char*)&rww, sizeof(rww));
+		
 		return 0;
 	}
 
 	int nnet::NeuralNet::writeWeightsToFile(std::string weightsStorageFileName)
 	{
-		//std::fstream fs(weightsStorageFileName, std::ios::out | std::ios::in | std::ios::binary | std::ios::app);
+		std::ofstream ofs;
+		std::vector<double> vec = { 0.123456789, 0.0987654321, 0.3314, 0.015, 0.043014 };
 
-		//fs.write(6, 310005);
-		std::string str = "0.854km896igig";
-		double a = 0;
-		a = std::stod(str);
-		std::cout << a << std::endl;
+		ofs.open(weightsStorageFileName, std::ios::binary | std::ios::app);
+		ofs.write((char*)& this->nodesCount, sizeof(nodesCount));
+
+		/*for (size_t i = 0; i < vec.size(); i++)
+		{
+			ofs.write((char*)& vec[i], sizeof(double));
+		}*/
+		ofs.close();
 		return 0;
 	}
 
@@ -177,7 +189,61 @@
 		return tanh(value);
 	}
  
- double afunctions::RandomFunc()
+	
+	
+	nnet::nodesCountStorage::nodesCountStorage()
+	{
+		this->inputNodesCount = 0;
+		this->hiddenNodesCount = 0;
+		this->outputNodesCount = 0;
+		this->hiddenLayersCount = 0;
+		this->classFlag = 1.55;
+	}
+
+	size_t nnet::nodesCountStorage::getInputNodesCount()
+	{
+		return this->inputNodesCount;
+	}
+
+	size_t nnet::nodesCountStorage::getHiddenNodesCount()
+	{
+		return this->hiddenNodesCount;
+	}
+
+	size_t nnet::nodesCountStorage::getOutputNodesCount()
+	{
+		return this->outputNodesCount;
+	}
+
+	size_t nnet::nodesCountStorage::getHiddenLayersCount()
+	{
+		return this->hiddenLayersCount;
+	}
+
+	
+	void nnet::nodesCountStorage::setInputNodesCount(size_t value)
+	{
+		this->inputNodesCount = value;
+	}
+
+	void nnet::nodesCountStorage::setHiddenNodesCount(size_t value)
+	{
+		this->hiddenNodesCount = value;
+	}
+
+	void nnet::nodesCountStorage::setOutputNodesCount(size_t value)
+	{
+		this->outputNodesCount = value;
+	}
+
+	void nnet::nodesCountStorage::setHiddenLayersCount(size_t value)
+	{
+		this->hiddenLayersCount = value;
+	}
+	
+	
+	
+	double afunctions::RandomFunc()
  {
 	 double rv;
 	 std::random_device rd;
@@ -186,4 +252,5 @@
 	 rv = uid(gen);
 	 return rv > 0 ? rv = uid(gen) : rv;
  }
+
 

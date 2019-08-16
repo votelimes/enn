@@ -7,9 +7,33 @@
 #include <random>
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <fstream>
 
 namespace nnet {
+	
+	class nodesCountStorage 
+	{
+		float classFlag;
+		size_t inputNodesCount;
+		size_t hiddenNodesCount;
+		size_t outputNodesCount;
+		size_t hiddenLayersCount;
+	
+	public:
+		
+		nodesCountStorage();
+		
+		size_t getInputNodesCount();
+		size_t getHiddenNodesCount();
+		size_t getOutputNodesCount();
+		size_t getHiddenLayersCount();
+
+		void setInputNodesCount(size_t value);
+		void setHiddenNodesCount(size_t value);
+		void setOutputNodesCount(size_t value);
+		void setHiddenLayersCount(size_t value);
+	};
 	
 	class NeuralNet
 	{
@@ -20,11 +44,11 @@ namespace nnet {
 	         std::vector<std::vector<double>>* nodesValues;
 	         std::vector<std::vector<double>>* nodesErrorValues;
 	
-
-			 size_t inputNodesCount;
-			 size_t hiddenNodesCount;
-			 size_t outputNodesCount;
-	         size_t hiddenLayersCount;
+			 nodesCountStorage nodesCount;
+			 //size_t inputNodesCount;
+			 //size_t hiddenNodesCount;
+			 //size_t outputNodesCount;
+	         //size_t hiddenLayersCount;
 
 			 double learningRate;
 	
@@ -48,6 +72,7 @@ namespace nnet {
 			 T activationFunction(T value, bool returnDerivativereturnDerivativeValueInstead);
 
 	};
+
 
 } // namespace nnet
 namespace afunctions {
