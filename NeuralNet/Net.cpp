@@ -31,7 +31,7 @@
 		//
 		for (size_t i = 0; i < (*nodesWeights)[nodesWeights->size() - 1].size(); i++)
 		{
-			(*nodesWeights)[nodesWeights->size() - 1][i].resize(outputNodesCount, afunctions::RandomFunc());
+			(*nodesWeights)[nodesWeights->size() - 1][i].resize(outputNodesCount, afunctions::RandomFunc(0.0, 1.1));
 			(*nodesWeights)[nodesWeights->size() - 1][i].shrink_to_fit();
 		}
 		//Weights initialization(random values) cicles:
@@ -41,7 +41,7 @@
 			{
 				for (size_t j = 0; j < (*nodesWeights)[i][k].size(); j++)
 				{
-					(*nodesWeights)[i][k][j] = afunctions::RandomFunc();
+					(*nodesWeights)[i][k][j] = afunctions::RandomFunc(0.0, 1.1);
 				}
 			}
 		}
@@ -219,6 +219,20 @@
 		}
 	}
 
+	void nnet::NeuralNet::reinitializeWeights()
+	{
+		for (size_t i = 0; i < this->nodesCount.getHiddenLayersCount() + 1; i++)
+		{
+			for (size_t j = 0; j < (*nodesValues)[i].size(); j++)
+			{
+				for (size_t k = 0; k < (*nodesValues)[i + 1].size(); k++)
+				{
+					(*nodesWeights)[i][j][k] = afunctions::RandomFunc(0.0, 1.1);
+				}
+			}
+		}
+	}
+
 	template <class T>
 	T nnet::NeuralNet::activationFunction(T value, bool returnDerivativeValueInstead) const
 	{
@@ -287,12 +301,12 @@
 	
 	
 	//Additional functions:
-	double afunctions::RandomFunc()
+	double afunctions::RandomFunc(double lowerLimit, double upperLimit)
  {
 	 double rv;
 	 std::random_device rd;
 	 std::mt19937 gen(rd());
-	 std::uniform_real_distribution<double> uid(0.0, 1.0);
+	 std::uniform_real_distribution<double> uid(lowerLimit, upperLimit);
 	 rv = uid(gen);
 	 return rv > 0 ? rv = uid(gen) : rv;
  }

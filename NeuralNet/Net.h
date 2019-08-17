@@ -73,6 +73,8 @@ namespace nnet {
 		__int64 setData(std::vector<double>& inputData, bool ignoreWarnings); // Return value is difference between network input layer size() and input data size();
 		void setWeights(double value);
 
+		void reinitializeWeights();
+
 		template <class T>
 		T activationFunction(T value, bool returnDerivativereturnDerivativeValueInstead) const;
 
@@ -82,7 +84,7 @@ namespace nnet {
 } // namespace nnet
 namespace afunctions {
 	
-	double RandomFunc();
+	double RandomFunc(double lowerLimit, double upperLimit);
 
 }
 
