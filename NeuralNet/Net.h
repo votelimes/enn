@@ -29,12 +29,13 @@ namespace nnet {
 		
 		nodesCountStorage();
 		
-		bool operator==(const nodesCountStorage& rhs) const;
+		bool operator==(const nodesCountStorage& ex) const;
+		bool operator!=(const nodesCountStorage& ex) const;
 
-		size_t getInputNodesCount();
-		size_t getHiddenNodesCount();
-		size_t getOutputNodesCount();
-		size_t getHiddenLayersCount();
+		size_t getInputNodesCount() const;
+		size_t getHiddenNodesCount() const;
+		size_t getOutputNodesCount() const;
+		size_t getHiddenLayersCount() const;
 
 		void setInputNodesCount(size_t value);
 		void setHiddenNodesCount(size_t value);
@@ -63,16 +64,17 @@ namespace nnet {
 		NeuralNet(size_t inputNodesCount, size_t hiddenNodesCount, size_t outputNodesCount, size_t hiddenLayersCount); //Kernel constructor
 			
 		__int64 readWeightsFromFile(std::string weightsStorageFileName); // returns 1 if file can not be open, 0 if it opens
-		__int64 writeWeightsToFile(std::string weightsStorageFileName); // returns 1 if file can not be open, 0 if it opens
+		__int64 writeWeightsToFile(std::string weightsStorageFileName) const; // returns 1 if file can not be open, 0 if it opens
 			
 		void studyNetwork(std::vector<std::vector<double>>& examplesSet, std::vector<std::vector<double>>& expectedValueslesSet);
 		void forwardPropogation();
 		__int64 backPropogation(std::vector<double>& expectedValues, bool ignoreWarnings);
 
 		__int64 setData(std::vector<double>& inputData, bool ignoreWarnings); // Return value is difference between network input layer size() and input data size();
+		void setWeights(double value);
 
 		template <class T>
-		T activationFunction(T value, bool returnDerivativereturnDerivativeValueInstead);
+		T activationFunction(T value, bool returnDerivativereturnDerivativeValueInstead) const;
 
 	};
 

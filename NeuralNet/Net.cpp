@@ -51,7 +51,7 @@
 	__int64 nnet::NeuralNet::readWeightsFromFile(std::string weightsStorageFileName) //returns 2 if layers nodes count does not match, returns 1 if file can not be open, 0 if it opens
 	{
 		std::ifstream ifs;
-		nnet:nodesCountStorage rww;
+		nodesCountStorage rww;
 
 		ifs.open(weightsStorageFileName, std::ios::binary);
 		if (!ifs.is_open()) {
@@ -59,14 +59,24 @@
 		}
 		
 		ifs.read((char*)&rww, sizeof(rww));
-		if (!(rww == nodesCount)) {
+		if (rww != nodesCount) {
 			return 2;
 		}
 
+		for (size_t i = 0; i < this->nodesCount.getHiddenLayersCount() + 1; i++)
+		{
+			for (size_t j = 0; j < (*nodesValues)[i].size(); j++)
+			{
+				for (size_t k = 0; k < (*nodesValues)[i + 1].size(); k++)
+				{
+					ifs.read((char*) & (*nodesWeights)[i][j][k], sizeof(double));
+				}
+			}
+		}
 		
 		return 0;
 	}
-	__int64 nnet::NeuralNet::writeWeightsToFile(std::string weightsStorageFileName) // returns 1 if file can not be open, 0 if it opens
+	__int64 nnet::NeuralNet::writeWeightsToFile(std::string weightsStorageFileName) const // returns 1 if file can not be open, 0 if it opens
 	{
 		std::ofstream ofs;
 
@@ -195,9 +205,22 @@
 		}
 		return flag1 ? 0 : (*nodesValues)[0].size() - inputData.size();
 	}
+	void nnet::NeuralNet::setWeights(double value)
+	{
+		for (size_t i = 0; i < this->nodesCount.getHiddenLayersCount() + 1; i++)
+		{
+			for (size_t j = 0; j < (*nodesValues)[i].size(); j++)
+			{
+				for (size_t k = 0; k < (*nodesValues)[i + 1].size(); k++)
+				{
+					(*nodesWeights)[i][j][k] = value;
+				}
+			}
+		}
+	}
 
 	template <class T>
-	T nnet::NeuralNet::activationFunction(T value, bool returnDerivativeValueInstead)
+	T nnet::NeuralNet::activationFunction(T value, bool returnDerivativeValueInstead) const
 	{
 		if (returnDerivativeValueInstead) {
 
@@ -219,24 +242,28 @@
 		this->hiddenLayersCount = 0;
 	}
 
-	bool nnet::nodesCountStorage::operator==(const nodesCountStorage& rhs) const
+	bool nnet::nodesCountStorage::operator==(const nodesCountStorage& ex) const
 	{
-		return (inputNodesCount == rhs.inputNodesCount) && (hiddenNodesCount == rhs.hiddenNodesCount) && (outputNodesCount == rhs.outputNodesCount) && (hiddenLayersCount == rhs.hiddenLayersCount);
+		return (inputNodesCount == ex.inputNodesCount) && (hiddenNodesCount == ex.hiddenNodesCount) && (outputNodesCount == ex.outputNodesCount) && (hiddenLayersCount == ex.hiddenLayersCount);
+	}
+	bool nnet::nodesCountStorage::operator!=(const nodesCountStorage& ex) const
+	{
+		return (inputNodesCount != ex.inputNodesCount) && (hiddenNodesCount != ex.hiddenNodesCount) && (outputNodesCount != ex.outputNodesCount) && (hiddenLayersCount != ex.hiddenLayersCount);
 	}
 	
-	size_t nnet::nodesCountStorage::getInputNodesCount()
+	size_t nnet::nodesCountStorage::getInputNodesCount() const
 	{
 		return this->inputNodesCount;
 	}
-	size_t nnet::nodesCountStorage::getHiddenNodesCount()
+	size_t nnet::nodesCountStorage::getHiddenNodesCount() const
 	{
 		return this->hiddenNodesCount;
 	}
-	size_t nnet::nodesCountStorage::getOutputNodesCount()
+	size_t nnet::nodesCountStorage::getOutputNodesCount() const
 	{
 		return this->outputNodesCount;
 	}
-	size_t nnet::nodesCountStorage::getHiddenLayersCount()
+	size_t nnet::nodesCountStorage::getHiddenLayersCount() const
 	{
 		return this->hiddenLayersCount;
 	}

@@ -10,8 +10,9 @@ int main()
 	
 	nnet::NeuralNet newNet(inputNodes, hiddenNodes, outputNodes, hiddenNodesLayers);
 
-	newNet.writeWeightsToFile("test.txt");
-	newNet.readWeightsFromFile("test.txt");
+	newNet.writeWeightsToFile("test.bin");
+	newNet.setWeights(0);
+	newNet.readWeightsFromFile("test.bin");
 	
 	/*for (auto i : examples)
 	{
