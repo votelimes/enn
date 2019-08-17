@@ -152,10 +152,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Net.cpp" />
+    <ClCompile Include="NetApplicationInterface.cpp" />
     <ClCompile Include="NeuralNet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Net.h" />
+    <ClInclude Include="NetApplicationInterface.h" />
     <ClInclude Include="NeuralNet.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

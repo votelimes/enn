@@ -3,8 +3,6 @@
 
 #include "Net.h"
 
-#include <iostream>
-
 #define inputNodes 1
 #define hiddenNodes 5
 #define outputNodes 1

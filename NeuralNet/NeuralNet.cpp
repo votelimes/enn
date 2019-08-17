@@ -11,15 +11,18 @@ int main()
 	std::vector<std::vector<double>> expecteds(examplesSIZE, std::vector<double>(outputNodes, 0));
 
 	size_t var = 0;
+	std::string command;
+	commandsList.push_back("help");
 	while (true)
 	{
-		
-		std::cout << "Главное меню.\n\n\n";
-		std::cout << "Выберите опцию: \n\n";
-		std::cout << "1. Сохранить весы." << std::endl;
-		std::cin >> var;
-		if () {
-
+		system("clear");
+		std::cin >> command;
+		if (command == commandsList[0]) {
+			for (size_t i = 0; i < commandsList.size(); i++)
+			{
+				std::cout << std::setw(15) << commandsList[i] << commandsDescription[i] << std::endl;
+			}
+			continue;
 		}
 	}
 
