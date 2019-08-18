@@ -29,6 +29,7 @@ nai::NetApplicationInterface::NetApplicationInterface()
 	//this->commandsDescription.push_back("");
 
 	this->numberOfNetworkTrainings = 0;
+
 }
 
 nai::NetApplicationInterface::~NetApplicationInterface()
@@ -64,22 +65,50 @@ void nai::NetApplicationInterface::doWork()
 		}
 		if (commandIndex == 2) {
 			
-			auto pos1 = command.find("-f");
-			if (pos1 != std::string::npos) {
-				pos1 += 2;
-				//fileName.resize(64);
-				auto fileName = command.substr(pos1, command.size());
-				auto it = fileName.begin();
-				while ((char*) (*it) == " ")
-				{
-					fileName.appe();
+			if (this->net1) {
+				auto pos1 = command.find("-f");
+				if (pos1 != std::string::npos) {
+					pos1 += 2;
+					auto fileName = command.substr(pos1, command.size());
+					while (fileName[0] == ' ')
+					{
+						fileName = fileName.substr(1, fileName.size());
+					}
+
+					this->net1->writeWeightsToFile(fileName);
+
+				}
+				else {
+					std::cout << "Unknown attributes. Use /help to see all commands info." << std::endl;
 				}
 			}
-			else {
-				std::cout << "Unknown attributes. Use /help to see all commands info." << std::endl;
+			else 
+			{
+				std::cout << "Create network first.  Use /help to see all commands info." << std::endl;
 			}
 		}
+		if (commandIndex == 3) {
+			if (this->net1) {
+				auto pos1 = command.find("-f");
+				if (pos1 != std::string::npos) {
+					pos1 += 2;
+					auto fileName = command.substr(pos1, command.size());
+					while (fileName[0] == ' ')
+					{
+						fileName = fileName.substr(1, fileName.size());
+					}
+					this->net1->readWeightsFromFile(fileName);
+				}
+			}
+			else 
+			{
+				std::cout << "Create network first.  Use /help to see all commands info." << std::endl;
+			}
 
+		}
+		if (commandIndex == 4) {
+
+		}
 	}
 }
 
@@ -93,5 +122,10 @@ inline __int64 nai::NetApplicationInterface::findCommand(std::string &command) c
 		}
 	}
 	return -1;
+}
+
+inline __int64 nai::NetApplicationInterface::getParametr(size_t pos, std::string param) const
+{
+	return 0;
 }
 
