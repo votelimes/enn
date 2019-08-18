@@ -14,9 +14,12 @@ namespace nai {
 		
 		//SECTION: METHODS
 
+	private:
+
+		inline __int64 findCommand(std::string& command) const;
 	public:
 		
-		NetApplicationInterface(nnet::NeuralNet& nnet);
+		NetApplicationInterface();
 		~NetApplicationInterface();
 
 		void doWork();

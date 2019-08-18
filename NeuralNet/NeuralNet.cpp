@@ -12,20 +12,8 @@ int main()
 
 	size_t var = 0;
 	std::string command;
-	commandsList.push_back("help");
-	while (true)
-	{
-		system("clear");
-		std::cin >> command;
-		if (command == commandsList[0]) {
-			for (size_t i = 0; i < commandsList.size(); i++)
-			{
-				std::cout << std::setw(15) << commandsList[i] << commandsDescription[i] << std::endl;
-			}
-			continue;
-		}
-	}
-
+	nai::NetApplicationInterface int_1;
+	int_1.doWork();
 
 	
 	/*for (auto i : examples)

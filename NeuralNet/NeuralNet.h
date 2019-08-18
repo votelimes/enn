@@ -2,6 +2,7 @@
 #define NEURAL_NET_H_
 
 #include "Net.h"
+#include "NetApplicationInterface.h"
 
 #define inputNodes 1
 #define hiddenNodes 5
