@@ -19,7 +19,14 @@ namespace nai {
 	private:
 
 		inline __int64 findCommand(std::string& command) const;
-		inline __int64 getParametr(size_t pos, std::string param) const;
+		inline double getParametrNumber(size_t pos1, size_t pos2, std::string paramString) const;
+		inline std::string getParametrString(size_t pos1, size_t pos2, std::string paramString) const;
+		
+		inline void toUpperCase(std::string& paramString);
+
+		inline std::string useHelp() const;
+		inline std::string successfullyExecuted() const;
+
 	public:
 		
 		NetApplicationInterface();
