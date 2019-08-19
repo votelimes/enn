@@ -12,7 +12,7 @@ namespace nai {
 
 		nnet::NeuralNet *net1;
 
-		long double numberOfNetworkTrainings;
+		long double trainingsCount;
 		
 		//SECTION: METHODS
 

@@ -4,7 +4,7 @@
 #include "NeuralNet.h"
 
 int main()
-{
+{	
 	nnet::NeuralNet Net_1(inputNodes, hiddenNodes, outputNodes, hiddenNodesLayers);
 
 	std::vector<std::vector<double>> examples(examplesSIZE, std::vector<double>(inputNodes, 0));

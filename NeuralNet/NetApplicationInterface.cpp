@@ -28,7 +28,7 @@ nai::NetApplicationInterface::NetApplicationInterface()
 	
 	//this->commandsDescription.push_back("");
 
-	this->numberOfNetworkTrainings = 0;
+	this->trainingsCount = 0;
 	this->net1 = NULL;
 
 }

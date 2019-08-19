@@ -31,7 +31,7 @@ namespace nnet {
 		
 		nodesCountStorage();
 		
-		bool operator==(const nodesCountStorage& ex) const;
+		auto operator==(const nodesCountStorage& ex) const;
 		bool operator!=(const nodesCountStorage& ex) const;
 
 		size_t getInputNodesCount() const;
@@ -68,9 +68,10 @@ namespace nnet {
 		__int64 readWeightsFromFile(std::string weightsStorageFileName); // returns 1 if file can not be open, 0 if it opens
 		__int64 writeWeightsToFile(std::string weightsStorageFileName) const; // returns 1 if file can not be open, 0 if it opens
 			
-		void studyNetwork(std::vector<std::vector<double>>& examplesSet, std::vector<std::vector<double>>& expectedValueslesSet);
-		void forwardPropogation();
-		__int64 backPropogation(std::vector<double>& expectedValues, bool ignoreWarnings);
+		void studyNetworkManual(std::vector<std::vector<double>>& examplesSet, std::vector<std::vector<double>>& expectedValueslesSet);
+		__int64 studyNetworkAuto(std::string &fileName);
+		void forwardPropogationManual();
+		__int64 backPropogationManual(std::vector<double>& expectedValues, bool ignoreWarnings);
 
 		__int64 setData(std::vector<double>& inputData, bool ignoreWarnings); // Return value is difference between network input layer size() and input data size();
 		void setWeights(double value);

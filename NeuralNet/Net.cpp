@@ -59,7 +59,7 @@
 		}
 		
 		ifs.read((char*)&rww, sizeof(rww));
-		if (rww != nodesCount) {
+		if (rww != this->nodesCount) {
 			return 2;
 		}
 
@@ -86,7 +86,7 @@
 			return 1;
 		}
 		
-		ofs.write((char*)& this->nodesCount, sizeof(nodesCount));
+		ofs.write((char*)& this->nodesCount, sizeof(this->nodesCount));
 		
 		for (size_t i = 0; i < this->nodesCount.getHiddenLayersCount() + 1; i++)
 		{
@@ -103,16 +103,95 @@
 		return 0;
 	}
 	
-	void nnet::NeuralNet::studyNetwork(std::vector<std::vector<double>>& examplesSet, std::vector<std::vector<double>>& expectedValueslesSet)
+	void nnet::NeuralNet::studyNetworkManual(std::vector<std::vector<double>>& examplesSet, std::vector<std::vector<double>>& expectedValueslesSet)
 	{
 		for (size_t i = 0; i < examplesSet.size(); i++)
 		{
 			setData(examplesSet[i], true);
-			forwardPropogation();
-			backPropogation(expectedValueslesSet[i], true);
+			forwardPropogationManual();
+			backPropogationManual(expectedValueslesSet[i], true);
 		}
 	}
-	void nnet::NeuralNet::forwardPropogation()
+	__int64 nnet::NeuralNet::studyNetworkAuto(std::string& fileName)
+	{
+		std::ifstream ifs;
+		nodesCountStorage rww;
+		size_t dataMassiveSize;
+		ifs.open(fileName, std::ios::binary);
+		if (!ifs.is_open()) { return 1; }
+		
+		ifs.read((char*)& dataMassiveSize, sizeof(size_t)); //1st line read count of examples
+
+		ifs.read((char*)& rww, sizeof(rww)); //2nd line read network count storage class
+		if (rww.getInputNodesCount() != this->nodesCount.getInputNodesCount() && rww.getOutputNodesCount() != this->nodesCount.getOutputNodesCount()) { return 2; }
+
+		for (size_t y = 0; y < dataMassiveSize; y++)
+		{
+			double tmp;
+			//input layer initialization
+			for (size_t u = 0; u < rww.getInputNodesCount(); u++)
+			{
+				ifs.read((char*)& tmp, sizeof(double));
+				(*nodesValues)[0][u] = tmp;
+			}
+			tmp = 0;
+			//forward propogation:
+			for (size_t i = 0; i < (*nodesWeights).size(); i++)
+			{
+				for (size_t j = 0; j < (*nodesValues)[i + 1].size(); j++)
+				{
+					for (size_t k = 0; k < (*nodesWeights)[i].size(); k++)
+					{
+						tmp = tmp + ((*nodesWeights)[i][k][j] * (*nodesValues)[i][k]);
+					}
+
+					(*nodesValues)[i + 1][j] = activationFunction(tmp, false);
+
+					tmp = 0;
+				}
+			}
+			////Calculate error procent for output layer:
+			tmp = 0;
+			for (size_t i = 0; i < (*nodesValues)[(*nodesValues).size() - 1].size(); i++)
+			{
+				ifs.read((char*)& tmp, sizeof(double));
+				(*nodesErrorValues)[(*nodesErrorValues).size() - 1][i] = tmp - (*nodesValues)[(*nodesValues).size() - 1][i];
+			}
+			tmp = 0;
+			//Calculate error procent for all other layers:
+			for (size_t i = (*nodesValues).size() - 2; i > 0; i--)
+			{
+				for (size_t j = 0; j < (*nodesValues)[i].size(); j++)
+				{
+					for (size_t k = 0; k < (*nodesValues)[i + 1].size(); k++)
+					{
+						tmp = tmp + ((*nodesWeights)[i][j][k] * (*nodesErrorValues)[i][k]);
+					}
+
+					(*nodesErrorValues)[i - 1][j] = tmp;
+					tmp = 0;
+				}
+			}
+			//Adjust weights:
+			for (size_t i = 0; i < (*nodesWeights).size(); i++)
+			{
+				for (size_t j = 0; j < (*nodesValues)[i + 1].size(); j++)
+				{
+					for (size_t k = 0; k < (*nodesValues)[i].size(); k++)
+					{
+						(*nodesWeights)[i][k][j] = (*nodesWeights)[i][k][j] + (learningRate * (*nodesErrorValues)[i][j] * activationFunction((*nodesValues)[i + 1][j], true) * (*nodesValues)[i][k]);
+					}
+				}
+			}
+
+		}
+
+
+		ifs.close();
+		return 0;
+
+	}
+	void nnet::NeuralNet::forwardPropogationManual()
 	{
 		double tmp = 0;
 
@@ -131,7 +210,7 @@
 			}
 		}
 	}
-	__int64 nnet::NeuralNet::backPropogation(std::vector<double>& expectedValues, bool ignoreWarnings)
+	__int64 nnet::NeuralNet::backPropogationManual(std::vector<double>& expectedValues, bool ignoreWarnings)
 	{
 		//Options:
 
@@ -155,6 +234,7 @@
 			(*nodesErrorValues)[(*nodesErrorValues).size() - 1][i] = expectedValues[i] - (*nodesValues)[(*nodesValues).size() - 1][i];
 		}
 
+		//Calculate error procent for all other layers
 		for (size_t i = (*nodesValues).size() - 2; i > 0; i--)
 		{
 			for (size_t j = 0; j < (*nodesValues)[i].size(); j++)
@@ -256,7 +336,7 @@
 		this->hiddenLayersCount = 0;
 	}
 
-	bool nnet::nodesCountStorage::operator==(const nodesCountStorage& ex) const
+	auto nnet::nodesCountStorage::operator==(const nodesCountStorage& ex) const
 	{
 		return (inputNodesCount == ex.inputNodesCount) && (hiddenNodesCount == ex.hiddenNodesCount) && (outputNodesCount == ex.outputNodesCount) && (hiddenLayersCount == ex.hiddenLayersCount);
 	}
