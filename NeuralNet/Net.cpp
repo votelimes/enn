@@ -379,9 +379,42 @@
 		this->hiddenLayersCount = value;
 	}
 	
+	nnet::dataMassiveMaker::dataMassiveMaker()
+	{
+		this->massiveSize = 0;
+		this->inputDataSize = 0;
+		this->expectedValuesSize = 0;
+	}
+
+	__int64 nnet::dataMassiveMaker::evenNumbersMassive(size_t inputDataSize, size_t outputDataSize, size_t massiveSize, std::string &fileName)
+	{
+		std::ofstream ofs;
+		std::vector<float> range;
+		nnet::nodesCountStorage ncs;
+		__int64 var = 0;
+
+		ncs.setInputNodesCount(inputDataSize);
+		ncs.setOutputNodesCount(outputDataSize);
+		
+		ofs.open(fileName, std::ios::binary);
+		if (!ofs.is_open()) { return 1; }
+
+		ofs.write((char*)& massiveSize, sizeof(size_t));
+		ofs.write((char*)& ncs, sizeof(ncs));
+		
+		for (size_t i = 0; i < massiveSize; i++)
+		{
+			var = afunctions::RandomFunc(static_cast<__int64>(2), static_cast<__int64>(99998));
+			if (var % 2 != 0) { var++; }
+			ofs.write((char*)& var, sizeof(__int64));
+		}
+		
+		
+		return 0;
+	}
 	
 	//Additional functions:
-	double afunctions::RandomFunc(double lowerLimit, double upperLimit)
+	inline double afunctions::RandomFunc(double lowerLimit, double upperLimit)
  {
 	 double rv;
 	 std::random_device rd;
@@ -390,5 +423,13 @@
 	 rv = uid(gen);
 	 return rv > 0 ? rv = uid(gen) : rv;
  }
-
+	inline __int64 afunctions::RandomFunc(__int64 lowerLimit, __int64 upperLimit)
+ {
+	double rv;
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<__int64> uid(lowerLimit, upperLimit);
+	rv = uid(gen);
+	return rv > 0 ? rv = uid(gen) : rv;
+ }
 

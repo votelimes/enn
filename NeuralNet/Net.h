@@ -14,6 +14,24 @@
 
 namespace nnet {
 	
+	class dataMassiveMaker 
+	{
+	//SECTION: DATA
+	
+	private:
+
+		size_t massiveSize;
+		size_t inputDataSize;
+		size_t expectedValuesSize;
+
+	//SECTION: METHODS
+	public:
+
+		dataMassiveMaker();
+
+		__int64 evenNumbersMassive(size_t inputDataSize, size_t outputDataSize, size_t massiveSize, std::string& fileName);
+	};
+
 	class nodesCountStorage 
 	{
 	
@@ -87,8 +105,8 @@ namespace nnet {
 } // namespace nnet
 namespace afunctions {
 	
-	double RandomFunc(double lowerLimit, double upperLimit);
-
+	inline double RandomFunc(double lowerLimit, double upperLimit);
+	inline __int64 RandomFunc(__int64 lowerLimit, __int64 upperLimit);
 }
 
 // namespace afunctions
