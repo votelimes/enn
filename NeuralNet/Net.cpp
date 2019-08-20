@@ -2,7 +2,7 @@
 
 	
 	//Kernel class:
-	nnet::NeuralNet::NeuralNet(size_t inputNodesCount, size_t hiddenNodesCount, size_t outputNodesCount, size_t hiddenLayersCount) // //Kernel constructor, hiddenNodesCount should be the largest
+	nnet::NeuralNet::NeuralNet(const size_t inputNodesCount, const size_t hiddenNodesCount, const size_t outputNodesCount, const size_t hiddenLayersCount) // //Kernel constructor, hiddenNodesCount should be the largest
 	{
 		//Fill variables:
 		
@@ -48,7 +48,7 @@
 		//
 	} // //Kernel constructor
 
-	__int64 nnet::NeuralNet::readWeightsFromFile(std::string weightsStorageFileName) //returns 2 if layers nodes count does not match, returns 1 if file can not be open, 0 if it opens
+	__int64 nnet::NeuralNet::readWeightsFromFile(const std::string weightsStorageFileName) //returns 2 if layers nodes count does not match, returns 1 if file can not be open, 0 if it opens
 	{
 		std::ifstream ifs;
 		nodesCountStorage rww;
@@ -76,10 +76,9 @@
 		
 		return 0;
 	}
-	__int64 nnet::NeuralNet::writeWeightsToFile(std::string weightsStorageFileName) const // returns 1 if file can not be open, 0 if it opens
+	__int64 nnet::NeuralNet::writeWeightsToFile(const std::string weightsStorageFileName) const // returns 1 if file can not be open, 0 if it opens
 	{
 		std::ofstream ofs;
-
 		ofs.open(weightsStorageFileName, std::ios::binary);
 		
 		if (!ofs.is_open()) {
@@ -103,7 +102,7 @@
 		return 0;
 	}
 	
-	void nnet::NeuralNet::studyNetworkManual(std::vector<std::vector<double>>& examplesSet, std::vector<std::vector<double>>& expectedValueslesSet)
+	void nnet::NeuralNet::studyNetworkManual(const std::vector<std::vector<double>>& examplesSet, const std::vector<std::vector<double>>& expectedValueslesSet)
 	{
 		for (size_t i = 0; i < examplesSet.size(); i++)
 		{
@@ -112,7 +111,7 @@
 			backPropogationManual(expectedValueslesSet[i], true);
 		}
 	}
-	__int64 nnet::NeuralNet::studyNetworkAuto(std::string& fileName)
+	__int64 nnet::NeuralNet::studyNetworkAuto(const std::string& fileName)
 	{
 		std::ifstream ifs;
 		nodesCountStorage rww;
@@ -210,7 +209,7 @@
 			}
 		}
 	}
-	__int64 nnet::NeuralNet::backPropogationManual(std::vector<double>& expectedValues, bool ignoreWarnings)
+	__int64 nnet::NeuralNet::backPropogationManual(const std::vector<double>& expectedValues, const bool ignoreWarnings)
 	{
 		//Options:
 
@@ -266,7 +265,7 @@
 		return flag1 ? 0 : (*nodesValues)[0].size() - expectedValues.size();
 	}
 
-	__int64 nnet::NeuralNet::setData(std::vector<double>& inputData, bool ignoreWarnings) // Return value is difference between network input layer size() and input data size();
+	__int64 nnet::NeuralNet::setData(const std::vector<double>& inputData, const bool ignoreWarnings) // Return value is difference between network input layer size() and input data size();
 	{
 		//Options:
 		bool flag1 = true;
@@ -285,7 +284,7 @@
 		}
 		return flag1 ? 0 : (*nodesValues)[0].size() - inputData.size();
 	}
-	void nnet::NeuralNet::setWeights(double value)
+	void nnet::NeuralNet::setWeights(const double value)
 	{
 		for (size_t i = 0; i < this->nodesCount.getHiddenLayersCount() + 1; i++)
 		{
@@ -298,7 +297,7 @@
 			}
 		}
 	}
-	void nnet::NeuralNet::setLearningRate(double value)
+	void nnet::NeuralNet::setLearningRate(const double value)
 	{
 		this->learningRate = value;
 	}
@@ -308,7 +307,7 @@
 		return this->learningRate;
 	}
 
-	void nnet::NeuralNet::reinitializeWeights(double lowerLimit, double upperLimit)
+	void nnet::NeuralNet::reinitializeWeights(const double lowerLimit, const double upperLimit)
 	{
 		for (size_t i = 0; i < this->nodesCount.getHiddenLayersCount() + 1; i++)
 		{
@@ -323,7 +322,7 @@
 	}
 
 	template <class T>
-	T nnet::NeuralNet::activationFunction(T value, bool returnDerivativeValueInstead) const
+	T nnet::NeuralNet::activationFunction(const T value, const bool returnDerivativeValueInstead) const
 	{
 		if (returnDerivativeValueInstead) {
 
@@ -371,19 +370,19 @@
 		return this->hiddenLayersCount;
 	}
 	
-	void nnet::nodesCountStorage::setInputNodesCount(size_t value)
+	void nnet::nodesCountStorage::setInputNodesCount(const size_t value)
 	{
 		this->inputNodesCount = value;
 	}
-	void nnet::nodesCountStorage::setHiddenNodesCount(size_t value)
+	void nnet::nodesCountStorage::setHiddenNodesCount(const size_t value)
 	{
 		this->hiddenNodesCount = value;
 	}
-	void nnet::nodesCountStorage::setOutputNodesCount(size_t value)
+	void nnet::nodesCountStorage::setOutputNodesCount(const size_t value)
 	{
 		this->outputNodesCount = value;
 	}
-	void nnet::nodesCountStorage::setHiddenLayersCount(size_t value)
+	void nnet::nodesCountStorage::setHiddenLayersCount(const size_t value)
 	{
 		this->hiddenLayersCount = value;
 	}
@@ -395,7 +394,7 @@
 		this->expectedValuesSize = 0;
 	}
 
-	__int64 nnet::dataMassiveMaker::evenNumbersMassive(size_t inputDataSize, size_t outputDataSize, size_t massiveSize, std::string &fileName)
+	__int64 nnet::dataMassiveMaker::evenNumbersMassive(const size_t inputDataSize, const size_t outputDataSize, const size_t massiveSize, const std::string &fileName)
 	{
 		std::ofstream ofs;
 		std::vector<double> range;
@@ -430,7 +429,7 @@
 	}
 	
 	//Additional functions:
-	inline double afunctions::RandomFunc(double lowerLimit, double upperLimit)
+	inline double afunctions::RandomFunc(const double lowerLimit, const double upperLimit)
  {
 	 double rv;
 	 std::random_device rd;
@@ -439,7 +438,7 @@
 	 rv = uid(gen);
 	 return rv > 0 ? rv = uid(gen) : rv;
  }
-	inline __int64 afunctions::RandomFunc(__int64 lowerLimit, __int64 upperLimit)
+	inline __int64 afunctions::RandomFunc(const __int64 lowerLimit, const __int64 upperLimit)
  {
 	__int64 rv;
 	std::random_device rd;
