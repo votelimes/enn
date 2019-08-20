@@ -17,13 +17,13 @@ nai::NetApplicationInterface::NetApplicationInterface()
 
 	this->commandsDescription.push_back("Shows a list of all commands and their purpose.");
 	this->commandsDescription.push_back("Closes a program without saving reults.");
-	this->commandsDescription.push_back("Saves current weight values to file. Use -f atribute before the file name. Ex.: /saveweight -f filename");
-	this->commandsDescription.push_back("Loads weight values from a file(user should choose a file name).");
-	this->commandsDescription.push_back("Reinitializes weight values. Use -v atribute before the value.with Ex.: /reinitializeweights -v 0.415");
-	this->commandsDescription.push_back("Creates the network according to the parametrs. Parametrs -i (input neurons count) -h (hidden neurons count) -o (output neurons count) -l (output layers count). Ex.: /createnetwork -i3 -h15 -o1 -l2");
-	this->commandsDescription.push_back("Trains the network using a two data arrays: input values and output values respectively. User should select file names.");
-	this->commandsDescription.push_back("Uses a network to get result. User should write input values.");
-	this->commandsDescription.push_back("Uses a network to get result. User should write input data file name.");
+	this->commandsDescription.push_back("Saves current weight values to file. Ex.: /saveweights FILENAME");
+	this->commandsDescription.push_back("Loads weight values from a file. Ex.: /saveweights FILENAME");
+	this->commandsDescription.push_back("Reinitializes weight values. Ex.: /reinitializeweights 0.415");
+	this->commandsDescription.push_back("Creates the network according to the parametrs. Parametrs (input neurons count) (hidden neurons count) (output neurons count) (output layers count). Ex.: /createnetwork 3 15 1 2");
+	this->commandsDescription.push_back("Trains the network using a data array file. Ex.: /trainnetwork FILENAME.");
+	this->commandsDescription.push_back("Uses a network to get result. Input values count respectevly to network input layer neurons count. Ex.: /getresultw INPUT1 INPUT2 INPUT3...");
+	this->commandsDescription.push_back("Uses a network to get result. Using a input data as file. Ex. /getresultf FILENAME");
 	this->commandsDescription.push_back("Prints current network parametrs.");
 	
 	//this->commandsDescription.push_back("");
@@ -39,14 +39,20 @@ nai::NetApplicationInterface::~NetApplicationInterface()
 
 void nai::NetApplicationInterface::doWork()
 {
-	std::string command;
-	__int64 commandIndex;
 	while (true)
 	{
-		std::getline(std::cin, command);
+		std::string command;
+		//std::getline(std::cin, command);
+		std::cin >> command;
 		this->toUpperCase(command);
-		commandIndex = this->findCommand(command);
-
+		__int64 commandIndex = this->findCommand(command);
+		std::vector<std::string> parametrsStorage;
+		while (std::cin.peek() != 10)
+		{
+			std::string temporary;
+			std::cin >> temporary;
+			parametrsStorage.push_back(temporary);
+		}
 		//unknownCommand
 		if (commandIndex == -1) {
 			std::cout << "Unknown command. " << this->useHelp() << std::endl;
@@ -69,16 +75,15 @@ void nai::NetApplicationInterface::doWork()
 		}
 		//Write weights (saveWeights)
 		if (commandIndex == 2) {  
-			if (this->net1) {
-				auto pos1 = command.find("-f");
-				if (pos1 != std::string::npos) {
-					pos1 += 2;
-					if (!this->net1->writeWeightsToFile(this->getParametrString(pos1, (size_t)0, command))) { std::cout << this->successfullyExecuted() << std::endl; }
-					else { std::cout << "Can't create file." << std::endl;}
+			if (parametrsStorage.size() == 1) {
+				if (this->net1) {
+
+					if (!this->net1->writeWeightsToFile(parametrsStorage[0])) { std::cout << this->successfullyExecuted() << std::endl; }
+					else { std::cout << "Can't create file." << std::endl; }
 				}
-				else { std::cout << "Unknown attributes. " << this->useHelp() << std::endl; }
+				else { std::cout << "Create network first. " << this->useHelp() << std::endl; }
 			}
-			else { std::cout << "Create network first. " << this->useHelp() << std::endl; }
+			else { std::cout << "Unknown attributes. " << this->useHelp() << std::endl; }
 		} 
 		//Read weights (loadWeights)
 		if (commandIndex == 3) {  
@@ -86,7 +91,7 @@ void nai::NetApplicationInterface::doWork()
 				auto pos1 = command.find("-f");
 				if (pos1 != std::string::npos) {
 					pos1 += 2;
-					if (!this->net1->readWeightsFromFile(this->getParametrString(pos1, (size_t)0, command))) { std::cout << "Can't read the file. (File may not exist)" << std::endl; }
+					if (!this->net1->readWeightsFromFile(this->getParametrsString(pos1, (size_t)0, command))) { std::cout << "Can't read the file. (File may not exist)" << std::endl; }
 				}
 			}
 			else { std::cout << "Create network first. " << this->useHelp() << std::endl; }
@@ -121,7 +126,7 @@ void nai::NetApplicationInterface::doWork()
 	}
 }
 
-inline __int64 nai::NetApplicationInterface::findCommand(std::string &command) const
+inline __int64 nai::NetApplicationInterface::findCommand(const std::string command) const
 {
 	for (size_t i = 0; i < this->commandsList.size(); i++) {
 
@@ -133,27 +138,35 @@ inline __int64 nai::NetApplicationInterface::findCommand(std::string &command) c
 	return -1;
 }
 
-inline double nai::NetApplicationInterface::getParametrNumber(size_t pos1, size_t pos2, std::string paramString) const
+inline __int64 nai::NetApplicationInterface::checkParametrsCount(const std::string& command, size_t parametrsCount) const
+{
+	if (command.find(" ") == 0 || command.find(" ") == std::string::npos) { return -1; }
+
+	for (size_t i = 0; i < parametrsCount; i++)
+	{
+
+	}
+	
+	return 0;
+}
+
+inline double nai::NetApplicationInterface::getParametrNumber(const size_t pos1, const size_t pos2, const std::string paramString) const
 {
 	std::stringstream sst;
-	sst << std::setprecision(15) << std::fixed << this->getParametrString(pos1, pos2, paramString) << std::endl;
+	sst << std::setprecision(15) << std::fixed << this->getParametrsString(pos1, pos2, paramString) << std::endl;
 	double var;
 	sst >> var;
 	return var;
 }
-inline std::string nai::NetApplicationInterface::getParametrString(size_t pos1, size_t pos2, std::string paramString) const
+inline std::string nai::NetApplicationInterface::getParametrsString(std::vector<std::string> &parametrsStorage)
 {
-	std::string retString = (pos2 != 0 ? paramString.substr(pos1, pos2) : paramString.substr(pos1));
-
-	while (retString[0] == ' ')
+	for (size_t i = 0; i < length; i++)
 	{
-		retString = retString.substr(1);
+
 	}
-	
-	return retString;
 }
 
-inline void nai::NetApplicationInterface::toUpperCase(std::string& paramString)
+inline void nai::NetApplicationInterface::toUpperCase(const std::string& paramString)
 {
 	for (size_t i = 0; i < paramString.size() && paramString[i] != ' '; i++)
 	{

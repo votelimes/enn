@@ -51,13 +51,13 @@
 	__int64 nnet::NeuralNet::readWeightsFromFile(const std::string weightsStorageFileName) //returns 2 if layers nodes count does not match, returns 1 if file can not be open, 0 if it opens
 	{
 		std::ifstream ifs;
-		nodesCountStorage rww;
 
 		ifs.open(weightsStorageFileName, std::ios::binary);
 		if (!ifs.is_open()) {
 			return 1;
 		}
-		
+
+		nodesCountStorage rww;
 		ifs.read((char*)&rww, sizeof(rww));
 		if (rww != this->nodesCount) {
 			return 2;
@@ -114,19 +114,20 @@
 	__int64 nnet::NeuralNet::studyNetworkAuto(const std::string& fileName)
 	{
 		std::ifstream ifs;
-		nodesCountStorage rww;
-		size_t dataMassiveSize;
+	
 		ifs.open(fileName, std::ios::binary);
 		if (!ifs.is_open()) { return 1; }
-
+		
+		size_t dataMassiveSize{};
 		ifs.read((char*)& dataMassiveSize, sizeof(size_t)); //1st line read count of examples
 
+		nodesCountStorage rww;
 		ifs.read((char*)& rww, sizeof(rww)); //2nd line read network count storage class
 		if (rww.getInputNodesCount() != this->nodesCount.getInputNodesCount() && rww.getOutputNodesCount() != this->nodesCount.getOutputNodesCount()) { return 2; }
 
 		for (size_t y = 0; y < dataMassiveSize; y++)
 		{
-			double tmp;
+			double tmp{};
 			//input layer initialization
 			for (size_t u = 0; u < rww.getInputNodesCount(); u++)
 			{
@@ -192,7 +193,7 @@
 	}
 	void nnet::NeuralNet::forwardPropogationManual()
 	{
-		double tmp = 0;
+		double tmp{};
 
 		for (size_t i = 0; i < (*nodesWeights).size(); i++)
 		{
@@ -213,7 +214,7 @@
 	{
 		//Options:
 
-		bool flag1 = true;
+		bool flag1{true};
 		if (expectedValues.size() != (*nodesValues)[(*nodesErrorValues).size() - 1].size()) {
 			if (!ignoreWarnings) {
 				std::cout << "\n Warning! Storage size and expected values data size does not match, errors are possible. " << std::endl;
@@ -224,7 +225,7 @@
 
 		//Core part:
 
-		double tmp = 0;
+		
 
 		//Calculate error procent for output layer:
 
@@ -238,6 +239,8 @@
 		{
 			for (size_t j = 0; j < (*nodesValues)[i].size(); j++)
 			{
+				double tmp{};
+
 				for (size_t k = 0; k < (*nodesValues)[i + 1].size(); k++)
 				{
 					tmp = tmp + ((*nodesWeights)[i][j][k] * (*nodesErrorValues)[i][k]);
@@ -268,7 +271,8 @@
 	__int64 nnet::NeuralNet::setData(const std::vector<double>& inputData, const bool ignoreWarnings) // Return value is difference between network input layer size() and input data size();
 	{
 		//Options:
-		bool flag1 = true;
+		bool flag1{true};
+		
 		if (inputData.size() != (*nodesValues)[0].size()) {
 			if (!ignoreWarnings) {
 				std::cout << "\n Warning! Storage size and input data size does not match, errors are possible. " << std::endl;
@@ -322,7 +326,7 @@
 	}
 
 	template <class T>
-	T nnet::NeuralNet::activationFunction(const T value, const bool returnDerivativeValueInstead) const
+	inline T nnet::NeuralNet::activationFunction(const T value, const bool returnDerivativeValueInstead) const
 	{
 		if (returnDerivativeValueInstead) {
 
@@ -397,21 +401,19 @@
 	__int64 nnet::dataMassiveMaker::evenNumbersMassive(const size_t inputDataSize, const size_t outputDataSize, const size_t massiveSize, const std::string &fileName)
 	{
 		std::ofstream ofs;
-		std::vector<double> range;
-		nnet::nodesCountStorage ncs;
-		__int64 var = 0;
-
-		ncs.setInputNodesCount(inputDataSize);
-		ncs.setOutputNodesCount(outputDataSize);
-		
 		ofs.open(fileName, std::ios::binary);
 		if (!ofs.is_open()) { return 1; }
 
 		ofs.write((char*)& massiveSize, sizeof(size_t));
+		
+		nnet::nodesCountStorage ncs;
+		ncs.setInputNodesCount(inputDataSize);
+		ncs.setOutputNodesCount(outputDataSize);
 		ofs.write((char*)& ncs, sizeof(ncs));
 		
 		for (size_t i = 0; i < massiveSize; i++)
 		{
+			__int64 var{};
 			var = afunctions::RandomFunc(static_cast<__int64>(1), static_cast<__int64>(1000000));
 			ofs.write((char*)& var, sizeof(double));
 			if (var % 2 == 0) { 
@@ -431,19 +433,25 @@
 	//Additional functions:
 	inline double afunctions::RandomFunc(const double lowerLimit, const double upperLimit)
  {
-	 double rv;
+	 
 	 std::random_device rd;
 	 std::mt19937 gen(rd());
+	 
 	 std::uniform_real_distribution<double> uid(lowerLimit, upperLimit);
+	 
+	 double rv;
 	 rv = uid(gen);
 	 return rv > 0 ? rv = uid(gen) : rv;
  }
 	inline __int64 afunctions::RandomFunc(const __int64 lowerLimit, const __int64 upperLimit)
  {
-	__int64 rv;
+	
 	std::random_device rd;
 	std::mt19937 gen(rd());
+	
 	std::uniform_int_distribution<__int64> uid(lowerLimit, upperLimit);
+	
+	__int64 rv;
 	rv = uid(gen);
 	return rv > 0 ? rv = uid(gen) : rv;
  }

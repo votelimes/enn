@@ -18,11 +18,12 @@ namespace nai {
 
 	private:
 
-		inline __int64 findCommand(std::string& command) const;
-		inline double getParametrNumber(size_t pos1, size_t pos2, std::string paramString) const;
-		inline std::string getParametrString(size_t pos1, size_t pos2, std::string paramString) const;
-		
-		inline void toUpperCase(std::string& paramString);
+		inline __int64 findCommand(const std::string command) const;
+		inline __int64  checkParametrsCount(const std::string &command, size_t parametrsCount) const;
+		inline double getParametrNumber(const size_t pos1, const size_t pos2, const std::string paramString) const;
+		inline std::string getParametrsString(std::vector<std::string>& command);
+
+		inline void toUpperCase(const std::string& paramString);
 
 		inline std::string useHelp() const;
 		inline std::string successfullyExecuted() const;

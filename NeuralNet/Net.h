@@ -88,7 +88,7 @@ namespace nnet {
 		void forwardPropogationManual();
 		__int64 backPropogationManual(const std::vector<double>& expectedValues, const bool ignoreWarnings);
 		template <class T>
-		T activationFunction(const T value, const bool returnDerivativereturnDerivativeValueInstead) const;
+		inline T activationFunction(const T value, const bool returnDerivativereturnDerivativeValueInstead) const;
 
 	public: 
 		
