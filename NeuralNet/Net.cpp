@@ -119,7 +119,7 @@
 		size_t dataMassiveSize;
 		ifs.open(fileName, std::ios::binary);
 		if (!ifs.is_open()) { return 1; }
-		
+
 		ifs.read((char*)& dataMassiveSize, sizeof(size_t)); //1st line read count of examples
 
 		ifs.read((char*)& rww, sizeof(rww)); //2nd line read network count storage class
@@ -297,6 +297,15 @@
 				}
 			}
 		}
+	}
+	void nnet::NeuralNet::setLearningRate(double value)
+	{
+		this->learningRate = value;
+	}
+
+	double nnet::NeuralNet::getLearningRate() const
+	{
+		return this->learningRate;
 	}
 
 	void nnet::NeuralNet::reinitializeWeights(double lowerLimit, double upperLimit)

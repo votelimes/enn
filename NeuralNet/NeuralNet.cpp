@@ -5,7 +5,7 @@
 
 int main()
 {	
-	nnet::NeuralNet net1(inputNodes, hiddenNodes, outputNodes, hiddenNodesLayers);
+	nnet::NeuralNet net1(INPUT_NODES, HIDDEN_NODES, OUTPUT_NODES, HIDDEN_NODES_LAYERS);
 	nnet::dataMassiveMaker maker1;
 	std::string dataMassiveEven = "dataMassiveEven.bin";
 

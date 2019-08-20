@@ -76,9 +76,9 @@ namespace nnet {
 		std::vector<std::vector<std::vector<double>>>* nodesWeights;
 	    std::vector<std::vector<double>>* nodesValues;
 	    std::vector<std::vector<double>>* nodesErrorValues;
-	
-		
 		double learningRate;
+		
+		
 	
 	//SECTION: METHODS
 		
@@ -102,6 +102,9 @@ namespace nnet {
 
 		 // Return value is difference between network input layer size() and input data size();
 		void setWeights(double value);
+		void setLearningRate(double value);
+
+		double getLearningRate() const;
 
 		void reinitializeWeights(double lowerLimit, double upperLimit);
 
