@@ -67,6 +67,9 @@ namespace nnet {
 	{
 
 	//SECTION: DATA
+	public:
+
+		nodesCountStorage nodesCount;
 
 	private: 
 		
@@ -74,11 +77,19 @@ namespace nnet {
 	    std::vector<std::vector<double>>* nodesValues;
 	    std::vector<std::vector<double>>* nodesErrorValues;
 	
-		nodesCountStorage nodesCount;
+		
 		double learningRate;
 	
 	//SECTION: METHODS
 		
+	private:
+		
+		__int64 setData(std::vector<double>& inputData, bool ignoreWarnings);
+		void forwardPropogationManual();
+		__int64 backPropogationManual(std::vector<double>& expectedValues, bool ignoreWarnings);
+		template <class T>
+		T activationFunction(T value, bool returnDerivativereturnDerivativeValueInstead) const;
+
 	public: 
 		
 		NeuralNet(size_t inputNodesCount, size_t hiddenNodesCount, size_t outputNodesCount, size_t hiddenLayersCount); //Kernel constructor
@@ -88,16 +99,13 @@ namespace nnet {
 			
 		void studyNetworkManual(std::vector<std::vector<double>>& examplesSet, std::vector<std::vector<double>>& expectedValueslesSet);
 		__int64 studyNetworkAuto(std::string &fileName);
-		void forwardPropogationManual();
-		__int64 backPropogationManual(std::vector<double>& expectedValues, bool ignoreWarnings);
 
-		__int64 setData(std::vector<double>& inputData, bool ignoreWarnings); // Return value is difference between network input layer size() and input data size();
+		 // Return value is difference between network input layer size() and input data size();
 		void setWeights(double value);
 
 		void reinitializeWeights(double lowerLimit, double upperLimit);
 
-		template <class T>
-		T activationFunction(T value, bool returnDerivativereturnDerivativeValueInstead) const;
+		
 
 	};
 

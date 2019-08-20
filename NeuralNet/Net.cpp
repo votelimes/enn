@@ -327,7 +327,7 @@
 	
 	
 
-	//Additional class: 
+	//Additional classes: 
 	nnet::nodesCountStorage::nodesCountStorage()
 	{
 		this->inputNodesCount = 0;
@@ -389,7 +389,7 @@
 	__int64 nnet::dataMassiveMaker::evenNumbersMassive(size_t inputDataSize, size_t outputDataSize, size_t massiveSize, std::string &fileName)
 	{
 		std::ofstream ofs;
-		std::vector<float> range;
+		std::vector<double> range;
 		nnet::nodesCountStorage ncs;
 		__int64 var = 0;
 
@@ -404,9 +404,16 @@
 		
 		for (size_t i = 0; i < massiveSize; i++)
 		{
-			var = afunctions::RandomFunc(static_cast<__int64>(2), static_cast<__int64>(99998));
-			if (var % 2 != 0) { var++; }
-			ofs.write((char*)& var, sizeof(__int64));
+			var = afunctions::RandomFunc(static_cast<__int64>(1), static_cast<__int64>(1000000));
+			ofs.write((char*)& var, sizeof(double));
+			if (var % 2 == 0) { 
+				double if1 = 1.0;
+				ofs.write((char*)& (if1), sizeof(double)); 
+			}
+			else {
+				double if1 = 0.5;
+				ofs.write((char*) & (if1), sizeof(double));
+			}
 		}
 		
 		
@@ -425,7 +432,7 @@
  }
 	inline __int64 afunctions::RandomFunc(__int64 lowerLimit, __int64 upperLimit)
  {
-	double rv;
+	__int64 rv;
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_int_distribution<__int64> uid(lowerLimit, upperLimit);

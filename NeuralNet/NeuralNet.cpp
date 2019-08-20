@@ -5,10 +5,11 @@
 
 int main()
 {	
-	nnet::NeuralNet Net_1(inputNodes, hiddenNodes, outputNodes, hiddenNodesLayers);
+	nnet::NeuralNet net1(inputNodes, hiddenNodes, outputNodes, hiddenNodesLayers);
+	nnet::dataMassiveMaker maker1;
+	std::string dataMassiveEven = "dataMassiveEven.bin";
 
-	std::vector<std::vector<double>> examples(examplesSIZE, std::vector<double>(inputNodes, 0));
-	std::vector<std::vector<double>> expecteds(examplesSIZE, std::vector<double>(outputNodes, 0));
+	maker1.evenNumbersMassive( net1.nodesCount.getInputNodesCount(), net1.nodesCount.getOutputNodesCount(), static_cast<size_t>(10000), dataMassiveEven);
 
 	size_t var = 0;
 	std::string command;
