@@ -314,7 +314,7 @@
 	void nnet::NeuralNet::printResult() const
 	{
 		std::cout << "_______________________________________________________" << std::endl;
-		for (size_t i = 0; i < this->nodesCount.getOutputNodesCount; i++)
+		for (size_t i = 0; i < this->nodesCount.getOutputNodesCount(); i++)
 		{
 			std::cout << i + 1 << ". " << (*nodesValues)[this->nodesCount.getHiddenLayersCount() + 1][i] << std::endl;
 		}

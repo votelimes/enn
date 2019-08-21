@@ -21,7 +21,7 @@ namespace nai {
 		inline __int64 findCommand(const std::string command) const;
 		inline __int64  checkParametrsCount(const std::string &command, size_t parametrsCount) const;
 
-		inline void toUpperCase(const std::string& paramString);
+		inline void toUpperCase(std::string& paramString);
 
 		inline std::string useHelp() const;
 		inline std::string successfullyExecuted() const;

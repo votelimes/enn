@@ -177,7 +177,7 @@ inline __int64 nai::NetApplicationInterface::checkParametrsCount(const std::stri
 	return 0;
 }
 
-inline void nai::NetApplicationInterface::toUpperCase(const std::string& paramString)
+inline void nai::NetApplicationInterface::toUpperCase(std::string& paramString)
 {
 	for (size_t i = 0; i < paramString.size() && paramString[i] != ' '; i++)
 	{
