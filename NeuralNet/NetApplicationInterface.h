@@ -20,8 +20,6 @@ namespace nai {
 
 		inline __int64 findCommand(const std::string command) const;
 		inline __int64  checkParametrsCount(const std::string &command, size_t parametrsCount) const;
-		inline double getParametrNumber(const size_t pos1, const size_t pos2, const std::string paramString) const;
-		inline std::string getParametrsString(std::vector<std::string>& command);
 
 		inline void toUpperCase(const std::string& paramString);
 

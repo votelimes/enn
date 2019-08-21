@@ -47,6 +47,7 @@ void nai::NetApplicationInterface::doWork()
 		this->toUpperCase(command);
 		__int64 commandIndex = this->findCommand(command);
 		std::vector<std::string> parametrsStorage;
+		parametrsStorage.clear();
 		while (std::cin.peek() != 10)
 		{
 			std::string temporary;
@@ -74,55 +75,72 @@ void nai::NetApplicationInterface::doWork()
 			break;
 		}
 		//Write weights (saveWeights)
-		if (commandIndex == 2) {  
-			if (parametrsStorage.size() == 1) {
-				if (this->net1) {
+		if (commandIndex == 2 && parametrsStorage.size() == 1) {
+			if (this->net1) {
 
-					if (!this->net1->writeWeightsToFile(parametrsStorage[0])) { std::cout << this->successfullyExecuted() << std::endl; }
-					else { std::cout << "Can't create file." << std::endl; }
-				}
-				else { std::cout << "Create network first. " << this->useHelp() << std::endl; }
+				if (!this->net1->writeWeightsToFile(parametrsStorage[0])) { std::cout << this->successfullyExecuted() << std::endl; }
+				else { std::cout << "Unable to create file." << std::endl; }
 			}
-			else { std::cout << "Unknown attributes. " << this->useHelp() << std::endl; }
+			else { std::cout << "Create network first. " << this->useHelp() << std::endl; }
+			continue;
 		} 
 		//Read weights (loadWeights)
-		if (commandIndex == 3) {  
+		if (commandIndex == 3 && parametrsStorage.size() == 1) {
 			if (this->net1) {
-				auto pos1 = command.find("-f");
-				if (pos1 != std::string::npos) {
-					pos1 += 2;
-					if (!this->net1->readWeightsFromFile(this->getParametrsString(pos1, (size_t)0, command))) { std::cout << "Can't read the file. (File may not exist)" << std::endl; }
-				}
+				if (!this->net1->readWeightsFromFile(parametrsStorage[0])) { std::cout << "Unable to open file." << std::endl; }
 			}
 			else { std::cout << "Create network first. " << this->useHelp() << std::endl; }
+			continue;
 		} 
 		//Reinitialize weights
-		if (commandIndex == 4) {
+		if (commandIndex == 4 && parametrsStorage.size() == 1) {
 			if (this->net1) {
-				auto pos1 = command.find("-v");
-				if (pos1 != std::string::npos) {
-					pos1 += 2;
-					this->net1->setWeights(this->getParametrNumber(pos1, 0, command));
-				}
-				else { std::cout << "Unknown attributes. " << this->useHelp() << std::endl; }
+				double weightsValue;
+				std::stringstream strst;
+				strst << std::fixed << std::setprecision(15) << parametrsStorage[0];
+				strst >> weightsValue;
+				this->net1->setWeights(weightsValue);
 			}
 			else { std::cout << "Create network first. " << this->useHelp() << std::endl; }
+			continue;
 		}
 		//Create network
-		if (commandIndex == 5) {
-			auto pos1 = command.find("-i");
-			auto pos2 = command.find("-h");
-			auto pos3 = command.find("-o");
-			auto pos4 = command.find("-l");
-
-			if (pos1 != std::string::npos && pos2 != std::string::npos && pos3 != std::string::npos && pos4 != std::string::npos) {
-
-				pos1 += 2; pos2 += 2; pos3 += 2; pos4 += 2;
-				this->net1 = new nnet::NeuralNet( static_cast<size_t>(this->getParametrNumber(pos1, pos2 - 1, command)), static_cast<size_t>(this->getParametrNumber(pos2, pos3 - 1, command)), static_cast<size_t>(this->getParametrNumber(pos3, pos4 - 1, command)), static_cast<size_t>(this->getParametrNumber(pos4, 0, command)));
-				std::cout << this->successfullyExecuted() << std::endl;
+		if (commandIndex == 5 && parametrsStorage.size() == 4) {
+			std::vector<size_t> counts;
+			for (size_t i = 0; i < 4; i++)
+			{	
+				std::stringstream strst;
+				strst << std::fixed << std::setprecision(15) << parametrsStorage[i];
+				size_t tmp;
+				strst >> tmp;
+				counts.push_back(tmp);
 			}
-			else { std::cout << "Unknown attributes. " << this->useHelp() << std::endl; }
+			this->net1 = new nnet::NeuralNet(counts[0], counts[1], counts[2], counts[3]);
+			std::cout << this->successfullyExecuted() << std::endl;
 		}
+		//Train network
+		if (commandIndex == 6 && parametrsStorage.size() == 1) {
+			if (this->net1) {
+				if (net1->studyNetworkAuto(parametrsStorage[0])) std::cout << this->successfullyExecuted() << std::endl;
+				else std::cout << "Unable to open file." << std::endl;
+			}
+			else { std::cout << "Create network first. " << this->useHelp() << std::endl; }
+			continue;
+		}
+		//Getresultw
+		if (commandIndex == 7 ) {
+			if (this->net1) {
+				if (parametrsStorage.size() == this->net1->nodesCount.getInputNodesCount()) {
+					
+					/////////////////
+					this->net1->printResult();
+				}
+				else std::cout << "Input parametrs count and network input nodes count does not match." << std::endl;
+			}
+			else { std::cout << "Create network first. " << this->useHelp() << std::endl; }
+			continue;
+		}
+		std::cout << "Unknown attributes. " << this->useHelp() << std::endl;
 	}
 }
 
@@ -148,22 +166,6 @@ inline __int64 nai::NetApplicationInterface::checkParametrsCount(const std::stri
 	}
 	
 	return 0;
-}
-
-inline double nai::NetApplicationInterface::getParametrNumber(const size_t pos1, const size_t pos2, const std::string paramString) const
-{
-	std::stringstream sst;
-	sst << std::setprecision(15) << std::fixed << this->getParametrsString(pos1, pos2, paramString) << std::endl;
-	double var;
-	sst >> var;
-	return var;
-}
-inline std::string nai::NetApplicationInterface::getParametrsString(std::vector<std::string> &parametrsStorage)
-{
-	for (size_t i = 0; i < length; i++)
-	{
-
-	}
 }
 
 inline void nai::NetApplicationInterface::toUpperCase(const std::string& paramString)

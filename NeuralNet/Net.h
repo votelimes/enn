@@ -105,6 +105,8 @@ namespace nnet {
 		void setLearningRate(const double value);
 
 		double getLearningRate() const;
+		
+		void printResult();
 
 		void reinitializeWeights(const double lowerLimit, const double upperLimit);
 

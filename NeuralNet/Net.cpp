@@ -311,6 +311,16 @@
 		return this->learningRate;
 	}
 
+	void nnet::NeuralNet::printResult()
+	{
+		std::cout << "_______________________________________________________" << std::endl;
+		for (size_t i = 0; i < this->nodesCount.getOutputNodesCount; i++)
+		{
+			std::cout << i + 1 << ". " << (*nodesValues)[this->nodesCount.getHiddenLayersCount() + 1][i] << std::endl;
+		}
+		std::cout << "_______________________________________________________" << std::endl;
+	}
+
 	void nnet::NeuralNet::reinitializeWeights(const double lowerLimit, const double upperLimit)
 	{
 		for (size_t i = 0; i < this->nodesCount.getHiddenLayersCount() + 1; i++)
