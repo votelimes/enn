@@ -2,16 +2,16 @@
 
 nai::NetApplicationInterface::NetApplicationInterface()
 {
-	this->commandsList.push_back("/HELP");
-	this->commandsList.push_back("/EXIT");
-	this->commandsList.push_back("/SAVEWEIGHTS");
-	this->commandsList.push_back("/LOADWEIGHTS");
-	this->commandsList.push_back("/REINITIALIZEWEIGHTS");
-	this->commandsList.push_back("/CREATENETWORK");
-	this->commandsList.push_back("/TRAINNETWORK");
-	this->commandsList.push_back("/GETRESULTW");
-	this->commandsList.push_back("/GETRESULTF");
-	this->commandsList.push_back("/GETNETWORKINFO");
+	this->commandsList.push_back("/HELP"); // 0
+	this->commandsList.push_back("/EXIT"); // 1
+	this->commandsList.push_back("/SAVEWEIGHTS"); // 2
+	this->commandsList.push_back("/LOADWEIGHTS"); // 3
+	this->commandsList.push_back("/REINITIALIZEWEIGHTS"); // 4
+	this->commandsList.push_back("/CREATENETWORK"); // 5
+	this->commandsList.push_back("/TRAINNETWORK"); // 6
+	this->commandsList.push_back("/GETRESULTW"); // 7
+	this->commandsList.push_back("/GETRESULTF"); // 8
+	this->commandsList.push_back("/GETNETWORKINFO"); // 9
 	
 	//this->commandsList.push_back("");
 
@@ -149,6 +149,11 @@ void nai::NetApplicationInterface::doWork()
 			else { std::cout << "Create network first. " << this->useHelp() << std::endl; }
 			continue;
 		}
+		//Getresultf
+		if (commandIndex == 7 && parametrsStorage.size() == 1) {
+
+		}
+
 		std::cout << "Unknown attributes. " << this->useHelp() << std::endl;
 	}
 }
