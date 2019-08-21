@@ -311,7 +311,7 @@
 		return this->learningRate;
 	}
 
-	void nnet::NeuralNet::printResult()
+	void nnet::NeuralNet::printResult() const
 	{
 		std::cout << "_______________________________________________________" << std::endl;
 		for (size_t i = 0; i < this->nodesCount.getOutputNodesCount; i++)

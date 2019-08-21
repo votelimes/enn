@@ -84,7 +84,7 @@ namespace nnet {
 		
 	private:
 		
-		__int64 setData(const std::vector<double>& inputData, const bool ignoreWarnings);
+		
 		void forwardPropogationManual();
 		__int64 backPropogationManual(const std::vector<double>& expectedValues, const bool ignoreWarnings);
 		template <class T>
@@ -103,10 +103,10 @@ namespace nnet {
 		 // Return value is difference between network input layer size() and input data size();
 		void setWeights(const double value);
 		void setLearningRate(const double value);
-
+		__int64 setData(const std::vector<double>& inputData, const bool ignoreWarnings);
 		double getLearningRate() const;
 		
-		void printResult();
+		void printResult() const;
 
 		void reinitializeWeights(const double lowerLimit, const double upperLimit);
 

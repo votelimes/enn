@@ -132,7 +132,16 @@ void nai::NetApplicationInterface::doWork()
 			if (this->net1) {
 				if (parametrsStorage.size() == this->net1->nodesCount.getInputNodesCount()) {
 					
-					/////////////////
+					std::vector<double> inputDataStorage;
+					for (size_t i = 0; i < parametrsStorage.size(); i++)
+					{
+						std::stringstream strst;
+						strst << std::fixed << std::setprecision(15) << parametrsStorage[i];
+						double tmp;
+						strst >> tmp;
+						inputDataStorage.push_back(tmp);
+					}
+					this->net1->setData(inputDataStorage, true);
 					this->net1->printResult();
 				}
 				else std::cout << "Input parametrs count and network input nodes count does not match." << std::endl;
