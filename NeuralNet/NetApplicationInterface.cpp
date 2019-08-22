@@ -78,8 +78,8 @@ void nai::NetApplicationInterface::doWork()
 		if (commandIndex == 2 && parametrsStorage.size() == 1) {
 			if (this->net1) {
 
-				if (!this->net1->writeWeightsToFile(parametrsStorage[0])) { std::cout << this->successfullyExecuted() << std::endl; }
-				else { std::cout << "Unable to create file." << std::endl; }
+				if (!this->net1->writeWeightsToFile(parametrsStorage[0])) std::cout << this->successfullyExecuted() << std::endl;
+				else std::cout << "Unable to create file." << std::endl;
 			}
 			else { std::cout << "Create network first. " << this->useHelp() << std::endl; }
 			continue;
@@ -87,7 +87,8 @@ void nai::NetApplicationInterface::doWork()
 		//Read weights (loadWeights)
 		if (commandIndex == 3 && parametrsStorage.size() == 1) {
 			if (this->net1) {
-				if (!this->net1->readWeightsFromFile(parametrsStorage[0])) { std::cout << "Unable to open file." << std::endl; }
+				if (this->net1->readWeightsFromFile(parametrsStorage[0])) std::cout << this->successfullyExecuted() << std::endl;
+				else std::cout << "Unable to open file." << std::endl;
 			}
 			else { std::cout << "Create network first. " << this->useHelp() << std::endl; }
 			continue;
@@ -117,11 +118,12 @@ void nai::NetApplicationInterface::doWork()
 			}
 			this->net1 = new nnet::NeuralNet(counts[0], counts[1], counts[2], counts[3]);
 			std::cout << this->successfullyExecuted() << std::endl;
+			continue;
 		}
 		//Train network
 		if (commandIndex == 6 && parametrsStorage.size() == 1) {
 			if (this->net1) {
-				if (net1->studyNetworkAuto(parametrsStorage[0])) std::cout << this->successfullyExecuted() << std::endl;
+				if (!net1->studyNetworkAuto(parametrsStorage[0])) std::cout << this->successfullyExecuted() << std::endl;
 				else std::cout << "Unable to open file." << std::endl;
 			}
 			else { std::cout << "Create network first. " << this->useHelp() << std::endl; }
@@ -141,8 +143,12 @@ void nai::NetApplicationInterface::doWork()
 						strst >> tmp;
 						inputDataStorage.push_back(tmp);
 					}
-					this->net1->setData(inputDataStorage, true);
-					this->net1->printResult();
+					if (this->net1->setData(inputDataStorage)) {
+						this->net1->forwardPropogationManual();
+						this->net1->printResult();
+					}
+					else std::cout << "Unable to set data. Sizes does not match";
+					
 				}
 				else std::cout << "Input parametrs count and network input nodes count does not match." << std::endl;
 			}
@@ -150,10 +156,28 @@ void nai::NetApplicationInterface::doWork()
 			continue;
 		}
 		//Getresultf
-		if (commandIndex == 7 && parametrsStorage.size() == 1) {
-
+		if (commandIndex == 8 && parametrsStorage.size() == 1) {
+			if (this->net1) {
+				if (this->net1->setData(parametrsStorage[0])) std::cout << "Unable to open file." << std::endl;
+				else {
+					this->net1->forwardPropogationManual();
+					this->net1->printResult();
+				}
+			}
+			else std::cout << "Create network first." << std::endl;
+			continue;
 		}
-
+		//Getnetworkinfo
+		if (commandIndex == 9 && parametrsStorage.size() == 0) {
+			if (this->net1) {
+				std::cout << "Input nodes: " << this->net1->nodesCount.getInputNodesCount() << std::endl;
+				std::cout << "Hidden nodes: " << this->net1->nodesCount.getHiddenNodesCount() << std::endl;
+				std::cout << "Output nodes: " << this->net1->nodesCount.getOutputNodesCount() << std::endl;
+				std::cout << "Hidden layers: " << this->net1->nodesCount.getHiddenLayersCount() << std::endl;
+			}
+			else std::cout << "Create network first." << std::endl;
+			continue;
+		}
 		std::cout << "Unknown attributes. " << this->useHelp() << std::endl;
 	}
 }

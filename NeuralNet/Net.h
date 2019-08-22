@@ -85,7 +85,7 @@ namespace nnet {
 	private:
 		
 		
-		void forwardPropogationManual();
+		
 		__int64 backPropogationManual(const std::vector<double>& expectedValues, const bool ignoreWarnings);
 		template <class T>
 		inline T activationFunction(const T value, const bool returnDerivativereturnDerivativeValueInstead) const;
@@ -99,11 +99,12 @@ namespace nnet {
 			
 		void studyNetworkManual(const std::vector<std::vector<double>>& examplesSet, const std::vector<std::vector<double>>& expectedValueslesSet);
 		__int64 studyNetworkAuto(const std::string &fileName);
-
+		void forwardPropogationManual();
 		 // Return value is difference between network input layer size() and input data size();
 		void setWeights(const double value);
 		void setLearningRate(const double value);
-		__int64 setData(const std::vector<double>& inputData, const bool ignoreWarnings);
+		__int64 setData(const std::vector<double>& inputData);
+		__int64 setData(const std::string fileName);
 		double getLearningRate() const;
 		
 		void printResult() const;

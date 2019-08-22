@@ -106,7 +106,7 @@
 	{
 		for (size_t i = 0; i < examplesSet.size(); i++)
 		{
-			setData(examplesSet[i], true);
+			setData(examplesSet[i]);
 			forwardPropogationManual();
 			backPropogationManual(expectedValueslesSet[i], true);
 		}
@@ -268,25 +268,37 @@
 		return flag1 ? 0 : (*nodesValues)[0].size() - expectedValues.size();
 	}
 
-	__int64 nnet::NeuralNet::setData(const std::vector<double>& inputData, const bool ignoreWarnings) // Return value is difference between network input layer size() and input data size();
+	__int64 nnet::NeuralNet::setData(const std::vector<double>& inputData) // Return value is difference between network input layer size() and input data size();
 	{
 		//Options:
 		bool flag1{true};
 		
-		if (inputData.size() != (*nodesValues)[0].size()) {
-			if (!ignoreWarnings) {
-				std::cout << "\n Warning! Storage size and input data size does not match, errors are possible. " << std::endl;
-				std::cin.get();
-			}
-			flag1 = false;
-		}
+		if (inputData.size() != (*nodesValues)[0].size()) return static_cast<__int64>((*nodesValues)[0].size() - inputData.size());
 
 		//Core part:
 		for (size_t i = 0; i < (*nodesValues)[0].size() && i < inputData.size(); i++)
 		{
 			(*nodesValues)[0][i] = inputData[i];
 		}
-		return flag1 ? 0 : (*nodesValues)[0].size() - inputData.size();
+		return 0;
+	}
+	__int64 nnet::NeuralNet::setData(const std::string fileName)
+	{
+		std::ifstream ifs;
+		ifs.open(fileName, std::ios::binary);
+		
+		nnet::nodesCountStorage ncs;
+		ifs.read((char*)& ncs, sizeof(ncs));
+		if (ncs.getInputNodesCount() != this->nodesCount.getOutputNodesCount()) return static_cast<__int64>((this->nodesCount.getOutputNodesCount()) - ncs.getInputNodesCount());
+
+		for (size_t i = 0; i < this->nodesCount.getInputNodesCount() && ifs; i++)	
+		{
+			double tmp;
+			ifs.read((char*)& tmp, sizeof(double));
+			(*nodesValues)[0][i] = tmp;
+		}
+
+		return 0;
 	}
 	void nnet::NeuralNet::setWeights(const double value)
 	{
