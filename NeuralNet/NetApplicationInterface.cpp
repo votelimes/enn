@@ -143,11 +143,11 @@ void nai::NetApplicationInterface::doWork()
 						strst >> tmp;
 						inputDataStorage.push_back(tmp);
 					}
-					if (this->net1->setData(inputDataStorage)) {
+					if (!this->net1->setData(inputDataStorage)) {
 						this->net1->forwardPropogationManual();
 						this->net1->printResult();
 					}
-					else std::cout << "Unable to set data. Sizes does not match";
+					else std::cout << "Unable to open file.";
 					
 				}
 				else std::cout << "Input parametrs count and network input nodes count does not match." << std::endl;

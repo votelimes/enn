@@ -271,7 +271,6 @@
 	__int64 nnet::NeuralNet::setData(const std::vector<double>& inputData) // Return value is difference between network input layer size() and input data size();
 	{
 		//Options:
-		bool flag1{true};
 		
 		if (inputData.size() != (*nodesValues)[0].size()) return static_cast<__int64>((*nodesValues)[0].size() - inputData.size());
 
@@ -286,7 +285,8 @@
 	{
 		std::ifstream ifs;
 		ifs.open(fileName, std::ios::binary);
-		
+		if (!ifs.is_open()) return 1;
+
 		nnet::nodesCountStorage ncs;
 		ifs.read((char*)& ncs, sizeof(ncs));
 		if (ncs.getInputNodesCount() != this->nodesCount.getOutputNodesCount()) return static_cast<__int64>((this->nodesCount.getOutputNodesCount()) - ncs.getInputNodesCount());
