@@ -63,13 +63,15 @@
 			return 2;
 		}
 
+		double var{};
 		for (size_t i = 0; i < this->nodesCount.getHiddenLayersCount() + 1; i++)
 		{
 			for (size_t j = 0; j < (*nodesValues)[i].size(); j++)
 			{
 				for (size_t k = 0; k < (*nodesValues)[i + 1].size(); k++)
 				{
-					ifs.read((char*) & (*nodesWeights)[i][j][k], sizeof(double));
+					ifs.read((char*) & var, sizeof(double));
+					(*nodesWeights)[i][j][k] =  var;
 				}
 			}
 		}
@@ -425,7 +427,7 @@
 		this->expectedValuesSize = 0;
 	}
 
-	__int64 nnet::dataMassiveMaker::printNumbersMassive(std::string fileName)
+	__int64 nnet::dataMassiveMaker::printNumbersMassive(std::string fileName) const
 	{
 		std::ifstream ifs;
 		ifs.open(fileName, std::ios::binary);
@@ -438,28 +440,32 @@
 		
 		ncs.print();
 
+		std::string str;
+		double var;
+		std::stringstream strst;
+		strst << std::fixed << std::setprecision(15);
+
 		for (size_t i = 0; i < massiveSize; i++)
 		{
-			double tmp;
 			for (size_t j = 0; j < ncs.getInputNodesCount(); j++)
 			{
-				ifs.read((char*)& tmp, sizeof(double));
-				std::cout << std::setw(16) << std::left << tmp;
+				ifs.read((char*)& var, sizeof(double));
+				std::cout << " | " << var;
 			}
-			std::cout << std::endl;
+			std::cout << " : ";
 			for (size_t j = 0; j < ncs.getOutputNodesCount(); j++)
 			{
-				ifs.read((char*)& tmp, sizeof(double));
-				std::cout << std::setw(16) << std::left << tmp;
+				ifs.read((char*)& var, sizeof(double));
+				std::cout << " | " << var;
 			}
-			std::cout << "___________________________________________________________________________________________________________________" << std::endl;
+			std::cout << "\n_____________________________________________________________________________________" << std::endl;
 		}
 
 
 		return 0;
 	}
 
-	__int64 nnet::dataMassiveMaker::evenNumbersMassive(const size_t inputDataSize, const size_t outputDataSize, const size_t massiveSize, const std::string &fileName)
+	__int64 nnet::dataMassiveMaker::evenNumbersMassive(const size_t inputDataSize, const size_t outputDataSize, const size_t massiveSize, const std::string fileName) const
 	{
 		std::ofstream ofs;
 		ofs.open(fileName, std::ios::binary);
@@ -474,17 +480,17 @@
 		
 		for (size_t i = 0; i < massiveSize; i++)
 		{
-			__int64 var{};
-			var = afunctions::RandomFunc(static_cast<__int64>(1), static_cast<__int64>(1000000));
-			ofs.write((char*)& var, sizeof(double));
-			if (var % 2 == 0) { 
-				double if1 = 1.0;
-				ofs.write((char*)& (if1), sizeof(double)); 
-			}
-			else {
-				double if1 = 0.5;
-				ofs.write((char*) & (if1), sizeof(double));
-			}
+			__int64 varInt{};
+			
+			varInt = afunctions::RandomFunc(static_cast<__int64>(1), static_cast<__int64>(1000000));
+			
+			double if1{};
+			if (varInt % 2 == 0) if1 = 1.0;
+			else if1 = 0.5;
+			
+			double varDouble = static_cast<double>(varInt);
+			ofs.write((char*)& (varDouble), sizeof(double));
+			ofs.write((char*) & (if1), sizeof(double));
 		}
 		
 		

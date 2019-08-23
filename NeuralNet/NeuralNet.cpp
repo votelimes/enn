@@ -9,16 +9,9 @@ int main()
 	std::string command;
 	nai::NetApplicationInterface int_1;
 	nnet::dataMassiveMaker dmm;
-	dmm.printNumbersMassive("dataMassiveEven.bin");
+	//dmm.evenNumbersMassive(1, 1, 10000, "dataMassive1.bin");
+	dmm.printNumbersMassive("dataMassive1.bin");
 	int_1.doWork();
 
 
-	
-	/*for (auto i : examples)
-	{
-		for (auto j : i) 
-		{
-
-		}
-	}*/
 }
