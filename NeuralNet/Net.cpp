@@ -412,12 +412,51 @@
 	{
 		this->hiddenLayersCount = value;
 	}
+
+	void nnet::nodesCountStorage::print()
+	{
+		std::cout << "Input nodes: " << this->getInputNodesCount() << "  |  Hidden nodes: " << this->getHiddenNodesCount() << "  |  Output nodes: " << this->getOutputNodesCount() << "  |  Hidden layers: " << this->getHiddenLayersCount() << std::endl;
+	}
 	
 	nnet::dataMassiveMaker::dataMassiveMaker()
 	{
 		this->massiveSize = 0;
 		this->inputDataSize = 0;
 		this->expectedValuesSize = 0;
+	}
+
+	__int64 nnet::dataMassiveMaker::printNumbersMassive(std::string fileName)
+	{
+		std::ifstream ifs;
+		ifs.open(fileName, std::ios::binary);
+		
+		size_t massiveSize;
+		ifs.read((char*)& massiveSize, sizeof(size_t));
+
+		nnet::nodesCountStorage ncs;
+		ifs.read((char*)& ncs, sizeof(ncs));
+		
+		ncs.print();
+
+		for (size_t i = 0; i < massiveSize; i++)
+		{
+			double tmp;
+			for (size_t j = 0; j < ncs.getInputNodesCount(); j++)
+			{
+				ifs.read((char*)& tmp, sizeof(double));
+				std::cout << std::setw(16) << std::left << tmp;
+			}
+			std::cout << std::endl;
+			for (size_t j = 0; j < ncs.getOutputNodesCount(); j++)
+			{
+				ifs.read((char*)& tmp, sizeof(double));
+				std::cout << std::setw(16) << std::left << tmp;
+			}
+			std::cout << "___________________________________________________________________________________________________________________" << std::endl;
+		}
+
+
+		return 0;
 	}
 
 	__int64 nnet::dataMassiveMaker::evenNumbersMassive(const size_t inputDataSize, const size_t outputDataSize, const size_t massiveSize, const std::string &fileName)

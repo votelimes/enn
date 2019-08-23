@@ -29,6 +29,7 @@ namespace nnet {
 
 		dataMassiveMaker();
 
+		__int64 printNumbersMassive(std::string fileName);
 		__int64 evenNumbersMassive(const size_t inputDataSize, const size_t outputDataSize, const size_t massiveSize, const std::string& fileName);
 	};
 
@@ -61,6 +62,8 @@ namespace nnet {
 		void setHiddenNodesCount(const size_t value);
 		void setOutputNodesCount(const size_t value);
 		void setHiddenLayersCount(const size_t value);
+
+		void print();
 	};
 	
 	class NeuralNet
