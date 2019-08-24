@@ -75,7 +75,6 @@
 				}
 			}
 		}
-		
 		return 0;
 	}
 	__int64 nnet::NeuralNet::writeWeightsToFile(const std::string weightsStorageFileName) const // returns 1 if file can not be open, 0 if it opens
@@ -99,8 +98,6 @@
 				}	
 			}
 		}
-		
-		ofs.close();
 		return 0;
 	}
 	
@@ -187,11 +184,7 @@
 			}
 
 		}
-
-
-		ifs.close();
 		return 0;
-
 	}
 	void nnet::NeuralNet::forwardPropogationManual()
 	{
@@ -299,7 +292,6 @@
 			ifs.read((char*)& tmp, sizeof(double));
 			(*nodesValues)[0][i] = tmp;
 		}
-
 		return 0;
 	}
 	void nnet::NeuralNet::setWeights(const double value)
@@ -441,24 +433,25 @@
 		ncs.print();
 
 		std::string str;
-		double var;
+		double value;
 		std::stringstream strst;
 		strst << std::fixed << std::setprecision(15);
 
 		for (size_t i = 0; i < massiveSize; i++)
 		{
+			std::cout << "\nInput data: " << std::endl;
 			for (size_t j = 0; j < ncs.getInputNodesCount(); j++)
 			{
-				ifs.read((char*)& var, sizeof(double));
-				std::cout << " | " << var;
+				ifs.read((char*)& value, sizeof(double));
+				std::cout << std::setw(15) << std::left << value;
 			}
-			std::cout << " : ";
+			std::cout << "\nExpected value respectevly: " << std::endl;
 			for (size_t j = 0; j < ncs.getOutputNodesCount(); j++)
 			{
-				ifs.read((char*)& var, sizeof(double));
-				std::cout << " | " << var;
+				ifs.read((char*)& value, sizeof(double));
+				std::cout << std::setw(15) << std::left << value;
 			}
-			std::cout << "\n_____________________________________________________________________________________" << std::endl;
+			std::cout << "\n_______________" << std::endl;
 		}
 
 
