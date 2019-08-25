@@ -107,7 +107,7 @@
 		{
 			setData(examplesSet[i]);
 			forwardPropogationManual();
-			backPropogationManual(expectedValueslesSet[i], true);
+			backPropogationManual(expectedValueslesSet[i]);
 		}
 	}
 	__int64 nnet::NeuralNet::studyNetworkAuto(const std::string& fileName)
@@ -205,18 +205,11 @@
 			}
 		}
 	}
-	__int64 nnet::NeuralNet::backPropogationManual(const std::vector<double>& expectedValues, const bool ignoreWarnings)
+	__int64 nnet::NeuralNet::backPropogationManual(const std::vector<double>& expectedValues)
 	{
-		//Options:
+		//:
 
-		bool flag1{true};
-		if (expectedValues.size() != (*nodesValues)[(*nodesErrorValues).size() - 1].size()) {
-			if (!ignoreWarnings) {
-				std::cout << "\n Warning! Storage size and expected values data size does not match, errors are possible. " << std::endl;
-				std::cin.get();
-			}
-			flag1 = false;
-		}
+		if (this->nodesCount.getOutputNodesCount() != expectedValues.size()) return static_cast<__int64>(this->nodesCount.getOutputNodesCount() - expectedValues.size());
 
 		//Core part:
 
@@ -260,14 +253,14 @@
 		}//(*nodesWeights)[i][k][j] = (*nodesWeights)[i][k][j] + (learningRate * (*nodesErrorValues)[i][j] * activationFunction((*nodesValues)[i + 1][j], true) * (*nodesValues)[i][j]);
 
 	  //return a differece between expected values collection size and output layer size
-		return flag1 ? 0 : (*nodesValues)[0].size() - expectedValues.size();
+		return 0;
 	}
 
 	__int64 nnet::NeuralNet::setData(const std::vector<double>& inputData) // Return value is difference between network input layer size() and input data size();
 	{
 		//Options:
 		
-		if (inputData.size() != (*nodesValues)[0].size()) return static_cast<__int64>((*nodesValues)[0].size() - inputData.size());
+		if (inputData.size() != this->nodesCount.getInputNodesCount()) return static_cast<__int64>(this->nodesCount.getInputNodesCount() - inputData.size());
 
 		//Core part:
 		for (size_t i = 0; i < (*nodesValues)[0].size() && i < inputData.size(); i++)
@@ -284,7 +277,7 @@
 
 		nnet::nodesCountStorage ncs;
 		ifs.read((char*)& ncs, sizeof(ncs));
-		if (ncs.getInputNodesCount() != this->nodesCount.getOutputNodesCount()) return static_cast<__int64>((this->nodesCount.getOutputNodesCount()) - ncs.getInputNodesCount());
+		if (ncs.getInputNodesCount() != this->nodesCount.getInputNodesCount()) return static_cast<__int64>((this->nodesCount.getInputNodesCount()) - ncs.getInputNodesCount());
 
 		for (size_t i = 0; i < this->nodesCount.getInputNodesCount() && ifs; i++)	
 		{
