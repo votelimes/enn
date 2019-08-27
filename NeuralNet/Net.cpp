@@ -12,7 +12,6 @@
 		this->nodesCount.setHiddenLayersCount(hiddenLayersCount);
 		this->learningRate = 0.1;
 		
-		//
 		//Create and normalize arrays
 		this->nodesWeights = new std::vector<std::vector<std::vector<double>>>(hiddenLayersCount + 1, std::vector<std::vector<double>>(hiddenNodesCount, std::vector<double>(hiddenNodesCount, 0)));
 		this->nodesValues = new std::vector<std::vector<double>>(hiddenLayersCount + 2, std::vector<double>(hiddenNodesCount, 0));
@@ -20,22 +19,22 @@
 
 		(*nodesValues)[0].resize(inputNodesCount, 0);
 		(*nodesValues)[0].shrink_to_fit();
-		(*nodesValues)[nodesValues->size() - 1].resize(outputNodesCount, 0);
-		(*nodesValues)[nodesValues->size() - 1].shrink_to_fit();
+		(*nodesValues)[this->nodesCount.getHiddenLayersCount() + 1].resize(outputNodesCount, 0);
+		(*nodesValues)[this->nodesCount.getHiddenLayersCount() + 1].shrink_to_fit();
 
-		(*nodesErrorValues)[nodesErrorValues->size() - 1].resize(outputNodesCount, 0);
-		(*nodesErrorValues)[nodesErrorValues->size() - 1].shrink_to_fit();
+		(*nodesErrorValues)[this->nodesCount.getHiddenLayersCount()].resize(outputNodesCount, 0);
+		(*nodesErrorValues)[this->nodesCount.getHiddenLayersCount()].shrink_to_fit();
 
 		(*nodesWeights)[0].resize(inputNodesCount);
 		(*nodesWeights)[0].shrink_to_fit();
 		//
-		for (size_t i = 0; i < (*nodesWeights)[nodesWeights->size() - 1].size(); i++)
+		for (size_t i = 0; i < (*nodesWeights)[this->nodesCount.getHiddenLayersCount()].size(); i++)
 		{
-			(*nodesWeights)[nodesWeights->size() - 1][i].resize(outputNodesCount, afunctions::RandomFunc(0.0, 1.0));
-			(*nodesWeights)[nodesWeights->size() - 1][i].shrink_to_fit();
+			(*nodesWeights)[this->nodesCount.getHiddenLayersCount()][i].resize(outputNodesCount, afunctions::RandomFunc(0.0, 1.0));
+			(*nodesWeights)[this->nodesCount.getHiddenLayersCount()][i].shrink_to_fit();
 		}
 		//Weights initialization(random values) cicles:
-		for (size_t i = 0; i < (*nodesWeights).size(); i++)
+		for (size_t i = 0; i < this->nodesCount.getHiddenLayersCount() + 1; i++)
 		{
 			for (size_t k = 0; k < (*nodesWeights)[i].size(); k++)
 			{
