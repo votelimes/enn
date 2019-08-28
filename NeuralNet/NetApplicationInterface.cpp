@@ -92,7 +92,7 @@ void nai::NetApplicationInterface::doWork()
 				__int64 retParam = this->net1->readWeightsFromFile(parametrsStorage[0]);
 				if(retParam == 1) std::cout << "Unable to open file." << std::endl;
 				if (retParam == 2) std::cout << "Layers and nodes sizes does not match." << std::endl;
-				else std::cout << this->successfullyExecuted();
+				else std::cout << this->successfullyExecuted() << std::endl;
 			}
 			else { std::cout << "Create network first. " << this->useHelp() << std::endl; }
 			continue;
