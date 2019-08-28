@@ -12,7 +12,7 @@ nai::NetApplicationInterface::NetApplicationInterface()
 	this->commandsList.push_back("/GETRESULTW"); // 7
 	this->commandsList.push_back("/GETRESULTF"); // 8
 	this->commandsList.push_back("/PRINTNETWORKINFO"); // 9
-	this->commandsList.push_back("/PRINTWEIGHTS");
+	this->commandsList.push_back("/PRINTWEIGHTS"); // 10
 	
 	//this->commandsList.push_back("");
 

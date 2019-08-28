@@ -357,12 +357,31 @@
 	template <class T>
 	inline T nnet::NeuralNet::activationFunction(const T value, const bool returnDerivativeValueInstead) const
 	{
-		if (returnDerivativeValueInstead) {
+		const double e = 2.718281828459045235360287471352;
+		//Tanh:
+		/*if (returnDerivativeValueInstead) { 
 
 			return 1 - pow(tanh(value), 2);
 		}
+		
+		return tanh(value);*/
+		//////
 
-		return tanh(value);
+		//Gauss:
+		/*if (returnDerivativeValueInstead) { 
+
+			return (-2 * (value * pow(e, -pow(value, 2))));
+		}
+
+		return pow(e, -pow(value,2));*/
+		/////
+		//Sin:
+		if (returnDerivativeValueInstead) {
+
+			return cos(x);
+		}
+
+		return sin(value);
 	}
  
 	
