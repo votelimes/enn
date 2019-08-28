@@ -11,7 +11,8 @@ nai::NetApplicationInterface::NetApplicationInterface()
 	this->commandsList.push_back("/TRAINNETWORK"); // 6
 	this->commandsList.push_back("/GETRESULTW"); // 7
 	this->commandsList.push_back("/GETRESULTF"); // 8
-	this->commandsList.push_back("/GETNETWORKINFO"); // 9
+	this->commandsList.push_back("/PRINTNETWORKINFO"); // 9
+	this->commandsList.push_back("/PRINTWEIGHTS");
 	
 	//this->commandsList.push_back("");
 
@@ -25,6 +26,7 @@ nai::NetApplicationInterface::NetApplicationInterface()
 	this->commandsDescription.push_back("Uses a network to get result. Input values count respectevly to network input layer neurons count. Ex.: /getresultw INPUT1 INPUT2 INPUT3...");
 	this->commandsDescription.push_back("Uses a network to get result. Using a input data as file. Ex. /getresultf FILENAME");
 	this->commandsDescription.push_back("Prints current network parametrs.");
+	this->commandsDescription.push_back("Prints current network weights.");
 	
 	//this->commandsDescription.push_back("");
 
@@ -87,8 +89,10 @@ void nai::NetApplicationInterface::doWork()
 		//Read weights (loadWeights)
 		if (commandIndex == 3 && parametrsStorage.size() == 1) {
 			if (this->net1) {
-				if (this->net1->readWeightsFromFile(parametrsStorage[0])) std::cout << this->successfullyExecuted() << std::endl;
-				else std::cout << "Unable to open file." << std::endl;
+				__int64 retParam = this->net1->readWeightsFromFile(parametrsStorage[0]);
+				if(retParam == 1) std::cout << "Unable to open file." << std::endl;
+				if (retParam == 2) std::cout << "Layers and nodes sizes does not match." << std::endl;
+				else std::cout << this->successfullyExecuted();
 			}
 			else { std::cout << "Create network first. " << this->useHelp() << std::endl; }
 			continue;
@@ -167,7 +171,7 @@ void nai::NetApplicationInterface::doWork()
 			else std::cout << "Create network first." << std::endl;
 			continue;
 		}
-		//Getnetworkinfo
+		//PRINTnetworkinfo
 		if (commandIndex == 9 && parametrsStorage.size() == 0) {
 			if (this->net1) {
 				std::cout << "Input nodes: " << this->net1->nodesCount.getInputNodesCount() << std::endl;
@@ -178,6 +182,15 @@ void nai::NetApplicationInterface::doWork()
 			else std::cout << "Create network first." << std::endl;
 			continue;
 		}
+		//PRINTWEIGHTS
+		if (commandIndex == 10) {
+			if (this->net1) {
+				this->net1->printWeights();
+			}
+			else std::cout << "Create network first." << std::endl;
+			continue;
+		}
+
 		std::cout << "Unknown attributes. " << this->useHelp() << std::endl;
 	}
 }
@@ -220,6 +233,6 @@ inline std::string nai::NetApplicationInterface::useHelp() const
 }
 inline std::string nai::NetApplicationInterface::successfullyExecuted() const
 {
-	return "Done!";
+	return "\nDone!";
 }
 

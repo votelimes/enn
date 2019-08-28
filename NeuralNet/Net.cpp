@@ -319,6 +319,27 @@
 		std::cout << "_______________________________________________________" << std::endl;
 	}
 
+	void nnet::NeuralNet::printWeights() const
+	{
+		
+		std::cout.setf(std::ios::fixed);
+		for (size_t i = 0; i < (*nodesWeights).size(); i++)
+		{
+			std::cout << "________________LAYER " << i + 1 << " WEIGHTS________________" << std::endl << std::endl;
+			for (size_t j = 0; j < (*nodesWeights)[i].size(); j++)
+			{
+				std::cout << "________NODE " << j + 1 << " WEIGHTS________" << std::endl << std::endl;
+				for (size_t k = 0; k < (*nodesWeights)[i][j].size(); k++)
+				{
+					std::cout << k + 1 << ". ";
+					std::cout << std::setw(15) << std::left << (*nodesWeights)[i][j][k];
+				}
+				std::cout << std::endl << std::endl;
+			}
+		}
+	}
+	
+
 	void nnet::NeuralNet::reinitializeWeights(const double lowerLimit, const double upperLimit)
 	{
 		for (size_t i = 0; i < this->nodesCount.getHiddenLayersCount() + 1; i++)
@@ -424,11 +445,8 @@
 		
 		ncs.print();
 
-		std::string str;
 		double value;
-		std::stringstream strst;
-		strst << std::fixed << std::setprecision(15);
-
+		std::cout.setf(std::ios::fixed);
 		for (size_t i = 0; i < massiveSize; i++)
 		{
 			std::cout << "\nInput data: " << std::endl;
@@ -467,7 +485,7 @@
 		{
 			__int64 varInt{};
 			
-			varInt = afunctions::RandomFunc(static_cast<__int64>(1), static_cast<__int64>(1000000));
+			varInt = afunctions::RandomFunc(static_cast<__int64>(1), static_cast<__int64>(100000000));
 			
 			double if1{};
 			if (varInt % 2 == 0) if1 = 1.0;
