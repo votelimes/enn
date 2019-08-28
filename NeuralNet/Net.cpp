@@ -378,7 +378,7 @@
 		//Sin:
 		if (returnDerivativeValueInstead) {
 
-			return cos(x);
+			return cos(value);
 		}
 
 		return sin(value);
