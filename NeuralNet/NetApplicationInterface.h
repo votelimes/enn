@@ -25,6 +25,7 @@ namespace nai {
 
 		inline std::string useHelp() const;
 		inline std::string successfullyExecuted() const;
+		inline void cls() const;
 
 	public:
 		
