@@ -487,7 +487,7 @@
 		return 0;
 	}
 
-	__int64 nnet::dataMassiveMaker::evenNumbersMassive(const size_t inputDataSize, const size_t outputDataSize, const size_t massiveSize, const std::string fileName) const
+	__int64 nnet::dataMassiveMaker::evenNumbersMassive(const size_t inputDataSize, const size_t outputDataSize, const size_t massiveSize, const std::string fileName, const __int64 lowerLimit, const __int64 upperLimit) const
 	{
 		std::ofstream ofs;
 		ofs.open(fileName, std::ios::binary);
@@ -504,7 +504,7 @@
 		{
 			__int64 varInt{};
 			
-			varInt = afunctions::RandomFunc(static_cast<__int64>(1), static_cast<__int64>(100000000));
+			varInt = afunctions::RandomFunc(static_cast<__int64>(lowerLimit), static_cast<__int64>(upperLimit));
 			
 			double if1{};
 			if (varInt % 2 == 0) if1 = 1.0;

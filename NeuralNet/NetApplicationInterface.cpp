@@ -13,6 +13,7 @@ nai::NetApplicationInterface::NetApplicationInterface()
 	this->commandsList.push_back("/GETRESULTF"); // 8
 	this->commandsList.push_back("/PRINTNETWORKINFO"); // 9
 	this->commandsList.push_back("/PRINTWEIGHTS"); // 10
+	this->commandsList.push_back("/TRAINNETWORKT");//11
 	
 	//this->commandsList.push_back("");
 
@@ -27,6 +28,7 @@ nai::NetApplicationInterface::NetApplicationInterface()
 	this->commandsDescription.push_back("Uses a network to get result. Using a input data as file. Ex. /getresultf FILENAME");
 	this->commandsDescription.push_back("Prints current network parametrs.");
 	this->commandsDescription.push_back("Prints current network weights.");
+	this->commandsDescription.push_back("Trains the network a certain number of times(1 is minimum). Ex.: /trainnetworkt FILENAME NUMBEROFTIMES");
 	
 	//this->commandsDescription.push_back("");
 
@@ -188,6 +190,27 @@ void nai::NetApplicationInterface::doWork()
 				this->net1->printWeights();
 			}
 			else std::cout << "Create network first." << std::endl;
+			continue;
+		}
+		//TRAINNETWORKTIMES
+		if (commandIndex == 11 && parametrsStorage.size() == 2) {
+			if (this->net1) {
+				if (!net1->studyNetworkAuto(parametrsStorage[0])) {
+
+					__int64 trainingsCount{1};
+					std::cout << "Number 1 training completed." << std::endl;
+					for (size_t i = 1; i < std::stoi(parametrsStorage[1]); i++)
+					{
+						trainingsCount++;
+						net1->studyNetworkAuto(parametrsStorage[0]);
+						std::cout << "Number " << i << " training completed." << std::endl;
+					}
+					std::cout << "The network has been trained " << trainingsCount << " times." << std::endl;
+					std::cout << this->successfullyExecuted() << std::endl;
+				}
+				else std::cout << "Unable to open file." << std::endl;
+			}
+			else { std::cout << "Create network first. " << this->useHelp() << std::endl; }
 			continue;
 		}
 

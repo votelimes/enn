@@ -30,7 +30,7 @@ namespace nnet {
 		dataMassiveMaker();
 
 		__int64 printNumbersMassive(std::string fileName) const;
-		__int64 evenNumbersMassive(const size_t inputDataSize, const size_t outputDataSize, const size_t massiveSize, const std::string fileName) const;
+		__int64 evenNumbersMassive(const size_t inputDataSize, const size_t outputDataSize, const size_t massiveSize, const std::string fileName, const __int64 lowerLimit, const __int64 upperLimit) const;
 	};
 
 	class nodesCountStorage 
