@@ -4,16 +4,17 @@ nai::NetApplicationInterface::NetApplicationInterface()
 {
 	this->commandsList.push_back("/HELP"); // 0
 	this->commandsList.push_back("/EXIT"); // 1
-	this->commandsList.push_back("/SAVEWEIGHTS"); // 2
-	this->commandsList.push_back("/LOADWEIGHTS"); // 3
-	this->commandsList.push_back("/REINITIALIZEWEIGHTS"); // 4
-	this->commandsList.push_back("/CREATENETWORK"); // 5
-	this->commandsList.push_back("/TRAINNETWORK"); // 6
-	this->commandsList.push_back("/GETRESULTW"); // 7
-	this->commandsList.push_back("/GETRESULTF"); // 8
-	this->commandsList.push_back("/PRINTNETWORKINFO"); // 9
-	this->commandsList.push_back("/PRINTWEIGHTS"); // 10
+	this->commandsList.push_back("/SAVEW"); // 2
+	this->commandsList.push_back("/LOADW"); // 3
+	this->commandsList.push_back("/RWEIGHTS"); // 4
+	this->commandsList.push_back("/CREATEN"); // 5
+	this->commandsList.push_back("/TRAINN"); // 6
+	this->commandsList.push_back("/GETRTW"); // 7
+	this->commandsList.push_back("/GETRF"); // 8
+	this->commandsList.push_back("/PRINTNI"); // 9
+	this->commandsList.push_back("/PRINTW"); // 10
 	this->commandsList.push_back("/CLS"); // 11
+	this->commandsList.push_back("/SETLR"); //12
 	
 	//this->commandsList.push_back("");
 
@@ -25,11 +26,11 @@ nai::NetApplicationInterface::NetApplicationInterface()
 	this->commandsDescription.push_back("Creates the network according to the parametrs. Parametrs (input neurons count) (hidden neurons count) (output neurons count) (output layers count). Ex.: /createnetwork 3 15 1 2");
 	this->commandsDescription.push_back("Trains the network a certain number of times(1 is minimum). Ex.: /trainnetworkt FILENAME NUMBEROFTIMES");
 	this->commandsDescription.push_back("Uses a network to get result. Input values count respectevly to network input layer neurons count. Ex.: /getresultw INPUT1 INPUT2 INPUT3...");
-	this->commandsDescription.push_back("Uses a network to get result. Using a input data as file. Ex. /getresultf FILENAME");
+	this->commandsDescription.push_back("Uses a network to get result. Using a input data as file. Ex.: /getresultf FILENAME");
 	this->commandsDescription.push_back("Prints current network parametrs.");
 	this->commandsDescription.push_back("Prints current network weights.");
 	this->commandsDescription.push_back("Clears terminal screen.");
-	
+	this->commandsDescription.push_back("Sets learning rate(number). Ex.: /setlr RATE");
 	//this->commandsDescription.push_back("");
 
 	this->trainingsCount = 0;
@@ -77,7 +78,7 @@ void nai::NetApplicationInterface::doWork()
 			
 			break;
 		}
-		//Write weights (saveWeights)
+		//savew
 		if (commandIndex == 2 && parametrsStorage.size() == 1) {
 			if (this->net1) {
 
@@ -87,7 +88,7 @@ void nai::NetApplicationInterface::doWork()
 			else { std::cout << "Create network first. " << this->useHelp() << std::endl; }
 			continue;
 		} 
-		//Read weights (loadWeights)
+		//loadw
 		if (commandIndex == 3 && parametrsStorage.size() == 1) {
 			if (this->net1) {
 				__int64 retParam = this->net1->readWeightsFromFile(parametrsStorage[0]);
@@ -98,7 +99,7 @@ void nai::NetApplicationInterface::doWork()
 			else { std::cout << "Create network first. " << this->useHelp() << std::endl; }
 			continue;
 		} 
-		//Reinitialize weights
+		//Rweights
 		if (commandIndex == 4 && parametrsStorage.size() == 1) {
 			if (this->net1) {
 				double weightsValue;
@@ -110,7 +111,7 @@ void nai::NetApplicationInterface::doWork()
 			else { std::cout << "Create network first. " << this->useHelp() << std::endl; }
 			continue;
 		}
-		//Create network
+		//Createn
 		if (commandIndex == 5 && parametrsStorage.size() == 4) {
 			std::vector<size_t> counts;
 			for (size_t i = 0; i < 4; i++)
@@ -125,7 +126,7 @@ void nai::NetApplicationInterface::doWork()
 			std::cout << this->successfullyExecuted() << std::endl;
 			continue;
 		}
-		//Train network
+		//Trainn
 		if (commandIndex == 6 && parametrsStorage.size() == 2) {
 			if (this->net1) {
 				if (!net1->studyNetworkAuto(parametrsStorage[0])) {
@@ -146,7 +147,7 @@ void nai::NetApplicationInterface::doWork()
 			else { std::cout << "Create network first. " << this->useHelp() << std::endl; }
 			continue;
 		}
-		//Getresultw
+		//Getrw
 		if (commandIndex == 7 ) {
 			if (this->net1) {
 				if (parametrsStorage.size() == this->net1->nodesCount.getInputNodesCount()) {
@@ -172,7 +173,7 @@ void nai::NetApplicationInterface::doWork()
 			else { std::cout << "Create network first. " << this->useHelp() << std::endl; }
 			continue;
 		}
-		//Getresultf
+		//Getrf
 		if (commandIndex == 8 && parametrsStorage.size() == 1) {
 			if (this->net1) {
 				if (this->net1->setData(parametrsStorage[0])) std::cout << "Unable to open file." << std::endl;
@@ -184,18 +185,19 @@ void nai::NetApplicationInterface::doWork()
 			else std::cout << "Create network first." << std::endl;
 			continue;
 		}
-		//PRINTnetworkinfo
+		//PRINTNI
 		if (commandIndex == 9 && parametrsStorage.size() == 0) {
 			if (this->net1) {
 				std::cout << "Input nodes: " << this->net1->nodesCount.getInputNodesCount() << std::endl;
 				std::cout << "Hidden nodes: " << this->net1->nodesCount.getHiddenNodesCount() << std::endl;
 				std::cout << "Output nodes: " << this->net1->nodesCount.getOutputNodesCount() << std::endl;
 				std::cout << "Hidden layers: " << this->net1->nodesCount.getHiddenLayersCount() << std::endl;
+				std::cout << "Learning rate: " << this->net1->getLearningRate() << std::endl;
 			}
 			else std::cout << "Create network first." << std::endl;
 			continue;
 		}
-		//PRINTWEIGHTS
+		//PRINTW
 		if (commandIndex == 10 && parametrsStorage.size() == 0) {
 			if (this->net1) {
 				this->net1->printWeights();
@@ -206,6 +208,14 @@ void nai::NetApplicationInterface::doWork()
 		//CLS
 		if (commandIndex == 11 && parametrsStorage.size() == 0) {
 			this->cls();
+			continue;
+		}
+		//SETLR
+		if (commandIndex == 12 && parametrsStorage.size() == 1) {
+			if (this->net1) {
+				this->net1->setLearningRate(stod(parametrsStorage[0]));
+			}
+			else std::cout << "Create network first." << std::endl;
 			continue;
 		}
 
@@ -251,7 +261,7 @@ inline std::string nai::NetApplicationInterface::useHelp() const
 }
 inline std::string nai::NetApplicationInterface::successfullyExecuted() const
 {
-	return "\nDone!";
+	return "\nDone!\n____________________";
 }
 
 inline void nai::NetApplicationInterface::cls() const
