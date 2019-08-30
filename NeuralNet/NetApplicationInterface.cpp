@@ -133,7 +133,7 @@ void nai::NetApplicationInterface::doWork()
 
 					__int64 trainingsCount{ 1 };
 					std::cout << "Number 1 training completed." << std::endl;
-					for (size_t i = 1; i < std::stoi(parametrsStorage[1]); i++)
+					for (size_t i = 1; i < (size_t)std::stoi(parametrsStorage[1]); i++)
 					{
 						trainingsCount++;
 						net1->studyNetworkAuto(parametrsStorage[0]);
