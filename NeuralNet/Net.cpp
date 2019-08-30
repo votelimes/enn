@@ -149,7 +149,6 @@
 				}
 			}
 			////Calculate error procent for output layer:
-			tmp = 0;
 			for (size_t i = 0; i < (*nodesValues)[(*nodesValues).size() - 1].size(); i++)
 			{
 				ifs.read((char*)& tmp, sizeof(double));
@@ -357,14 +356,14 @@
 	template <class T>
 	inline T nnet::NeuralNet::activationFunction(const T value, const bool returnDerivativeValueInstead) const
 	{
-		const double e = 2.718281828459045235360287471352;
+		const double e = 2.718281828459045235360287471352; //euler's number
 		//Tanh:
-		/*if (returnDerivativeValueInstead) { 
+		if (returnDerivativeValueInstead) { 
 
 			return 1 - pow(tanh(value), 2);
 		}
 		
-		return tanh(value);*/
+		return tanh(value);
 		//////
 
 		//Gauss:
@@ -376,12 +375,12 @@
 		return pow(e, -pow(value,2));*/
 		/////
 		//Sin:
-		if (returnDerivativeValueInstead) {
+		/*if (returnDerivativeValueInstead) {
 
 			return cos(value);
 		}
 
-		return sin(value);
+		return sin(value);*/
 	}
  
 	
