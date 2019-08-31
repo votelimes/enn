@@ -1,6 +1,6 @@
 #ifndef NET_APPLICATION_INTERFACE_H_
 #define NET_APPLICATION_INTERFACE_H_
-#include "Net.h"
+#include "R:\Projects\NeuralNet\NeuralNet\Core\Net.h"
 
 namespace nai {
 	class NetApplicationInterface

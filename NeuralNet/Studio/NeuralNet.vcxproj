@@ -151,14 +151,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Net.cpp" />
-    <ClCompile Include="NetApplicationInterface.cpp" />
-    <ClCompile Include="NeuralNet.cpp" />
+    <ClCompile Include="..\Core\Main\NeuralNet.cpp" />
+    <ClCompile Include="..\Core\Net.cpp" />
+    <ClCompile Include="..\Interface\NetApplicationInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Net.h" />
-    <ClInclude Include="NetApplicationInterface.h" />
-    <ClInclude Include="NeuralNet.h" />
+    <ClInclude Include="..\Core\Main\NeuralNet.h" />
+    <ClInclude Include="..\Core\Net.h" />
+    <ClInclude Include="..\Interface\NetApplicationInterface.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

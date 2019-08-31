@@ -15,24 +15,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="NeuralNet.cpp">
+    <ClCompile Include="..\Core\Main\NeuralNet.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Net.cpp">
+    <ClCompile Include="..\Core\Net.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="NetApplicationInterface.cpp">
+    <ClCompile Include="..\Interface\NetApplicationInterface.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Net.h">
+    <ClInclude Include="..\Interface\NetApplicationInterface.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="NeuralNet.h">
+    <ClInclude Include="..\Core\Net.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="NetApplicationInterface.h">
+    <ClInclude Include="..\Core\Main\NeuralNet.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

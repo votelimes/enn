@@ -2,7 +2,7 @@
 
 	
 	//Kernel class:
-	nnet::NeuralNet::NeuralNet(const size_t inputNodesCount, const size_t hiddenNodesCount, const size_t outputNodesCount, const size_t hiddenLayersCount) // //Kernel constructor, hiddenNodesCount should be the largest
+	ann::NeuralNet::NeuralNet(const size_t inputNodesCount, const size_t hiddenNodesCount, const size_t outputNodesCount, const size_t hiddenLayersCount) // //Kernel constructor, hiddenNodesCount should be the largest
 	{
 		//Fill variables:
 		
@@ -49,7 +49,7 @@
 		//
 	} // //Kernel constructor
 
-	__int64 nnet::NeuralNet::readWeightsFromFile(const std::string weightsStorageFileName) //returns 2 if layers nodes count does not match, returns 1 if file can not be open, 0 if it opens
+	__int64 ann::NeuralNet::readWeightsFromFile(const std::string weightsStorageFileName) //returns 2 if layers nodes count does not match, returns 1 if file can not be open, 0 if it opens
 	{
 		std::ifstream ifs;
 
@@ -78,7 +78,7 @@
 		}
 		return 0;
 	}
-	__int64 nnet::NeuralNet::writeWeightsToFile(const std::string weightsStorageFileName) const // returns 1 if file can not be open, 0 if it opens
+	__int64 ann::NeuralNet::writeWeightsToFile(const std::string weightsStorageFileName) const // returns 1 if file can not be open, 0 if it opens
 	{
 		std::ofstream ofs;
 		ofs.open(weightsStorageFileName, std::ios::binary);
@@ -102,7 +102,7 @@
 		return 0;
 	}
 	
-	void nnet::NeuralNet::studyNetworkManual(const std::vector<std::vector<double>>& examplesSet, const std::vector<std::vector<double>>& expectedValueslesSet)
+	void ann::NeuralNet::studyNetworkManual(const std::vector<std::vector<double>>& examplesSet, const std::vector<std::vector<double>>& expectedValueslesSet)
 	{
 		for (size_t i = 0; i < examplesSet.size(); i++)
 		{
@@ -111,7 +111,7 @@
 			backPropogationManual(expectedValueslesSet[i]);
 		}
 	}
-	__int64 nnet::NeuralNet::studyNetworkAuto(const std::string& fileName)
+	__int64 ann::NeuralNet::studyNetworkAuto(const std::string& fileName)
 	{
 		std::ifstream ifs;
 	
@@ -186,7 +186,7 @@
 		}
 		return 0;
 	}
-	void nnet::NeuralNet::forwardPropogationManual()
+	void ann::NeuralNet::forwardPropogationManual()
 	{
 		double tmp{};
 
@@ -205,7 +205,7 @@
 			}
 		}
 	}
-	__int64 nnet::NeuralNet::backPropogationManual(const std::vector<double>& expectedValues)
+	__int64 ann::NeuralNet::backPropogationManual(const std::vector<double>& expectedValues)
 	{
 		//:
 
@@ -256,7 +256,7 @@
 		return 0;
 	}
 
-	__int64 nnet::NeuralNet::setData(const std::vector<double>& inputData) // Return value is difference between network input layer size() and input data size();
+	__int64 ann::NeuralNet::setData(const std::vector<double>& inputData) // Return value is difference between network input layer size() and input data size();
 	{
 		//Options:
 		
@@ -269,13 +269,13 @@
 		}
 		return 0;
 	}
-	__int64 nnet::NeuralNet::setData(const std::string fileName)
+	__int64 ann::NeuralNet::setData(const std::string fileName)
 	{
 		std::ifstream ifs;
 		ifs.open(fileName, std::ios::binary);
 		if (!ifs.is_open()) return 1;
 
-		nnet::nodesCountStorage ncs;
+		ann::nodesCountStorage ncs;
 		ifs.read((char*)& ncs, sizeof(ncs));
 		if (ncs.getInputNodesCount() != this->nodesCount.getInputNodesCount()) return static_cast<__int64>((this->nodesCount.getInputNodesCount()) - ncs.getInputNodesCount());
 
@@ -287,7 +287,7 @@
 		}
 		return 0;
 	}
-	void nnet::NeuralNet::setWeights(const double value)
+	void ann::NeuralNet::setWeights(const double value)
 	{
 		for (size_t i = 0; i < this->nodesCount.getHiddenLayersCount() + 1; i++)
 		{
@@ -300,17 +300,17 @@
 			}
 		}
 	}
-	void nnet::NeuralNet::setLearningRate(const double value)
+	void ann::NeuralNet::setLearningRate(const double value)
 	{
 		this->learningRate = value;
 	}
 
-	double nnet::NeuralNet::getLearningRate() const
+	double ann::NeuralNet::getLearningRate() const
 	{
 		return this->learningRate;
 	}
 
-	void nnet::NeuralNet::printResult() const
+	void ann::NeuralNet::printResult() const
 	{
 		std::cout << "_______________________________________________________" << std::endl;
 		for (size_t i = 0; i < this->nodesCount.getOutputNodesCount(); i++)
@@ -320,7 +320,7 @@
 		std::cout << "_______________________________________________________" << std::endl;
 	}
 
-	void nnet::NeuralNet::printWeights() const
+	void ann::NeuralNet::printWeights() const
 	{
 		
 		std::cout.setf(std::ios::fixed);
@@ -341,7 +341,7 @@
 	}
 	
 
-	void nnet::NeuralNet::reinitializeWeights(const double lowerLimit, const double upperLimit)
+	void ann::NeuralNet::reinitializeWeights(const double lowerLimit, const double upperLimit)
 	{
 		for (size_t i = 0; i < this->nodesCount.getHiddenLayersCount() + 1; i++)
 		{
@@ -356,7 +356,7 @@
 	}
 
 	template <class T>
-	inline T nnet::NeuralNet::activationFunction(const T value, const bool returnDerivativeValueInstead) const
+	inline T ann::NeuralNet::activationFunction(const T value, const bool returnDerivativeValueInstead) const
 	{
 		const double e = 2.718281828459045235360287471352; //euler's number
 		//Tanh:
@@ -389,7 +389,7 @@
 	
 
 	//Additional classes: 
-	nnet::nodesCountStorage::nodesCountStorage()
+	ann::nodesCountStorage::nodesCountStorage()
 	{
 		this->inputNodesCount = 0;
 		this->hiddenNodesCount = 0;
@@ -397,62 +397,62 @@
 		this->hiddenLayersCount = 0;
 	}
 
-	auto nnet::nodesCountStorage::operator==(const nodesCountStorage& ex) const
+	auto ann::nodesCountStorage::operator==(const nodesCountStorage& ex) const
 	{
 		return (inputNodesCount == ex.inputNodesCount) && (hiddenNodesCount == ex.hiddenNodesCount) && (outputNodesCount == ex.outputNodesCount) && (hiddenLayersCount == ex.hiddenLayersCount);
 	}
-	bool nnet::nodesCountStorage::operator!=(const nodesCountStorage& ex) const
+	bool ann::nodesCountStorage::operator!=(const nodesCountStorage& ex) const
 	{
 		return (inputNodesCount != ex.inputNodesCount) && (hiddenNodesCount != ex.hiddenNodesCount) && (outputNodesCount != ex.outputNodesCount) && (hiddenLayersCount != ex.hiddenLayersCount);
 	}
 	
-	size_t nnet::nodesCountStorage::getInputNodesCount() const
+	size_t ann::nodesCountStorage::getInputNodesCount() const
 	{
 		return this->inputNodesCount;
 	}
-	size_t nnet::nodesCountStorage::getHiddenNodesCount() const
+	size_t ann::nodesCountStorage::getHiddenNodesCount() const
 	{
 		return this->hiddenNodesCount;
 	}
-	size_t nnet::nodesCountStorage::getOutputNodesCount() const
+	size_t ann::nodesCountStorage::getOutputNodesCount() const
 	{
 		return this->outputNodesCount;
 	}
-	size_t nnet::nodesCountStorage::getHiddenLayersCount() const
+	size_t ann::nodesCountStorage::getHiddenLayersCount() const
 	{
 		return this->hiddenLayersCount;
 	}
 	
-	void nnet::nodesCountStorage::setInputNodesCount(const size_t value)
+	void ann::nodesCountStorage::setInputNodesCount(const size_t value)
 	{
 		this->inputNodesCount = value;
 	}
-	void nnet::nodesCountStorage::setHiddenNodesCount(const size_t value)
+	void ann::nodesCountStorage::setHiddenNodesCount(const size_t value)
 	{
 		this->hiddenNodesCount = value;
 	}
-	void nnet::nodesCountStorage::setOutputNodesCount(const size_t value)
+	void ann::nodesCountStorage::setOutputNodesCount(const size_t value)
 	{
 		this->outputNodesCount = value;
 	}
-	void nnet::nodesCountStorage::setHiddenLayersCount(const size_t value)
+	void ann::nodesCountStorage::setHiddenLayersCount(const size_t value)
 	{
 		this->hiddenLayersCount = value;
 	}
 
-	void nnet::nodesCountStorage::print()
+	void ann::nodesCountStorage::print()
 	{
 		std::cout << "Input nodes: " << this->getInputNodesCount() << "  |  Hidden nodes: " << this->getHiddenNodesCount() << "  |  Output nodes: " << this->getOutputNodesCount() << "  |  Hidden layers: " << this->getHiddenLayersCount() << std::endl;
 	}
 	
-	nnet::dataMassiveMaker::dataMassiveMaker()
+	ann::dataMassiveMaker::dataMassiveMaker()
 	{
 		this->massiveSize = 0;
 		this->inputDataSize = 0;
 		this->expectedValuesSize = 0;
 	}
 
-	__int64 nnet::dataMassiveMaker::printNumbersMassive(std::string fileName) const
+	__int64 ann::dataMassiveMaker::printNumbersMassive(std::string fileName) const
 	{
 		std::ifstream ifs;
 		ifs.open(fileName, std::ios::binary);
@@ -460,7 +460,7 @@
 		size_t massiveSize;
 		ifs.read((char*)& massiveSize, sizeof(size_t));
 
-		nnet::nodesCountStorage ncs;
+		ann::nodesCountStorage ncs;
 		ifs.read((char*)& ncs, sizeof(ncs));
 		
 		ncs.print();
@@ -488,7 +488,7 @@
 		return 0;
 	}
 
-	__int64 nnet::dataMassiveMaker::evenNumbersMassive(const size_t inputDataSize, const size_t outputDataSize, const size_t massiveSize, const std::string fileName, const __int64 lowerLimit, const __int64 upperLimit) const
+	__int64 ann::dataMassiveMaker::evenNumbersMassive(const size_t inputDataSize, const size_t outputDataSize, const size_t massiveSize, const std::string fileName, const __int64 lowerLimit, const __int64 upperLimit) const
 	{
 		std::ofstream ofs;
 		ofs.open(fileName, std::ios::binary);
@@ -496,7 +496,7 @@
 
 		ofs.write((char*)& massiveSize, sizeof(size_t));
 		
-		nnet::nodesCountStorage ncs;
+		ann::nodesCountStorage ncs;
 		ncs.setInputNodesCount(inputDataSize);
 		ncs.setOutputNodesCount(outputDataSize);
 		ofs.write((char*)& ncs, sizeof(ncs));
