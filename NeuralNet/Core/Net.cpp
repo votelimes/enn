@@ -136,20 +136,23 @@
 			}
 			tmp = 0;
 			//forward propogation:
-			for (size_t i = 0; i < (*nodesWeights).size(); i++)
-			{
-				for (size_t j = 0; j < (*nodesValues)[i + 1].size(); j++)
+			
+			concurrency::parallel_for(size_t(0), (*nodesWeights).size(), [&](size_t i)
+				//for (size_t i = 0; i < (*nodesWeights).size(); i++)
 				{
-					for (size_t k = 0; k < (*nodesWeights)[i].size(); k++)
+					for (size_t j = 0; j < (*nodesValues)[i + 1].size(); j++)
 					{
-						tmp = tmp + ((*nodesWeights)[i][k][j] * (*nodesValues)[i][k]);
+						for (size_t k = 0; k < (*nodesWeights)[i].size(); k++)
+						{
+							tmp = tmp + ((*nodesWeights)[i][k][j] * (*nodesValues)[i][k]);
+						}
+
+						(*nodesValues)[i + 1][j] = activationFunction(tmp, false);
+
+						tmp = 0;
 					}
+				});
 
-					(*nodesValues)[i + 1][j] = activationFunction(tmp, false);
-
-					tmp = 0;
-				}
-			}
 			////Calculate error procent for output layer:
 			for (size_t i = 0; i < (*nodesValues)[(*nodesValues).size() - 1].size(); i++)
 			{
@@ -157,20 +160,24 @@
 				(*nodesErrorValues)[(*nodesErrorValues).size() - 1][i] = tmp - (*nodesValues)[(*nodesValues).size() - 1][i];
 			}
 			tmp = 0;
-			//Calculate error procent for all other layers:
-			for (size_t i = (*nodesValues).size() - 2; i > 0; i--)
-			{
-				for (size_t j = 0; j < (*nodesValues)[i].size(); j++)
-				{
-					for (size_t k = 0; k < (*nodesValues)[i + 1].size(); k++)
-					{
-						tmp = tmp + ((*nodesWeights)[i][j][k] * (*nodesErrorValues)[i][k]);
-					}
 
-					(*nodesErrorValues)[i - 1][j] = tmp;
-					tmp = 0;
-				}
-			}
+			//Calculate error procent for all other layers:
+			
+			concurrency::parallel_for(size_t(0), (*nodesValues).size() - 2, [&](size_t i)
+				//for (size_t i = (*nodesValues).size() - 2; i > 0; i--)
+				{
+					for (size_t j = 0; j < (*nodesValues)[i].size(); j++)
+					{
+						for (size_t k = 0; k < (*nodesValues)[i + 1].size(); k++)
+						{
+							tmp = tmp + ((*nodesWeights)[i][j][k] * (*nodesErrorValues)[i][k]);
+						}
+
+						(*nodesErrorValues)[i - 1][j] = tmp;
+						tmp = 0;
+					}
+				});
+
 			//Adjust weights:
 			for (size_t i = 0; i < (*nodesWeights).size(); i++)
 			{
