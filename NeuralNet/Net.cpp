@@ -34,16 +34,18 @@
 			(*nodesWeights)[this->nodesCount.getHiddenLayersCount()][i].shrink_to_fit();
 		}
 		//Weights initialization(random values) cicles:
-		for (size_t i = 0; i < this->nodesCount.getHiddenLayersCount() + 1; i++)
-		{
-			for (size_t k = 0; k < (*nodesWeights)[i].size(); k++)
+		
+		concurrency::parallel_for(size_t(0), this->nodesCount.getHiddenLayersCount() + 1, [&](size_t i)
+			//for (size_t i = 0; i < this->nodesCount.getHiddenLayersCount() + 1; i++)
 			{
-				for (size_t j = 0; j < (*nodesWeights)[i][k].size(); j++)
+				for (size_t k = 0; k < (*nodesWeights)[i].size(); k++)
 				{
-					(*nodesWeights)[i][k][j] = afunctions::RandomFunc(0.0, 1.0);
+					for (size_t j = 0; j < (*nodesWeights)[i][k].size(); j++)
+					{
+						(*nodesWeights)[i][k][j] = afunctions::RandomFunc(0.0, 1.0);
+					}
 				}
-			}
-		}
+			});
 		//
 	} // //Kernel constructor
 

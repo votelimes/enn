@@ -2,6 +2,7 @@
 #define NET_H_
 
 #include "Windows.h"
+#include "ppl.h"
 
 #include <vector>
 #include <random>
@@ -13,7 +14,7 @@
 #include <algorithm>
 #include <thread>
 
-namespace nnet {
+namespace ann {
 	
 	class dataMassiveMaker 
 	{

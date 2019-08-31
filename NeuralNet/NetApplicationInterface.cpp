@@ -122,7 +122,7 @@ void nai::NetApplicationInterface::doWork()
 				strst >> tmp;
 				counts.push_back(tmp);
 			}
-			this->net1 = new nnet::NeuralNet(counts[0], counts[1], counts[2], counts[3]);
+			this->net1 = new ann::NeuralNet(counts[0], counts[1], counts[2], counts[3]);
 			std::cout << this->successfullyExecuted() << std::endl;
 			continue;
 		}

@@ -10,7 +10,7 @@ namespace nai {
 		std::vector<std::string> commandsList;
 		std::vector<std::string> commandsDescription;
 
-		nnet::NeuralNet *net1;
+		ann::NeuralNet *net1;
 
 		long double trainingsCount;
 		
