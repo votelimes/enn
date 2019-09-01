@@ -111,7 +111,7 @@ namespace ann {
 		__int64 studyNetworkAuto(const std::string &fileName);
 		__int64 studyNetworkFileMT(const std::string& fileName);
 
-		__int64 produceResult(const std::vector<double>& inputValues);
+		std::vector<double>* produceResult(const std::vector<double>& inputValues);
 		
 		void setWeights(const double value);
 		void setLearningRate(const double value);

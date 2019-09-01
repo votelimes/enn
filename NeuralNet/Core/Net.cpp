@@ -238,9 +238,19 @@
 		return 0;
 	}
 
-	__int64 ann::NeuralNet::produceResult(const std::vector<double>& inputValues)
+	std::vector<double>* ann::NeuralNet::produceResult(const std::vector<double>& inputValues)
 	{
-		return 0;
+		this->setData(inputValues);
+		this->feedForward();
+
+		static std::vector<double>* outputValues = new std::vector<double>;
+
+		for (size_t i = 0; i < (*nodesValues)[this->nodesCount.getTotalLayersCount() - 1].size(); i++)
+		{
+			outputValues->push_back((*nodesValues)[this->nodesCount.getTotalLayersCount() - 1][i]);
+		}
+
+		return outputValues;
 	}
 	
 	void ann::NeuralNet::feedForward()
