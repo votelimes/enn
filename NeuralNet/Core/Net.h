@@ -108,11 +108,12 @@ namespace ann {
 		__int64 readWeightsFromFile(const std::string weightsStorageFileName); // returns 1 if file can not be open, 0 if it opens
 		__int64 writeWeightsToFile(const std::string weightsStorageFileName) const; // returns 1 if file can not be open, 0 if it opens
 		
-		__int64 studyNetworkAuto(const std::string &fileName);
+		__int64 studyNetworkFile(const std::string &fileName);
 		__int64 studyNetworkFileMT(const std::string& fileName);
 
 		std::vector<double>* produceResult(const std::vector<double>& inputValues);
-		
+		__int64 produceResult(const std::string inputDataFileName, const std::string outputDataFileName);
+
 		void setWeights(const double value);
 		void setLearningRate(const double value);
 		

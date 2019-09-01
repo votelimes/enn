@@ -129,14 +129,14 @@ void nai::NetApplicationInterface::doWork()
 		//Trainn
 		if (commandIndex == 6 && parametrsStorage.size() == 2) {
 			if (this->net1) {
-				if (!net1->studyNetworkAuto(parametrsStorage[0])) {
+				if (!net1->studyNetworkFile(parametrsStorage[0])) {
 
 					__int64 trainingsCount{ 1 };
 					std::cout << "Number 1 training completed." << std::endl;
 					for (size_t i = 1; i < static_cast<size_t>(std::stoi(parametrsStorage[1])); i++)
 					{
 						trainingsCount++;
-						net1->studyNetworkAuto(parametrsStorage[0]);
+						net1->studyNetworkFile(parametrsStorage[0]);
 						std::cout << "Number " << i + 1 << " training completed." << std::endl;
 					}
 					std::cout << "The network has been trained " << trainingsCount << " times." << std::endl;
@@ -171,13 +171,12 @@ void nai::NetApplicationInterface::doWork()
 			continue;
 		}
 		//Getrf
-		if (commandIndex == 8 && parametrsStorage.size() == 1) {
+		if (commandIndex == 8 && parametrsStorage.size() == 2) {
 			if (this->net1) {
-				if (this->net1->setData(parametrsStorage[0])) std::cout << "Unable to open file." << std::endl;
-				else {
-					this->net1->feedForward();
-					this->net1->printResult();
+				if (this->net1->produceResult(parametrsStorage[0], parametrsStorage[1])) {
+					std::cout << this->successfullyExecuted();
 				}
+				else std::cout << "Unknown parametrs or unable to open file." << std::endl;
 			}
 			else std::cout << "Create network first." << std::endl;
 			continue;
@@ -216,7 +215,7 @@ void nai::NetApplicationInterface::doWork()
 			continue;
 		}
 
-		std::cout << "Unknown attributes. " << this->useHelp() << std::endl;
+		std::cout << "Unknown parametrs. " << this->useHelp() << std::endl;
 	}
 }
 

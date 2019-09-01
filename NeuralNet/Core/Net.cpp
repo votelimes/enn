@@ -102,7 +102,7 @@
 		return 0;
 	}
 	
-	__int64 ann::NeuralNet::studyNetworkAuto(const std::string& fileName)
+	__int64 ann::NeuralNet::studyNetworkFile(const std::string& fileName)
 	{
 		std::ifstream ifs;
 	
@@ -240,17 +240,58 @@
 
 	std::vector<double>* ann::NeuralNet::produceResult(const std::vector<double>& inputValues)
 	{
-		this->setData(inputValues);
+		if (this->setData(inputValues)) { return nullptr; }
+		
 		this->feedForward();
 
 		static std::vector<double>* outputValues = new std::vector<double>;
-
 		for (size_t i = 0; i < (*nodesValues)[this->nodesCount.getTotalLayersCount() - 1].size(); i++)
 		{
 			outputValues->push_back((*nodesValues)[this->nodesCount.getTotalLayersCount() - 1][i]);
 		}
 
 		return outputValues;
+	}
+
+	__int64 ann::NeuralNet::produceResult(const std::string inputDataFileName, const std::string outputDataFileName)
+	{
+		std::ifstream ifs;
+
+		ifs.open(inputDataFileName, std::ios::binary);
+		if (!ifs.is_open()) { return 1; }
+
+		size_t dataMassiveSize{};
+		ifs.read((char*)& dataMassiveSize, sizeof(size_t)); //1st line read count of examples
+
+		nodesCountStorage rww;
+		ifs.read((char*)& rww, sizeof(rww)); //2nd line read network count storage class
+		if (rww.getInputNodesCount() != this->nodesCount.getInputNodesCount() && rww.getOutputNodesCount() != this->nodesCount.getOutputNodesCount()) { return 2; }
+		
+		
+		std::ofstream ofs;
+		ofs.open(outputDataFileName, std::ios::binary);
+		if (!ifs.is_open()) { return 3; }
+		ofs.write((char*)& dataMassiveSize, sizeof(size_t));
+		ofs.write((char*)& rww, sizeof(rww)); 
+		for (size_t i = 0; i < dataMassiveSize; i++)
+		{
+			
+			std::vector<double> inputValues;
+			for (size_t j = 0; j < rww.getInputNodesCount(); i++)
+			{
+				inputValues.push_back(0);
+				ifs.read((char*)& inputValues[i], sizeof(double));
+			}
+			this->setData(inputValues);
+			this->feedForward();
+
+			for (size_t j = 0; j < rww.getOutputNodesCount(); i++)
+			{
+				inputValues.push_back(0);
+				ofs.write((char*)& (*nodesValues)[this->nodesCount.getTotalLayersCount() - 1][j], sizeof(double));
+			}
+		}
+		return 0;
 	}
 	
 	void ann::NeuralNet::feedForward()
