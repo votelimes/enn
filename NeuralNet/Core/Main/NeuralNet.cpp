@@ -7,6 +7,6 @@ int main()
 {
 	nai::NetApplicationInterface int_1;
 	ann::dataMassiveMaker dmm;
-	dmm.evenNumbersMassive(1, 1, 1000000, "dataMassive1.bdm", 1, 10000);
+	//dmm.evenNumbersMassive(1, 1, 1000000, "dataMassive1.bdm", 1, 10000);
 	int_1.doWork();
 }

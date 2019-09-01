@@ -3,6 +3,7 @@
 
 #include "Windows.h"
 #include "ppl.h"
+#include "omp.h"
 
 #include <vector>
 #include <random>
@@ -45,6 +46,7 @@ namespace ann {
 		size_t hiddenNodesCount;
 		size_t outputNodesCount;
 		size_t hiddenLayersCount;
+		size_t totalLayersCount;
 	
 
 	//SECTION: METHODS
@@ -59,6 +61,7 @@ namespace ann {
 		size_t getHiddenNodesCount() const;
 		size_t getOutputNodesCount() const;
 		size_t getHiddenLayersCount() const;
+		size_t getTotalLayersCount() const;
 
 		void setInputNodesCount(const size_t value);
 		void setHiddenNodesCount(const size_t value);
@@ -89,11 +92,14 @@ namespace ann {
 		
 	private:
 		
-		
-		
-		__int64 backPropogationManual(const std::vector<double>& expectedValues);
 		template <class T>
 		inline T activationFunction(const T value, const bool returnDerivativereturnDerivativeValueInstead) const;
+		
+		void feedForward();
+		void feedBack(const std::vector<double>& expValues);
+		void weightsReadjustment();
+
+		__int64 setData(const std::vector<double>& inputData);
 
 	public: 
 		
@@ -101,23 +107,21 @@ namespace ann {
 			
 		__int64 readWeightsFromFile(const std::string weightsStorageFileName); // returns 1 if file can not be open, 0 if it opens
 		__int64 writeWeightsToFile(const std::string weightsStorageFileName) const; // returns 1 if file can not be open, 0 if it opens
-			
-		void studyNetworkManual(const std::vector<std::vector<double>>& examplesSet, const std::vector<std::vector<double>>& expectedValueslesSet);
+		
 		__int64 studyNetworkAuto(const std::string &fileName);
-		void forwardPropogationManual();
-		 // Return value is difference between network input layer size() and input data size();
+		__int64 studyNetworkFileMT(const std::string& fileName);
+
+		__int64 produceResult(const std::vector<double>& inputValues);
+		
 		void setWeights(const double value);
 		void setLearningRate(const double value);
-		__int64 setData(const std::vector<double>& inputData);
-		__int64 setData(const std::string fileName);
+		
 		double getLearningRate() const;
 		
 		void printResult() const;
 		void printWeights() const;
 
 		void reinitializeWeights(const double lowerLimit, const double upperLimit);
-
-		
 
 	};
 

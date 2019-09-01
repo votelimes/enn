@@ -162,7 +162,7 @@ void nai::NetApplicationInterface::doWork()
 						inputDataStorage.push_back(tmp);
 					}
 					if (!this->net1->setData(inputDataStorage)) {
-						this->net1->forwardPropogationManual();
+						this->net1->feedForward();
 						this->net1->printResult();
 					}
 					else std::cout << "Unable to open file.";
@@ -178,7 +178,7 @@ void nai::NetApplicationInterface::doWork()
 			if (this->net1) {
 				if (this->net1->setData(parametrsStorage[0])) std::cout << "Unable to open file." << std::endl;
 				else {
-					this->net1->forwardPropogationManual();
+					this->net1->feedForward();
 					this->net1->printResult();
 				}
 			}
