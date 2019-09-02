@@ -26,7 +26,7 @@ nai::NetApplicationInterface::NetApplicationInterface()
 	this->commandsDescription.push_back("Creates the network according to the parametrs. Parametrs (input neurons count) (hidden neurons count) (output neurons count) (output layers count). Ex.: /createnetwork 3 15 1 2");
 	this->commandsDescription.push_back("Trains the network a certain number of times(1 is minimum). Ex.: /trainnetworkt FILENAME NUMBEROFTIMES");
 	this->commandsDescription.push_back("Uses a network to get result. Input values count respectevly to network input layer neurons count. Ex.: /getresultw INPUT1 INPUT2 INPUT3...");
-	this->commandsDescription.push_back("Uses a network to get result. Using a input data as file. Ex.: /getresultf FILENAME");
+	this->commandsDescription.push_back("Uses a network to get result. Input data should be represented as file. Produce a output data file. Ex.: /getresultf INPUTDATAFILENAME OUTPUTDATAFILENAME");
 	this->commandsDescription.push_back("Prints current network parametrs.");
 	this->commandsDescription.push_back("Prints current network weights.");
 	this->commandsDescription.push_back("Clears terminal screen.");
@@ -68,7 +68,7 @@ void nai::NetApplicationInterface::doWork()
 
 			for (size_t i = 0; i < this->commandsList.size(); i++) {
 				std::string helpS;
-				helpS = "\n" + std::to_string(i + 1) + "." + " " + commandsList[i];
+				helpS = std::to_string(i + 1) + "." + " " + commandsList[i];
 				std::cout << std::setw(25) << std::left << helpS << commandsDescription[i] << std::endl;
 			}
 			continue;
