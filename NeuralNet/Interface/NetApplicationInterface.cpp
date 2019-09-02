@@ -129,14 +129,14 @@ void nai::NetApplicationInterface::doWork()
 		//Trainn
 		if (commandIndex == 6 && parametrsStorage.size() == 2) {
 			if (this->net1) {
-				if (!net1->studyNetworkFile(parametrsStorage[0])) {
+				if (!net1->studyNetworkFileMT(parametrsStorage[0])) {
 
 					__int64 trainingsCount{ 1 };
 					std::cout << "Number 1 training completed." << std::endl;
 					for (size_t i = 1; i < static_cast<size_t>(std::stoi(parametrsStorage[1])); i++)
 					{
 						trainingsCount++;
-						net1->studyNetworkFile(parametrsStorage[0]);
+						net1->studyNetworkFileMT(parametrsStorage[0]);
 						std::cout << "Number " << i + 1 << " training completed." << std::endl;
 					}
 					std::cout << "The network has been trained " << trainingsCount << " times." << std::endl;
@@ -188,6 +188,7 @@ void nai::NetApplicationInterface::doWork()
 				std::cout << "Hidden nodes: " << this->net1->nodesCount.getHiddenNodesCount() << std::endl;
 				std::cout << "Output nodes: " << this->net1->nodesCount.getOutputNodesCount() << std::endl;
 				std::cout << "Hidden layers: " << this->net1->nodesCount.getHiddenLayersCount() << std::endl;
+				std::cout << "Total layers: " << this->net1->nodesCount.getTotalLayersCount() << std::endl;
 				std::cout << "Learning rate: " << this->net1->getLearningRate() << std::endl;
 			}
 			else std::cout << "Create network first." << std::endl;

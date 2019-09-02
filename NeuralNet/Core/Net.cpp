@@ -252,7 +252,6 @@
 
 		return outputValues;
 	}
-
 	__int64 ann::NeuralNet::produceResult(const std::string inputDataFileName, const std::string outputDataFileName)
 	{
 		std::ifstream ifs;
@@ -318,10 +317,10 @@
 		//Calc output layer errors
 		for (size_t i = 0; i < this->nodesCount.getOutputNodesCount(); i++)
 		{
-			(*nodesErrorValues)[this->nodesCount.getTotalLayersCount() - 1][i] = expValues[i] - (*nodesValues)[this->nodesCount.getTotalLayersCount() - 1][i];
+			(*nodesErrorValues)[this->nodesCount.getTotalLayersCount() - 2][i] = expValues[i] - (*nodesValues)[this->nodesCount.getTotalLayersCount() - 1][i];
 		}
+		
 		//Calc all other layers errors
-
 		for (size_t i = this->nodesCount.getTotalLayersCount() - 2; i > 0; i--)
 		{
 			for (size_t j = 0; j < (*nodesValues)[i].size(); j++)
@@ -333,7 +332,6 @@
 				}
 
 				(*nodesErrorValues)[i - 1][j] = tmp;
-				tmp = 0;
 			}
 		}
 
@@ -602,7 +600,6 @@
 			ofs.write((char*)& (varDouble), sizeof(double));
 			ofs.write((char*) & (if1), sizeof(double));
 		}
-		
 		
 		return 0;
 	}
