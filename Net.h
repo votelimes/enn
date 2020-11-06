@@ -1,10 +1,6 @@
 #ifndef NET_H_
 #define NET_H_
 
-#include "Windows.h"
-#include "ppl.h"
-#include "omp.h"
-
 #include <vector>
 #include <random>
 #include <iostream>
