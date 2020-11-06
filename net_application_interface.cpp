@@ -1,4 +1,4 @@
-#include "NetApplicationInterface.h"
+#include "net_application_interface.h"
 
 nai::NetApplicationInterface::NetApplicationInterface()
 {
