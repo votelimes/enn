@@ -2,7 +2,7 @@
 
 int main()
 {
-	nai::NetApplicationInterface int_1;
-	ann::dataMassiveMaker dmm;
-	int_1.doWork();
+	ann::NeuralNet net_core(64*64, 40, 10, 1);
+
+	return 0;
 }
