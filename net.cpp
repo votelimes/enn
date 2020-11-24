@@ -2,22 +2,22 @@
 
 	
 	//Kernel class:
-	network_core::NeuralNet::NeuralNet(const size_t inputNodesCount, const size_t hiddenNodesCount, const size_t outputNodesCount, const size_t hiddenLayersCount) // //Kernel constructor, hiddenNodesCount should be the largest
+	network_core::NeuralNet::NeuralNet(const size_t input_nodes_count, const size_t hidden_nodes_count, const size_t outputNodesCount, const size_t hiddenLayersCount) // //Kernel constructor, hidden_nodes_count should be the largest
 	{
 		//Fill variables:
 		
-		this->nodes_count.setInputNodesCount(inputNodesCount);
-		this->nodes_count.setHiddenNodesCount(hiddenNodesCount);
+		this->nodes_count.setInputNodesCount(input_nodes_count);
+		this->nodes_count.setHiddenNodesCount(hidden_nodes_count);
 		this->nodes_count.setOutputNodesCount(outputNodesCount);
 		this->nodes_count.setHiddenLayersCount(hiddenLayersCount);
 		this->learning_rate = 0.1;
 		
 		//Create and normalize arrays
-		this->nodes_weights = new std::vector<std::vector<std::vector<double>>>(hiddenLayersCount + 1, std::vector<std::vector<double>>(hiddenNodesCount, std::vector<double>(hiddenNodesCount, 0)));
-		this->nodes_values = new std::vector<std::vector<double>>(hiddenLayersCount + 2, std::vector<double>(hiddenNodesCount, 0));
-		this->nodes_error_values = new std::vector<std::vector<double>>(hiddenLayersCount + 1, std::vector<double>(hiddenNodesCount, 0));
+		this->nodes_weights = new std::vector<std::vector<std::vector<double>>>(hiddenLayersCount + 1, std::vector<std::vector<double>>(hidden_nodes_count, std::vector<double>(hidden_nodes_count, 0)));
+		this->nodes_values = new std::vector<std::vector<double>>(hiddenLayersCount + 2, std::vector<double>(hidden_nodes_count, 0));
+		this->nodes_error_values = new std::vector<std::vector<double>>(hiddenLayersCount + 1, std::vector<double>(hidden_nodes_count, 0));
 
-		(*nodes_values)[0].resize(inputNodesCount, 0);
+		(*nodes_values)[0].resize(input_nodes_count, 0);
 		(*nodes_values)[0].shrink_to_fit();
 		(*nodes_values)[this->nodes_count.getHiddenLayersCount() + 1].resize(outputNodesCount, 0);
 		(*nodes_values)[this->nodes_count.getHiddenLayersCount() + 1].shrink_to_fit();
@@ -25,7 +25,7 @@
 		(*nodes_error_values)[this->nodes_count.getHiddenLayersCount()].resize(outputNodesCount, 0);
 		(*nodes_error_values)[this->nodes_count.getHiddenLayersCount()].shrink_to_fit();
 
-		(*nodes_weights)[0].resize(inputNodesCount);
+		(*nodes_weights)[0].resize(input_nodes_count);
 		(*nodes_weights)[0].shrink_to_fit();
 		//
 		for (size_t i = 0; i < (*nodes_weights)[this->nodes_count.getHiddenLayersCount()].size(); i++)
@@ -470,8 +470,8 @@
 	//Additional classes: 
 	network_core::NodesCountStorage::NodesCountStorage()
 	{
-		this->inputNodesCount = 0;
-		this->hiddenNodesCount = 0;
+		this->input_nodes_count = 0;
+		this->hidden_nodes_count = 0;
 		this->outputNodesCount = 0;
 		this->hiddenLayersCount = 0;
 		this->totalLayersCount = 0;
@@ -479,20 +479,20 @@
 
 	auto network_core::NodesCountStorage::operator==(const NodesCountStorage& ex) const
 	{
-		return (inputNodesCount == ex.inputNodesCount) && (hiddenNodesCount == ex.hiddenNodesCount) && (outputNodesCount == ex.outputNodesCount) && (hiddenLayersCount == ex.hiddenLayersCount);
+		return (input_nodes_count == ex.input_nodes_count) && (hidden_nodes_count == ex.hidden_nodes_count) && (outputNodesCount == ex.outputNodesCount) && (hiddenLayersCount == ex.hiddenLayersCount);
 	}
 	bool network_core::NodesCountStorage::operator!=(const NodesCountStorage& ex) const
 	{
-		return (inputNodesCount != ex.inputNodesCount) && (hiddenNodesCount != ex.hiddenNodesCount) && (outputNodesCount != ex.outputNodesCount) && (hiddenLayersCount != ex.hiddenLayersCount);
+		return (input_nodes_count != ex.input_nodes_count) && (hidden_nodes_count != ex.hidden_nodes_count) && (outputNodesCount != ex.outputNodesCount) && (hiddenLayersCount != ex.hiddenLayersCount);
 	}
 	
 	size_t network_core::NodesCountStorage::getInputNodesCount() const
 	{
-		return this->inputNodesCount;
+		return this->input_nodes_count;
 	}
 	size_t network_core::NodesCountStorage::getHiddenNodesCount() const
 	{
-		return this->hiddenNodesCount;
+		return this->hidden_nodes_count;
 	}
 	size_t network_core::NodesCountStorage::getOutputNodesCount() const
 	{
@@ -509,12 +509,12 @@
 	
 	void network_core::NodesCountStorage::setInputNodesCount(const size_t value)
 	{
-		this->inputNodesCount = value;
+		this->input_nodes_count = value;
 		this->totalLayersCount = this->hiddenLayersCount + (size_t) 2;
 	}
 	void network_core::NodesCountStorage::setHiddenNodesCount(const size_t value)
 	{
-		this->hiddenNodesCount = value;
+		this->hidden_nodes_count = value;
 		this->totalLayersCount = this->hiddenLayersCount + (size_t)2;
 	}
 	void network_core::NodesCountStorage::setOutputNodesCount(const size_t value)
@@ -535,9 +535,9 @@
 	
 	network_core::DataMassiveMaker::DataMassiveMaker()
 	{
-		this->massiveSize = 0;
-		this->inputDataSize = 0;
-		this->expectedValuesSize = 0;
+		this->massive_length = 0;
+		this->input_data_length = 0;
+		this->expected_values_length = 0;
 	}
 
 	__int64 network_core::DataMassiveMaker::printNumbersMassive(std::string dataset_file_name) const
@@ -545,8 +545,8 @@
 		std::ifstream input_file_stream;
 		input_file_stream.open(dataset_file_name, std::ios::binary);
 		
-		size_t massiveSize;
-		input_file_stream.read((char*)& massiveSize, sizeof(size_t));
+		size_t massive_length;
+		input_file_stream.read((char*)& massive_length, sizeof(size_t));
 
 		network_core::NodesCountStorage ncs;
 		input_file_stream.read((char*)& ncs, sizeof(ncs));
@@ -555,7 +555,7 @@
 
 		double value;
 		std::cout.setf(std::ios::fixed);
-		for (size_t i = 0; i < massiveSize; i++)
+		for (size_t i = 0; i < massive_length; i++)
 		{
 			std::cout << "\nInput data: " << std::endl;
 			for (size_t j = 0; j < ncs.getInputNodesCount(); j++)
@@ -576,20 +576,20 @@
 		return 0;
 	}
 
-	__int64 network_core::DataMassiveMaker::evenNumbersMassive(const size_t inputDataSize, const size_t outputDataSize, const size_t massiveSize, const std::string dataset_file_name, const __int64 lower_limit, const __int64 upper_limit) const
+	__int64 network_core::DataMassiveMaker::evenNumbersMassive(const size_t input_data_length, const size_t outputDataSize, const size_t massive_length, const std::string dataset_file_name, const __int64 lower_limit, const __int64 upper_limit) const
 	{
 		std::ofstream output_file_stream;
 		output_file_stream.open(dataset_file_name, std::ios::binary);
 		if (!output_file_stream.is_open()) { return 1; }
 
-		output_file_stream.write((char*)& massiveSize, sizeof(size_t));
+		output_file_stream.write((char*)& massive_length, sizeof(size_t));
 		
 		network_core::NodesCountStorage ncs;
-		ncs.setInputNodesCount(inputDataSize);
+		ncs.setInputNodesCount(input_data_length);
 		ncs.setOutputNodesCount(outputDataSize);
 		output_file_stream.write((char*)& ncs, sizeof(ncs));
 		
-		for (size_t i = 0; i < massiveSize; i++)
+		for (size_t i = 0; i < massive_length; i++)
 		{
 			__int64 varInt{};
 			

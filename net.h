@@ -19,17 +19,17 @@ namespace network_core {
 	
 	private:
 
-		size_t massiveSize;
-		size_t inputDataSize;
-		size_t expectedValuesSize;
+		size_t massive_length;
+		size_t input_data_length;
+		size_t expected_values_length;
 
 	//SECTION: METHODS
 	public:
 
 		DataMassiveMaker();
 
-		__int64 printNumbersMassive(std::string fileName) const;
-		__int64 evenNumbersMassive(const size_t inputDataSize, const size_t outputDataSize, const size_t massiveSize, const std::string fileName, const __int64 lowerLimit, const __int64 upperLimit) const;
+		__int64 printNumbersMassive(std::string file_name) const;
+		__int64 evenNumbersMassive(const size_t input_data_length, const size_t output_data_length, const size_t massive_length, const std::string file_name, const __int64 lower_limit, const __int64 upper_limit) const;
 	};
 
 	class NodesCountStorage 
@@ -38,8 +38,8 @@ namespace network_core {
 	//SECTION: DATA
 	private:	
 		
-		size_t inputNodesCount;
-		size_t hiddenNodesCount;
+		size_t input_nodes_count;
+		size_t hidden_nodes_count;
 		size_t outputNodesCount;
 		size_t hiddenLayersCount;
 		size_t totalLayersCount;
@@ -99,13 +99,13 @@ namespace network_core {
 
 	public: 
 		
-		NeuralNet(const size_t inputNodesCount, const size_t hiddenNodesCount, const size_t outputNodesCount, const size_t hiddenLayersCount); //Kernel constructor
+		NeuralNet(const size_t input_nodes_count, const size_t hidden_nodes_count, const size_t outputNodesCount, const size_t hiddenLayersCount); //Kernel constructor
 			
 		__int64 ReadWeightsFile(const std::string weightsStorageFileName); // returns 1 if file can not be open, 0 if it opens
 		__int64 WriteWeightsFile(const std::string weightsStorageFileName) const; // returns 1 if file can not be open, 0 if it opens
 		
-		__int64 StudyFile(const std::string &fileName);
-		__int64 StudyFileMT(const std::string& fileName);
+		__int64 StudyFile(const std::string &file_name);
+		__int64 StudyFileMT(const std::string& file_name);
 		__int8 StudyOnce(const std::vector<double> &input_data);
 
 		std::vector<double>* ProduceResult(const std::vector<double>& inputValues);
@@ -119,7 +119,7 @@ namespace network_core {
 		void PrintResult() const;
 		void PrintWeights() const;
 
-		void WeightsReinitialisation(const double lowerLimit, const double upperLimit);
+		void WeightsReinitialisation(const double lower_limit, const double upper_limit);
 
 	};
 
@@ -127,8 +127,8 @@ namespace network_core {
 } // namespace nnet
 namespace additional_functions {
 	
-	inline double RandomFunction(const double lowerLimit, const double upperLimit);
-	inline __int64 RandomFunction(const __int64 lowerLimit, const __int64 upperLimit);
+	inline double RandomFunction(const double lower_limit, const double upper_limit);
+	inline __int64 RandomFunction(const __int64 lower_limit, const __int64 upper_limit);
 }
 
 // namespace additional_functions
