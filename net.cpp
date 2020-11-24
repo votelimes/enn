@@ -57,9 +57,9 @@
 			return 1;
 		}
 
-		NodesCountStorage rww;
-		input_file_stream.read((char*)&rww, sizeof(rww));
-		if (rww != this->nodes_count) {
+		NodesCountStorage file_nodes_count;
+		input_file_stream.read((char*)&file_nodes_count, sizeof(file_nodes_count));
+		if (file_nodes_count != this->nodes_count) {
 			return 2;
 		}
 
@@ -111,15 +111,15 @@
 		size_t input_data_massive_lenght{};
 		input_file_stream.read((char*)& input_data_massive_lenght, sizeof(size_t)); //1st line read count of examples
 
-		NodesCountStorage rww;
-		input_file_stream.read((char*)& rww, sizeof(rww)); //2nd line read network count storage class
-		if (rww.GetInputNodesCount() != this->nodes_count.GetInputNodesCount() && rww.GetOutputNodesCount() != this->nodes_count.GetOutputNodesCount()) { return 2; }
+		NodesCountStorage file_nodes_count;
+		input_file_stream.read((char*)& file_nodes_count, sizeof(file_nodes_count)); //2nd line read network count storage class
+		if (file_nodes_count.GetInputNodesCount() != this->nodes_count.GetInputNodesCount() && file_nodes_count.GetOutputNodesCount() != this->nodes_count.GetOutputNodesCount()) { return 2; }
 
 		for (size_t y = 0; y < input_data_massive_lenght; y++)
 		{
 			double tmp{};
 			//input layer initialization
-			for (size_t u = 0; u < rww.GetInputNodesCount(); u++)
+			for (size_t u = 0; u < file_nodes_count.GetInputNodesCount(); u++)
 			{
 				input_file_stream.read((char*)& tmp, sizeof(double));
 				(*nodes_values)[0][u] = tmp;
@@ -192,16 +192,16 @@
 		size_t input_data_massive_lenght{};
 		input_file_stream.read((char*)& input_data_massive_lenght, sizeof(size_t)); //1st line read count of examples
 
-		NodesCountStorage rww;
-		input_file_stream.read((char*)& rww, sizeof(rww)); //2nd line read network count storage class
-		if (rww.GetInputNodesCount() != this->nodes_count.GetInputNodesCount() && rww.GetOutputNodesCount() != this->nodes_count.GetOutputNodesCount()) { return 2; }
+		NodesCountStorage file_nodes_count;
+		input_file_stream.read((char*)& file_nodes_count, sizeof(file_nodes_count)); //2nd line read network count storage class
+		if (file_nodes_count.GetInputNodesCount() != this->nodes_count.GetInputNodesCount() && file_nodes_count.GetOutputNodesCount() != this->nodes_count.GetOutputNodesCount()) { return 2; }
 
 		for (size_t y = 0; y < input_data_massive_lenght; y++)
 		{
 			double tmp{};
 			//Get input data from file
 			std::vector<double> input_data;
-			for (size_t u = 0; u < rww.GetInputNodesCount(); u++)
+			for (size_t u = 0; u < file_nodes_count.GetInputNodesCount(); u++)
 			{
 				input_file_stream.read((char*)& tmp, sizeof(double));
 				input_data.push_back(tmp);
@@ -213,7 +213,7 @@
 			//Get expected values from file
 			std::vector<double> expectedValues;
 			
-			for (size_t i = 0; i < rww.GetOutputNodesCount(); i++)
+			for (size_t i = 0; i < file_nodes_count.GetOutputNodesCount(); i++)
 			{
 				input_file_stream.read((char*)& tmp, sizeof(double));
 				expectedValues.push_back(tmp);
@@ -265,21 +265,21 @@
 		size_t input_data_massive_lenght{};
 		input_file_stream.read((char*)& input_data_massive_lenght, sizeof(size_t)); //1st line read count of examples
 
-		NodesCountStorage rww;
-		input_file_stream.read((char*)& rww, sizeof(rww)); //2nd line read network count storage class
-		if (rww.GetInputNodesCount() != this->nodes_count.GetInputNodesCount() && rww.GetOutputNodesCount() != this->nodes_count.GetOutputNodesCount()) { return 2; }
+		NodesCountStorage file_nodes_count;
+		input_file_stream.read((char*)& file_nodes_count, sizeof(file_nodes_count)); //2nd line read network count storage class
+		if (file_nodes_count.GetInputNodesCount() != this->nodes_count.GetInputNodesCount() && file_nodes_count.GetOutputNodesCount() != this->nodes_count.GetOutputNodesCount()) { return 2; }
 		
 		
 		std::ofstream output_file_stream;
 		output_file_stream.open(output_data_file_name, std::ios::binary);
 		if (!input_file_stream.is_open()) { return 3; }
 		output_file_stream.write((char*)& input_data_massive_lenght, sizeof(size_t));
-		output_file_stream.write((char*)& rww, sizeof(rww)); 
+		output_file_stream.write((char*)& file_nodes_count, sizeof(file_nodes_count)); 
 		for (size_t i = 0; i < input_data_massive_lenght; i++)
 		{
 			
 			std::vector<double> input_values;
-			for (size_t j = 0; j < rww.GetInputNodesCount(); i++)
+			for (size_t j = 0; j < file_nodes_count.GetInputNodesCount(); i++)
 			{
 				input_values.push_back(0);
 				input_file_stream.read((char*)& input_values[i], sizeof(double));
@@ -287,7 +287,7 @@
 			this->SetData(input_values);
 			this->FeedForward();
 
-			for (size_t j = 0; j < rww.GetOutputNodesCount(); i++)
+			for (size_t j = 0; j < file_nodes_count.GetOutputNodesCount(); i++)
 			{
 				input_values.push_back(0);
 				output_file_stream.write((char*)& (*nodes_values)[this->nodes_count.GetTotalLayersCount() - 1][j], sizeof(double));
