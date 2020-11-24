@@ -82,7 +82,7 @@ void nai::NetApplicationInterface::doWork()
 		if (commandIndex == 2 && parametrsStorage.size() == 1) {
 			if (this->net1) {
 
-				if (!this->net1->writeWeightsToFile(parametrsStorage[0])) std::cout << this->successfullyExecuted() << std::endl;
+				if (!this->net1->WriteWeightsFile(parametrsStorage[0])) std::cout << this->successfullyExecuted() << std::endl;
 				else std::cout << "Unable to create file." << std::endl;
 			}
 			else { std::cout << "Create network first. " << this->useHelp() << std::endl; }
@@ -91,7 +91,7 @@ void nai::NetApplicationInterface::doWork()
 		//loadw
 		if (commandIndex == 3 && parametrsStorage.size() == 1) {
 			if (this->net1) {
-				__int64 retParam = this->net1->readWeightsFromFile(parametrsStorage[0]);
+				__int64 retParam = this->net1->ReadWeightsFile(parametrsStorage[0]);
 				if(retParam == 1) std::cout << "Unable to open file." << std::endl;
 				if (retParam == 2) std::cout << "Layers and nodes sizes does not match." << std::endl;
 				else std::cout << this->successfullyExecuted() << std::endl;
@@ -106,7 +106,7 @@ void nai::NetApplicationInterface::doWork()
 				std::stringstream strst;
 				strst << std::fixed << std::setprecision(15) << parametrsStorage[0];
 				strst >> weightsValue;
-				this->net1->setWeights(weightsValue);
+				this->net1->SetWeights(weightsValue);
 			}
 			else { std::cout << "Create network first. " << this->useHelp() << std::endl; }
 			continue;
@@ -129,14 +129,14 @@ void nai::NetApplicationInterface::doWork()
 		//Trainn
 		if (commandIndex == 6 && parametrsStorage.size() == 2) {
 			if (this->net1) {
-				if (!net1->studyNetworkFileMT(parametrsStorage[0])) {
+				if (!net1->StudyFileMT(parametrsStorage[0])) {
 
 					__int64 trainingsCount{ 1 };
 					std::cout << "Number 1 training completed." << std::endl;
 					for (size_t i = 1; i < static_cast<size_t>(std::stoi(parametrsStorage[1])); i++)
 					{
 						trainingsCount++;
-						net1->studyNetworkFileMT(parametrsStorage[0]);
+						net1->StudyFileMT(parametrsStorage[0]);
 						std::cout << "Number " << i + 1 << " training completed." << std::endl;
 					}
 					std::cout << "The network has been trained " << trainingsCount << " times." << std::endl;
@@ -150,7 +150,7 @@ void nai::NetApplicationInterface::doWork()
 		//Getrw
 		if (commandIndex == 7 ) {
 			if (this->net1) {
-				if (parametrsStorage.size() == this->net1->nodesCount.getInputNodesCount()) {
+				if (parametrsStorage.size() == this->net1->nodes_count.getInputNodesCount()) {
 					
 					std::vector<double> inputData;
 					for (size_t i = 0; i < parametrsStorage.size(); i++)
@@ -161,7 +161,7 @@ void nai::NetApplicationInterface::doWork()
 						strst >> tmp;
 						inputData.push_back(tmp);
 					}
-					std::vector<double>* outputDataP = this->net1->produceResult(inputData);
+					std::vector<double>* outputDataP = this->net1->ProduceResult(inputData);
 
 					
 				}
@@ -173,7 +173,7 @@ void nai::NetApplicationInterface::doWork()
 		//Getrf
 		if (commandIndex == 8 && parametrsStorage.size() == 2) {
 			if (this->net1) {
-				if (this->net1->produceResult(parametrsStorage[0], parametrsStorage[1])) {
+				if (this->net1->ProduceResult(parametrsStorage[0], parametrsStorage[1])) {
 					std::cout << this->successfullyExecuted();
 				}
 				else std::cout << "Unknown parametrs or unable to open file." << std::endl;
@@ -184,12 +184,12 @@ void nai::NetApplicationInterface::doWork()
 		//PRINTNI
 		if (commandIndex == 9 && parametrsStorage.size() == 0) {
 			if (this->net1) {
-				std::cout << "Input nodes: " << this->net1->nodesCount.getInputNodesCount() << std::endl;
-				std::cout << "Hidden nodes: " << this->net1->nodesCount.getHiddenNodesCount() << std::endl;
-				std::cout << "Output nodes: " << this->net1->nodesCount.getOutputNodesCount() << std::endl;
-				std::cout << "Hidden layers: " << this->net1->nodesCount.getHiddenLayersCount() << std::endl;
-				std::cout << "Total layers: " << this->net1->nodesCount.getTotalLayersCount() << std::endl;
-				std::cout << "Learning rate: " << this->net1->getLearningRate() << std::endl;
+				std::cout << "Input nodes: " << this->net1->nodes_count.getInputNodesCount() << std::endl;
+				std::cout << "Hidden nodes: " << this->net1->nodes_count.getHiddenNodesCount() << std::endl;
+				std::cout << "Output nodes: " << this->net1->nodes_count.getOutputNodesCount() << std::endl;
+				std::cout << "Hidden layers: " << this->net1->nodes_count.getHiddenLayersCount() << std::endl;
+				std::cout << "Total layers: " << this->net1->nodes_count.getTotalLayersCount() << std::endl;
+				std::cout << "Learning rate: " << this->net1->GetLearningRate() << std::endl;
 			}
 			else std::cout << "Create network first." << std::endl;
 			continue;
@@ -197,7 +197,7 @@ void nai::NetApplicationInterface::doWork()
 		//PRINTW
 		if (commandIndex == 10 && parametrsStorage.size() == 0) {
 			if (this->net1) {
-				this->net1->printWeights();
+				this->net1->PrintWeights();
 			}
 			else std::cout << "Create network first." << std::endl;
 			continue;
@@ -210,7 +210,7 @@ void nai::NetApplicationInterface::doWork()
 		//SETLR
 		if (commandIndex == 12 && parametrsStorage.size() == 1) {
 			if (this->net1) {
-				this->net1->setLearningRate(stod(parametrsStorage[0]));
+				this->net1->SetLearningRate(stod(parametrsStorage[0]));
 			}
 			else std::cout << "Create network first." << std::endl;
 			continue;

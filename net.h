@@ -13,7 +13,7 @@
 
 namespace ann {
 	
-	class dataMassiveMaker 
+	class DataMassiveMaker 
 	{
 	//SECTION: DATA
 	
@@ -26,13 +26,13 @@ namespace ann {
 	//SECTION: METHODS
 	public:
 
-		dataMassiveMaker();
+		DataMassiveMaker();
 
 		__int64 printNumbersMassive(std::string fileName) const;
 		__int64 evenNumbersMassive(const size_t inputDataSize, const size_t outputDataSize, const size_t massiveSize, const std::string fileName, const __int64 lowerLimit, const __int64 upperLimit) const;
 	};
 
-	class nodesCountStorage 
+	class NodesCountStorage 
 	{
 	
 	//SECTION: DATA
@@ -48,10 +48,10 @@ namespace ann {
 	//SECTION: METHODS
 	public:
 		
-		nodesCountStorage();
+		NodesCountStorage();
 		
-		auto operator==(const nodesCountStorage& ex) const;
-		bool operator!=(const nodesCountStorage& ex) const;
+		auto operator==(const NodesCountStorage& ex) const;
+		bool operator!=(const NodesCountStorage& ex) const;
 
 		size_t getInputNodesCount() const;
 		size_t getHiddenNodesCount() const;
@@ -73,14 +73,14 @@ namespace ann {
 	//SECTION: DATA
 	public:
 
-		nodesCountStorage nodesCount;
+		NodesCountStorage nodes_count;
 
 	private: 
 		
 		std::vector<std::vector<std::vector<double>>>* nodes_weights;
 	    std::vector<std::vector<double>>* nodes_values;
 	    std::vector<std::vector<double>>* nodes_error_values;
-		double learningRate;
+		double learning_rate;
 		
 		
 	
@@ -91,35 +91,35 @@ namespace ann {
 		template <class T>
 		inline T activationFunction(const T value, const bool returnDerivativereturnDerivativeValueInstead) const;
 		
-		void feedForward();
-		void feedBack(const std::vector<double>& expValues);
-		void weightsReadjustment();
+		void FeedForward();
+		void FeedBack(const std::vector<double>& expValues);
+		void WeightsReadjustment();
 
-		__int64 setData(const std::vector<double>& inputData);
+		__int64 SetData(const std::vector<double>& inputData);
 
 	public: 
 		
 		NeuralNet(const size_t inputNodesCount, const size_t hiddenNodesCount, const size_t outputNodesCount, const size_t hiddenLayersCount); //Kernel constructor
 			
-		__int64 readWeightsFromFile(const std::string weightsStorageFileName); // returns 1 if file can not be open, 0 if it opens
-		__int64 writeWeightsToFile(const std::string weightsStorageFileName) const; // returns 1 if file can not be open, 0 if it opens
+		__int64 ReadWeightsFile(const std::string weightsStorageFileName); // returns 1 if file can not be open, 0 if it opens
+		__int64 WriteWeightsFile(const std::string weightsStorageFileName) const; // returns 1 if file can not be open, 0 if it opens
 		
-		__int64 studyNetworkFile(const std::string &fileName);
-		__int64 studyNetworkFileMT(const std::string& fileName);
+		__int64 StudyFile(const std::string &fileName);
+		__int64 StudyFileMT(const std::string& fileName);
 		__int8 StudyOnce(const std::vector<double> &input_data);
 
-		std::vector<double>* produceResult(const std::vector<double>& inputValues);
-		__int64 produceResult(const std::string inputDataFileName, const std::string outputDataFileName);
+		std::vector<double>* ProduceResult(const std::vector<double>& inputValues);
+		__int64 ProduceResult(const std::string inputDataFileName, const std::string outputDataFileName);
 
-		void setWeights(const double value);
-		void setLearningRate(const double value);
+		void SetWeights(const double value);
+		void SetLearningRate(const double value);
 		
-		double getLearningRate() const;
+		double GetLearningRate() const;
 		
-		void printResult() const;
-		void printWeights() const;
+		void PrintResult() const;
+		void PrintWeights() const;
 
-		void reinitializeWeights(const double lowerLimit, const double upperLimit);
+		void WeightsReinitialisation(const double lowerLimit, const double upperLimit);
 
 	};
 
@@ -127,8 +127,8 @@ namespace ann {
 } // namespace nnet
 namespace afunctions {
 	
-	inline double RandomFunc(const double lowerLimit, const double upperLimit);
-	inline __int64 RandomFunc(const __int64 lowerLimit, const __int64 upperLimit);
+	inline double RandomFunction(const double lowerLimit, const double upperLimit);
+	inline __int64 RandomFunction(const __int64 lowerLimit, const __int64 upperLimit);
 }
 
 // namespace afunctions

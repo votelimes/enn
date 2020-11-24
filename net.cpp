@@ -6,11 +6,11 @@
 	{
 		//Fill variables:
 		
-		this->nodesCount.setInputNodesCount(inputNodesCount);
-		this->nodesCount.setHiddenNodesCount(hiddenNodesCount);
-		this->nodesCount.setOutputNodesCount(outputNodesCount);
-		this->nodesCount.setHiddenLayersCount(hiddenLayersCount);
-		this->learningRate = 0.1;
+		this->nodes_count.setInputNodesCount(inputNodesCount);
+		this->nodes_count.setHiddenNodesCount(hiddenNodesCount);
+		this->nodes_count.setOutputNodesCount(outputNodesCount);
+		this->nodes_count.setHiddenLayersCount(hiddenLayersCount);
+		this->learning_rate = 0.1;
 		
 		//Create and normalize arrays
 		this->nodes_weights = new std::vector<std::vector<std::vector<double>>>(hiddenLayersCount + 1, std::vector<std::vector<double>>(hiddenNodesCount, std::vector<double>(hiddenNodesCount, 0)));
@@ -19,36 +19,36 @@
 
 		(*nodes_values)[0].resize(inputNodesCount, 0);
 		(*nodes_values)[0].shrink_to_fit();
-		(*nodes_values)[this->nodesCount.getHiddenLayersCount() + 1].resize(outputNodesCount, 0);
-		(*nodes_values)[this->nodesCount.getHiddenLayersCount() + 1].shrink_to_fit();
+		(*nodes_values)[this->nodes_count.getHiddenLayersCount() + 1].resize(outputNodesCount, 0);
+		(*nodes_values)[this->nodes_count.getHiddenLayersCount() + 1].shrink_to_fit();
 
-		(*nodes_error_values)[this->nodesCount.getHiddenLayersCount()].resize(outputNodesCount, 0);
-		(*nodes_error_values)[this->nodesCount.getHiddenLayersCount()].shrink_to_fit();
+		(*nodes_error_values)[this->nodes_count.getHiddenLayersCount()].resize(outputNodesCount, 0);
+		(*nodes_error_values)[this->nodes_count.getHiddenLayersCount()].shrink_to_fit();
 
 		(*nodes_weights)[0].resize(inputNodesCount);
 		(*nodes_weights)[0].shrink_to_fit();
 		//
-		for (size_t i = 0; i < (*nodes_weights)[this->nodesCount.getHiddenLayersCount()].size(); i++)
+		for (size_t i = 0; i < (*nodes_weights)[this->nodes_count.getHiddenLayersCount()].size(); i++)
 		{
-			(*nodes_weights)[this->nodesCount.getHiddenLayersCount()][i].resize(outputNodesCount, afunctions::RandomFunc(0.0, 1.0));
-			(*nodes_weights)[this->nodesCount.getHiddenLayersCount()][i].shrink_to_fit();
+			(*nodes_weights)[this->nodes_count.getHiddenLayersCount()][i].resize(outputNodesCount, afunctions::RandomFunction(0.0, 1.0));
+			(*nodes_weights)[this->nodes_count.getHiddenLayersCount()][i].shrink_to_fit();
 		}
 		//Weights initialization(random values) cicles:
 		
-		for (size_t i = 0; i < this->nodesCount.getHiddenLayersCount() + 1; i++)
+		for (size_t i = 0; i < this->nodes_count.getHiddenLayersCount() + 1; i++)
 		{
 			for (size_t k = 0; k < (*nodes_weights)[i].size(); k++)
 			{
 				for (size_t j = 0; j < (*nodes_weights)[i][k].size(); j++)
 				{
-					(*nodes_weights)[i][k][j] = afunctions::RandomFunc(0.0, 1.0);
+					(*nodes_weights)[i][k][j] = afunctions::RandomFunction(0.0, 1.0);
 				}
 			}
 		}
 		//
 	} // //Kernel constructor
 
-	__int64 ann::NeuralNet::readWeightsFromFile(const std::string weightsStorageFileName) //returns 2 if layers nodes count does not match, returns 1 if file can not be open, 0 if it opens
+	__int64 ann::NeuralNet::ReadWeightsFile(const std::string weightsStorageFileName) //returns 2 if layers nodes count does not match, returns 1 if file can not be open, 0 if it opens
 	{
 		std::ifstream ifs;
 
@@ -57,14 +57,14 @@
 			return 1;
 		}
 
-		nodesCountStorage rww;
+		NodesCountStorage rww;
 		ifs.read((char*)&rww, sizeof(rww));
-		if (rww != this->nodesCount) {
+		if (rww != this->nodes_count) {
 			return 2;
 		}
 
 		double var{};
-		for (size_t i = 0; i < this->nodesCount.getHiddenLayersCount() + 1; i++)
+		for (size_t i = 0; i < this->nodes_count.getHiddenLayersCount() + 1; i++)
 		{
 			for (size_t j = 0; j < (*nodes_values)[i].size(); j++)
 			{
@@ -77,7 +77,7 @@
 		}
 		return 0;
 	}
-	__int64 ann::NeuralNet::writeWeightsToFile(const std::string weightsStorageFileName) const // returns 1 if file can not be open, 0 if it opens
+	__int64 ann::NeuralNet::WriteWeightsFile(const std::string weightsStorageFileName) const // returns 1 if file can not be open, 0 if it opens
 	{
 		std::ofstream output_file_stream;
 		output_file_stream.open(weightsStorageFileName, std::ios::binary);
@@ -86,9 +86,9 @@
 			return 1;
 		}
 		
-		output_file_stream.write((char*)& this->nodesCount, sizeof(this->nodesCount));
+		output_file_stream.write((char*)& this->nodes_count, sizeof(this->nodes_count));
 		
-		for (size_t i = 0; i < this->nodesCount.getHiddenLayersCount() + 1; i++)
+		for (size_t i = 0; i < this->nodes_count.getHiddenLayersCount() + 1; i++)
 		{
 			for (size_t j = 0; j < (*nodes_values)[i].size(); j++)
 			{
@@ -101,7 +101,7 @@
 		return 0;
 	}
 	
-	__int64 ann::NeuralNet::studyNetworkFile(const std::string& fileName)
+	__int64 ann::NeuralNet::StudyFile(const std::string& fileName)
 	{
 		std::ifstream ifs;
 	
@@ -111,9 +111,9 @@
 		size_t dataMassiveSize{};
 		ifs.read((char*)& dataMassiveSize, sizeof(size_t)); //1st line read count of examples
 
-		nodesCountStorage rww;
+		NodesCountStorage rww;
 		ifs.read((char*)& rww, sizeof(rww)); //2nd line read network count storage class
-		if (rww.getInputNodesCount() != this->nodesCount.getInputNodesCount() && rww.getOutputNodesCount() != this->nodesCount.getOutputNodesCount()) { return 2; }
+		if (rww.getInputNodesCount() != this->nodes_count.getInputNodesCount() && rww.getOutputNodesCount() != this->nodes_count.getOutputNodesCount()) { return 2; }
 
 		for (size_t y = 0; y < dataMassiveSize; y++)
 		{
@@ -174,7 +174,7 @@
 				{
 					for (size_t k = 0; k < (*nodes_values)[i].size(); k++)
 					{
-						(*nodes_weights)[i][k][j] = (*nodes_weights)[i][k][j] + (learningRate * (*nodes_error_values)[i][j] * activationFunction((*nodes_values)[i + 1][j], true) * (*nodes_values)[i][k]);
+						(*nodes_weights)[i][k][j] = (*nodes_weights)[i][k][j] + (learning_rate * (*nodes_error_values)[i][j] * activationFunction((*nodes_values)[i + 1][j], true) * (*nodes_values)[i][k]);
 					}
 				}
 			}
@@ -182,7 +182,7 @@
 		}
 		return 0;
 	}
-	__int64 ann::NeuralNet::studyNetworkFileMT(const std::string& fileName)
+	__int64 ann::NeuralNet::StudyFileMT(const std::string& fileName)
 	{
 		std::ifstream ifs;
 
@@ -192,9 +192,9 @@
 		size_t dataMassiveSize{};
 		ifs.read((char*)& dataMassiveSize, sizeof(size_t)); //1st line read count of examples
 
-		nodesCountStorage rww;
+		NodesCountStorage rww;
 		ifs.read((char*)& rww, sizeof(rww)); //2nd line read network count storage class
-		if (rww.getInputNodesCount() != this->nodesCount.getInputNodesCount() && rww.getOutputNodesCount() != this->nodesCount.getOutputNodesCount()) { return 2; }
+		if (rww.getInputNodesCount() != this->nodes_count.getInputNodesCount() && rww.getOutputNodesCount() != this->nodes_count.getOutputNodesCount()) { return 2; }
 
 		for (size_t y = 0; y < dataMassiveSize; y++)
 		{
@@ -207,9 +207,9 @@
 				inputData.push_back(tmp);
 			}
 			//Set input data to network
-			this->setData(inputData);
+			this->SetData(inputData);
 			//Feed forward
-			this->feedForward();
+			this->FeedForward();
 			//Get expected values from file
 			std::vector<double> expectedValues;
 			
@@ -219,7 +219,7 @@
 				expectedValues.push_back(tmp);
 			}
 			//Calculate error procent for all layers
-			this->feedBack(expectedValues);
+			this->FeedBack(expectedValues);
 
 			//Adjust weights:
 			for (size_t i = 0; i < (*nodes_weights).size(); i++)
@@ -228,7 +228,7 @@
 				{
 					for (size_t k = 0; k < (*nodes_values)[i].size(); k++)
 					{
-						(*nodes_weights)[i][k][j] = (*nodes_weights)[i][k][j] + (learningRate * (*nodes_error_values)[i][j] * activationFunction((*nodes_values)[i + 1][j], true) * (*nodes_values)[i][k]);
+						(*nodes_weights)[i][k][j] = (*nodes_weights)[i][k][j] + (learning_rate * (*nodes_error_values)[i][j] * activationFunction((*nodes_values)[i + 1][j], true) * (*nodes_values)[i][k]);
 					}
 				}
 			}
@@ -237,25 +237,25 @@
 		return 0;
 	}
 	__int8 ann::NeuralNet::StudyOnce(const std::vector<double> &input_data){
-		
+
 		return 0;
 	}
 
-	std::vector<double>* ann::NeuralNet::produceResult(const std::vector<double>& inputValues)
+	std::vector<double>* ann::NeuralNet::ProduceResult(const std::vector<double>& inputValues)
 	{
-		if (this->setData(inputValues)) { return nullptr; }
+		if (this->SetData(inputValues)) { return nullptr; }
 		
-		this->feedForward();
+		this->FeedForward();
 
 		static std::vector<double>* outputValues = new std::vector<double>;
-		for (size_t i = 0; i < (*nodes_values)[this->nodesCount.getTotalLayersCount() - 1].size(); i++)
+		for (size_t i = 0; i < (*nodes_values)[this->nodes_count.getTotalLayersCount() - 1].size(); i++)
 		{
-			outputValues->push_back((*nodes_values)[this->nodesCount.getTotalLayersCount() - 1][i]);
+			outputValues->push_back((*nodes_values)[this->nodes_count.getTotalLayersCount() - 1][i]);
 		}
 
 		return outputValues;
 	}
-	__int64 ann::NeuralNet::produceResult(const std::string inputDataFileName, const std::string outputDataFileName)
+	__int64 ann::NeuralNet::ProduceResult(const std::string inputDataFileName, const std::string outputDataFileName)
 	{
 		std::ifstream ifs;
 
@@ -265,9 +265,9 @@
 		size_t dataMassiveSize{};
 		ifs.read((char*)& dataMassiveSize, sizeof(size_t)); //1st line read count of examples
 
-		nodesCountStorage rww;
+		NodesCountStorage rww;
 		ifs.read((char*)& rww, sizeof(rww)); //2nd line read network count storage class
-		if (rww.getInputNodesCount() != this->nodesCount.getInputNodesCount() && rww.getOutputNodesCount() != this->nodesCount.getOutputNodesCount()) { return 2; }
+		if (rww.getInputNodesCount() != this->nodes_count.getInputNodesCount() && rww.getOutputNodesCount() != this->nodes_count.getOutputNodesCount()) { return 2; }
 		
 		
 		std::ofstream output_file_stream;
@@ -284,19 +284,19 @@
 				inputValues.push_back(0);
 				ifs.read((char*)& inputValues[i], sizeof(double));
 			}
-			this->setData(inputValues);
-			this->feedForward();
+			this->SetData(inputValues);
+			this->FeedForward();
 
 			for (size_t j = 0; j < rww.getOutputNodesCount(); i++)
 			{
 				inputValues.push_back(0);
-				output_file_stream.write((char*)& (*nodes_values)[this->nodesCount.getTotalLayersCount() - 1][j], sizeof(double));
+				output_file_stream.write((char*)& (*nodes_values)[this->nodes_count.getTotalLayersCount() - 1][j], sizeof(double));
 			}
 		}
 		return 0;
 	}
 	
-	void ann::NeuralNet::feedForward()
+	void ann::NeuralNet::FeedForward()
 	{
 		double tmp{};
 
@@ -315,16 +315,16 @@
 			}
 		}
 	}
-	void ann::NeuralNet::feedBack(const std::vector<double>& expValues)
+	void ann::NeuralNet::FeedBack(const std::vector<double>& expValues)
 	{
 		//Calc output layer errors
-		for (size_t i = 0; i < this->nodesCount.getOutputNodesCount(); i++)
+		for (size_t i = 0; i < this->nodes_count.getOutputNodesCount(); i++)
 		{
-			(*nodes_error_values)[this->nodesCount.getTotalLayersCount() - 2][i] = expValues[i] - (*nodes_values)[this->nodesCount.getTotalLayersCount() - 1][i];
+			(*nodes_error_values)[this->nodes_count.getTotalLayersCount() - 2][i] = expValues[i] - (*nodes_values)[this->nodes_count.getTotalLayersCount() - 1][i];
 		}
 		
 		//Calc all other layers errors
-		for (size_t i = this->nodesCount.getTotalLayersCount() - 2; i > 0; i--)
+		for (size_t i = this->nodes_count.getTotalLayersCount() - 2; i > 0; i--)
 		{
 			for (size_t j = 0; j < (*nodes_values)[i].size(); j++)
 			{
@@ -339,7 +339,7 @@
 		}
 
 	}
-	void ann::NeuralNet::weightsReadjustment()
+	void ann::NeuralNet::WeightsReadjustment()
 	{
 		for (size_t i = 0; i < (*nodes_weights).size(); i++)
 		{
@@ -347,16 +347,16 @@
 			{
 				for (size_t k = 0; k < (*nodes_values)[i].size(); k++)
 				{
-					(*nodes_weights)[i][k][j] = (*nodes_weights)[i][k][j] + (learningRate * (*nodes_error_values)[i][j] * activationFunction((*nodes_values)[i + 1][j], true) * (*nodes_values)[i][k]);
+					(*nodes_weights)[i][k][j] = (*nodes_weights)[i][k][j] + (learning_rate * (*nodes_error_values)[i][j] * activationFunction((*nodes_values)[i + 1][j], true) * (*nodes_values)[i][k]);
 				}
 			}
 		}
 	}
 
-	__int64 ann::NeuralNet::setData(const std::vector<double> &inputData) // Return value is difference between network input layer size() and input data size();
+	__int64 ann::NeuralNet::SetData(const std::vector<double> &inputData) // Return value is difference between network input layer size() and input data size();
 	{
 		
-		if (inputData.size() != this->nodesCount.getInputNodesCount()) return (__int64)this->nodesCount.getInputNodesCount() - inputData.size();
+		if (inputData.size() != this->nodes_count.getInputNodesCount()) return (__int64)this->nodes_count.getInputNodesCount() - inputData.size();
 
 		//Core part:
 		for (size_t i = 0; i < (*nodes_values)[0].size() && i < inputData.size(); i++)
@@ -366,22 +366,22 @@
 		return 0;
 	}
 	
-	void ann::NeuralNet::reinitializeWeights(const double lowerLimit, const double upperLimit)
+	void ann::NeuralNet::WeightsReinitialisation(const double lowerLimit, const double upperLimit)
 	{
-		for (size_t i = 0; i < this->nodesCount.getHiddenLayersCount() + 1; i++)
+		for (size_t i = 0; i < this->nodes_count.getHiddenLayersCount() + 1; i++)
 		{
 			for (size_t j = 0; j < (*nodes_values)[i].size(); j++)
 			{
 				for (size_t k = 0; k < (*nodes_values)[i + 1].size(); k++)
 				{
-					(*nodes_weights)[i][j][k] = afunctions::RandomFunc(lowerLimit, upperLimit);
+					(*nodes_weights)[i][j][k] = afunctions::RandomFunction(lowerLimit, upperLimit);
 				}
 			}
 		}
 	}
-	void ann::NeuralNet::setWeights(const double value)
+	void ann::NeuralNet::SetWeights(const double value)
 	{
-		for (size_t i = 0; i < this->nodesCount.getHiddenLayersCount() + 1; i++)
+		for (size_t i = 0; i < this->nodes_count.getHiddenLayersCount() + 1; i++)
 		{
 			for (size_t j = 0; j < (*nodes_values)[i].size(); j++)
 			{
@@ -392,26 +392,26 @@
 			}
 		}
 	}
-	void ann::NeuralNet::setLearningRate(const double value)
+	void ann::NeuralNet::SetLearningRate(const double value)
 	{
-		this->learningRate = value;
+		this->learning_rate = value;
 	}
 
-	double ann::NeuralNet::getLearningRate() const
+	double ann::NeuralNet::GetLearningRate() const
 	{
-		return this->learningRate;
+		return this->learning_rate;
 	}
 	
-	void ann::NeuralNet::printResult() const
+	void ann::NeuralNet::PrintResult() const
 	{
 		std::cout << "_______________________________________________________" << std::endl;
-		for (size_t i = 0; i < this->nodesCount.getOutputNodesCount(); i++)
+		for (size_t i = 0; i < this->nodes_count.getOutputNodesCount(); i++)
 		{
-			std::cout << i + 1 << ". " << (*nodes_values)[this->nodesCount.getHiddenLayersCount() + 1][i] << std::endl;
+			std::cout << i + 1 << ". " << (*nodes_values)[this->nodes_count.getHiddenLayersCount() + 1][i] << std::endl;
 		}
 		std::cout << "_______________________________________________________" << std::endl;
 	}
-	void ann::NeuralNet::printWeights() const
+	void ann::NeuralNet::PrintWeights() const
 	{
 		
 		std::cout.setf(std::ios::fixed);
@@ -468,7 +468,7 @@
 	
 
 	//Additional classes: 
-	ann::nodesCountStorage::nodesCountStorage()
+	ann::NodesCountStorage::NodesCountStorage()
 	{
 		this->inputNodesCount = 0;
 		this->hiddenNodesCount = 0;
@@ -477,70 +477,70 @@
 		this->totalLayersCount = 0;
 	}
 
-	auto ann::nodesCountStorage::operator==(const nodesCountStorage& ex) const
+	auto ann::NodesCountStorage::operator==(const NodesCountStorage& ex) const
 	{
 		return (inputNodesCount == ex.inputNodesCount) && (hiddenNodesCount == ex.hiddenNodesCount) && (outputNodesCount == ex.outputNodesCount) && (hiddenLayersCount == ex.hiddenLayersCount);
 	}
-	bool ann::nodesCountStorage::operator!=(const nodesCountStorage& ex) const
+	bool ann::NodesCountStorage::operator!=(const NodesCountStorage& ex) const
 	{
 		return (inputNodesCount != ex.inputNodesCount) && (hiddenNodesCount != ex.hiddenNodesCount) && (outputNodesCount != ex.outputNodesCount) && (hiddenLayersCount != ex.hiddenLayersCount);
 	}
 	
-	size_t ann::nodesCountStorage::getInputNodesCount() const
+	size_t ann::NodesCountStorage::getInputNodesCount() const
 	{
 		return this->inputNodesCount;
 	}
-	size_t ann::nodesCountStorage::getHiddenNodesCount() const
+	size_t ann::NodesCountStorage::getHiddenNodesCount() const
 	{
 		return this->hiddenNodesCount;
 	}
-	size_t ann::nodesCountStorage::getOutputNodesCount() const
+	size_t ann::NodesCountStorage::getOutputNodesCount() const
 	{
 		return this->outputNodesCount;
 	}
-	size_t ann::nodesCountStorage::getHiddenLayersCount() const
+	size_t ann::NodesCountStorage::getHiddenLayersCount() const
 	{
 		return this->hiddenLayersCount;
 	}
-	size_t ann::nodesCountStorage::getTotalLayersCount() const
+	size_t ann::NodesCountStorage::getTotalLayersCount() const
 	{
 		return this->totalLayersCount;
 	}
 	
-	void ann::nodesCountStorage::setInputNodesCount(const size_t value)
+	void ann::NodesCountStorage::setInputNodesCount(const size_t value)
 	{
 		this->inputNodesCount = value;
 		this->totalLayersCount = this->hiddenLayersCount + (size_t) 2;
 	}
-	void ann::nodesCountStorage::setHiddenNodesCount(const size_t value)
+	void ann::NodesCountStorage::setHiddenNodesCount(const size_t value)
 	{
 		this->hiddenNodesCount = value;
 		this->totalLayersCount = this->hiddenLayersCount + (size_t)2;
 	}
-	void ann::nodesCountStorage::setOutputNodesCount(const size_t value)
+	void ann::NodesCountStorage::setOutputNodesCount(const size_t value)
 	{
 		this->outputNodesCount = value;
 		this->totalLayersCount = this->hiddenLayersCount + (size_t)2;
 	}
-	void ann::nodesCountStorage::setHiddenLayersCount(const size_t value)
+	void ann::NodesCountStorage::setHiddenLayersCount(const size_t value)
 	{
 		this->hiddenLayersCount = value;
 		this->totalLayersCount = this->hiddenLayersCount + (size_t)2;
 	}
 
-	void ann::nodesCountStorage::print()
+	void ann::NodesCountStorage::print()
 	{
 		std::cout << "Input nodes: " << this->getInputNodesCount() << "  |  Hidden nodes: " << this->getHiddenNodesCount() << "  |  Output nodes: " << this->getOutputNodesCount() << "  |  Hidden layers: " << this->getHiddenLayersCount() << std::endl;
 	}
 	
-	ann::dataMassiveMaker::dataMassiveMaker()
+	ann::DataMassiveMaker::DataMassiveMaker()
 	{
 		this->massiveSize = 0;
 		this->inputDataSize = 0;
 		this->expectedValuesSize = 0;
 	}
 
-	__int64 ann::dataMassiveMaker::printNumbersMassive(std::string fileName) const
+	__int64 ann::DataMassiveMaker::printNumbersMassive(std::string fileName) const
 	{
 		std::ifstream ifs;
 		ifs.open(fileName, std::ios::binary);
@@ -548,7 +548,7 @@
 		size_t massiveSize;
 		ifs.read((char*)& massiveSize, sizeof(size_t));
 
-		ann::nodesCountStorage ncs;
+		ann::NodesCountStorage ncs;
 		ifs.read((char*)& ncs, sizeof(ncs));
 		
 		ncs.print();
@@ -576,7 +576,7 @@
 		return 0;
 	}
 
-	__int64 ann::dataMassiveMaker::evenNumbersMassive(const size_t inputDataSize, const size_t outputDataSize, const size_t massiveSize, const std::string fileName, const __int64 lowerLimit, const __int64 upperLimit) const
+	__int64 ann::DataMassiveMaker::evenNumbersMassive(const size_t inputDataSize, const size_t outputDataSize, const size_t massiveSize, const std::string fileName, const __int64 lowerLimit, const __int64 upperLimit) const
 	{
 		std::ofstream output_file_stream;
 		output_file_stream.open(fileName, std::ios::binary);
@@ -584,7 +584,7 @@
 
 		output_file_stream.write((char*)& massiveSize, sizeof(size_t));
 		
-		ann::nodesCountStorage ncs;
+		ann::NodesCountStorage ncs;
 		ncs.setInputNodesCount(inputDataSize);
 		ncs.setOutputNodesCount(outputDataSize);
 		output_file_stream.write((char*)& ncs, sizeof(ncs));
@@ -593,7 +593,7 @@
 		{
 			__int64 varInt{};
 			
-			varInt = afunctions::RandomFunc(static_cast<__int64>(lowerLimit), static_cast<__int64>(upperLimit));
+			varInt = afunctions::RandomFunction(static_cast<__int64>(lowerLimit), static_cast<__int64>(upperLimit));
 			
 			double if1{};
 			if (varInt % 2 == 0) if1 = 1.0;
@@ -608,7 +608,7 @@
 	}
 	
 	//Additional functions:
-	inline double afunctions::RandomFunc(const double lowerLimit, const double upperLimit)
+	inline double afunctions::RandomFunction(const double lowerLimit, const double upperLimit)
  {
 	 
 	 std::random_device rd;
@@ -620,7 +620,7 @@
 	 rv = uid(gen);
 	 return rv > 0 ? rv = uid(gen) : rv;
  }
-	inline __int64 afunctions::RandomFunc(const __int64 lowerLimit, const __int64 upperLimit)
+	inline __int64 afunctions::RandomFunction(const __int64 lowerLimit, const __int64 upperLimit)
  {
 	
 	std::random_device rd;
