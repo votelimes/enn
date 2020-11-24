@@ -101,21 +101,21 @@
 		return 0;
 	}
 	
-	__int64 ann::NeuralNet::StudyFile(const std::string& fileName)
+	__int64 ann::NeuralNet::StudyFile(const std::string& dataset_file_name)
 	{
 		std::ifstream ifs;
 	
-		ifs.open(fileName, std::ios::binary);
+		ifs.open(dataset_file_name, std::ios::binary);
 		if (!ifs.is_open()) { return 1; }
 		
-		size_t dataMassiveSize{};
-		ifs.read((char*)& dataMassiveSize, sizeof(size_t)); //1st line read count of examples
+		size_t input_data_massive_lenght{};
+		ifs.read((char*)& input_data_massive_lenght, sizeof(size_t)); //1st line read count of examples
 
 		NodesCountStorage rww;
 		ifs.read((char*)& rww, sizeof(rww)); //2nd line read network count storage class
 		if (rww.getInputNodesCount() != this->nodes_count.getInputNodesCount() && rww.getOutputNodesCount() != this->nodes_count.getOutputNodesCount()) { return 2; }
 
-		for (size_t y = 0; y < dataMassiveSize; y++)
+		for (size_t y = 0; y < input_data_massive_lenght; y++)
 		{
 			double tmp{};
 			//input layer initialization
@@ -182,21 +182,21 @@
 		}
 		return 0;
 	}
-	__int64 ann::NeuralNet::StudyFileMT(const std::string& fileName)
+	__int64 ann::NeuralNet::StudyFileMT(const std::string& dataset_file_name)
 	{
 		std::ifstream ifs;
 
-		ifs.open(fileName, std::ios::binary);
+		ifs.open(dataset_file_name, std::ios::binary);
 		if (!ifs.is_open()) { return 1; }
 
-		size_t dataMassiveSize{};
-		ifs.read((char*)& dataMassiveSize, sizeof(size_t)); //1st line read count of examples
+		size_t input_data_massive_lenght{};
+		ifs.read((char*)& input_data_massive_lenght, sizeof(size_t)); //1st line read count of examples
 
 		NodesCountStorage rww;
 		ifs.read((char*)& rww, sizeof(rww)); //2nd line read network count storage class
 		if (rww.getInputNodesCount() != this->nodes_count.getInputNodesCount() && rww.getOutputNodesCount() != this->nodes_count.getOutputNodesCount()) { return 2; }
 
-		for (size_t y = 0; y < dataMassiveSize; y++)
+		for (size_t y = 0; y < input_data_massive_lenght; y++)
 		{
 			double tmp{};
 			//Get input data from file
@@ -241,9 +241,9 @@
 		return 0;
 	}
 
-	std::vector<double>* ann::NeuralNet::ProduceResult(const std::vector<double>& inputValues)
+	std::vector<double>* ann::NeuralNet::ProduceResult(const std::vector<double>& input_values)
 	{
-		if (this->SetData(inputValues)) { return nullptr; }
+		if (this->SetData(input_values)) { return nullptr; }
 		
 		this->FeedForward();
 
@@ -255,15 +255,15 @@
 
 		return outputValues;
 	}
-	__int64 ann::NeuralNet::ProduceResult(const std::string inputDataFileName, const std::string outputDataFileName)
+	__int64 ann::NeuralNet::ProduceResult(const std::string input_data_file_name, const std::string output_data_file_name)
 	{
 		std::ifstream ifs;
 
-		ifs.open(inputDataFileName, std::ios::binary);
+		ifs.open(input_data_file_name, std::ios::binary);
 		if (!ifs.is_open()) { return 1; }
 
-		size_t dataMassiveSize{};
-		ifs.read((char*)& dataMassiveSize, sizeof(size_t)); //1st line read count of examples
+		size_t input_data_massive_lenght{};
+		ifs.read((char*)& input_data_massive_lenght, sizeof(size_t)); //1st line read count of examples
 
 		NodesCountStorage rww;
 		ifs.read((char*)& rww, sizeof(rww)); //2nd line read network count storage class
@@ -271,25 +271,25 @@
 		
 		
 		std::ofstream output_file_stream;
-		output_file_stream.open(outputDataFileName, std::ios::binary);
+		output_file_stream.open(output_data_file_name, std::ios::binary);
 		if (!ifs.is_open()) { return 3; }
-		output_file_stream.write((char*)& dataMassiveSize, sizeof(size_t));
+		output_file_stream.write((char*)& input_data_massive_lenght, sizeof(size_t));
 		output_file_stream.write((char*)& rww, sizeof(rww)); 
-		for (size_t i = 0; i < dataMassiveSize; i++)
+		for (size_t i = 0; i < input_data_massive_lenght; i++)
 		{
 			
-			std::vector<double> inputValues;
+			std::vector<double> input_values;
 			for (size_t j = 0; j < rww.getInputNodesCount(); i++)
 			{
-				inputValues.push_back(0);
-				ifs.read((char*)& inputValues[i], sizeof(double));
+				input_values.push_back(0);
+				ifs.read((char*)& input_values[i], sizeof(double));
 			}
-			this->SetData(inputValues);
+			this->SetData(input_values);
 			this->FeedForward();
 
 			for (size_t j = 0; j < rww.getOutputNodesCount(); i++)
 			{
-				inputValues.push_back(0);
+				input_values.push_back(0);
 				output_file_stream.write((char*)& (*nodes_values)[this->nodes_count.getTotalLayersCount() - 1][j], sizeof(double));
 			}
 		}
@@ -315,12 +315,12 @@
 			}
 		}
 	}
-	void ann::NeuralNet::FeedBack(const std::vector<double>& expValues)
+	void ann::NeuralNet::FeedBack(const std::vector<double>& expected_values)
 	{
 		//Calc output layer errors
 		for (size_t i = 0; i < this->nodes_count.getOutputNodesCount(); i++)
 		{
-			(*nodes_error_values)[this->nodes_count.getTotalLayersCount() - 2][i] = expValues[i] - (*nodes_values)[this->nodes_count.getTotalLayersCount() - 1][i];
+			(*nodes_error_values)[this->nodes_count.getTotalLayersCount() - 2][i] = expected_values[i] - (*nodes_values)[this->nodes_count.getTotalLayersCount() - 1][i];
 		}
 		
 		//Calc all other layers errors
@@ -366,7 +366,7 @@
 		return 0;
 	}
 	
-	void ann::NeuralNet::WeightsReinitialisation(const double lowerLimit, const double upperLimit)
+	void ann::NeuralNet::WeightsReinitialisation(const double lower_limit, const double upper_limit)
 	{
 		for (size_t i = 0; i < this->nodes_count.getHiddenLayersCount() + 1; i++)
 		{
@@ -374,7 +374,7 @@
 			{
 				for (size_t k = 0; k < (*nodes_values)[i + 1].size(); k++)
 				{
-					(*nodes_weights)[i][j][k] = afunctions::RandomFunction(lowerLimit, upperLimit);
+					(*nodes_weights)[i][j][k] = afunctions::RandomFunction(lower_limit, upper_limit);
 				}
 			}
 		}
@@ -540,10 +540,10 @@
 		this->expectedValuesSize = 0;
 	}
 
-	__int64 ann::DataMassiveMaker::printNumbersMassive(std::string fileName) const
+	__int64 ann::DataMassiveMaker::printNumbersMassive(std::string dataset_file_name) const
 	{
 		std::ifstream ifs;
-		ifs.open(fileName, std::ios::binary);
+		ifs.open(dataset_file_name, std::ios::binary);
 		
 		size_t massiveSize;
 		ifs.read((char*)& massiveSize, sizeof(size_t));
@@ -576,10 +576,10 @@
 		return 0;
 	}
 
-	__int64 ann::DataMassiveMaker::evenNumbersMassive(const size_t inputDataSize, const size_t outputDataSize, const size_t massiveSize, const std::string fileName, const __int64 lowerLimit, const __int64 upperLimit) const
+	__int64 ann::DataMassiveMaker::evenNumbersMassive(const size_t inputDataSize, const size_t outputDataSize, const size_t massiveSize, const std::string dataset_file_name, const __int64 lower_limit, const __int64 upper_limit) const
 	{
 		std::ofstream output_file_stream;
-		output_file_stream.open(fileName, std::ios::binary);
+		output_file_stream.open(dataset_file_name, std::ios::binary);
 		if (!output_file_stream.is_open()) { return 1; }
 
 		output_file_stream.write((char*)& massiveSize, sizeof(size_t));
@@ -593,7 +593,7 @@
 		{
 			__int64 varInt{};
 			
-			varInt = afunctions::RandomFunction(static_cast<__int64>(lowerLimit), static_cast<__int64>(upperLimit));
+			varInt = afunctions::RandomFunction(static_cast<__int64>(lower_limit), static_cast<__int64>(upper_limit));
 			
 			double if1{};
 			if (varInt % 2 == 0) if1 = 1.0;
@@ -608,25 +608,25 @@
 	}
 	
 	//Additional functions:
-	inline double afunctions::RandomFunction(const double lowerLimit, const double upperLimit)
+	inline double afunctions::RandomFunction(const double lower_limit, const double upper_limit)
  {
 	 
 	 std::random_device rd;
 	 std::mt19937 gen(rd());
 	 
-	 std::uniform_real_distribution<double> uid(lowerLimit, upperLimit);
+	 std::uniform_real_distribution<double> uid(lower_limit, upper_limit);
 	 
 	 double rv;
 	 rv = uid(gen);
 	 return rv > 0 ? rv = uid(gen) : rv;
  }
-	inline __int64 afunctions::RandomFunction(const __int64 lowerLimit, const __int64 upperLimit)
+	inline __int64 afunctions::RandomFunction(const __int64 lower_limit, const __int64 upper_limit)
  {
 	
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	
-	std::uniform_int_distribution<__int64> uid(lowerLimit, upperLimit);
+	std::uniform_int_distribution<__int64> uid(lower_limit, upper_limit);
 	
 	__int64 rv;
 	rv = uid(gen);
