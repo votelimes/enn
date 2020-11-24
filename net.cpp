@@ -2,40 +2,40 @@
 
 	
 	//Kernel class:
-	network_core::NeuralNet::NeuralNet(const size_t input_nodes_count, const size_t hidden_nodes_count, const size_t outputNodesCount, const size_t hiddenLayersCount) // //Kernel constructor, hidden_nodes_count should be the largest
+	network_core::NeuralNet::NeuralNet(const size_t input_nodes_count, const size_t hidden_nodes_count, const size_t output_nodes_count, const size_t hidden_layers_count) // //Kernel constructor, hidden_nodes_count should be the largest
 	{
 		//Fill variables:
 		
-		this->nodes_count.setInputNodesCount(input_nodes_count);
-		this->nodes_count.setHiddenNodesCount(hidden_nodes_count);
-		this->nodes_count.setOutputNodesCount(outputNodesCount);
-		this->nodes_count.setHiddenLayersCount(hiddenLayersCount);
+		this->nodes_count.SetInputNodesCount(input_nodes_count);
+		this->nodes_count.SetHiddenNodesCount(hidden_nodes_count);
+		this->nodes_count.SetOutputNodesCount(output_nodes_count);
+		this->nodes_count.SetHiddenLayersCount(hidden_layers_count);
 		this->learning_rate = 0.1;
 		
 		//Create and normalize arrays
-		this->nodes_weights = new std::vector<std::vector<std::vector<double>>>(hiddenLayersCount + 1, std::vector<std::vector<double>>(hidden_nodes_count, std::vector<double>(hidden_nodes_count, 0)));
-		this->nodes_values = new std::vector<std::vector<double>>(hiddenLayersCount + 2, std::vector<double>(hidden_nodes_count, 0));
-		this->nodes_error_values = new std::vector<std::vector<double>>(hiddenLayersCount + 1, std::vector<double>(hidden_nodes_count, 0));
+		this->nodes_weights = new std::vector<std::vector<std::vector<double>>>(hidden_layers_count + 1, std::vector<std::vector<double>>(hidden_nodes_count, std::vector<double>(hidden_nodes_count, 0)));
+		this->nodes_values = new std::vector<std::vector<double>>(hidden_layers_count + 2, std::vector<double>(hidden_nodes_count, 0));
+		this->nodes_error_values = new std::vector<std::vector<double>>(hidden_layers_count + 1, std::vector<double>(hidden_nodes_count, 0));
 
 		(*nodes_values)[0].resize(input_nodes_count, 0);
 		(*nodes_values)[0].shrink_to_fit();
-		(*nodes_values)[this->nodes_count.getHiddenLayersCount() + 1].resize(outputNodesCount, 0);
-		(*nodes_values)[this->nodes_count.getHiddenLayersCount() + 1].shrink_to_fit();
+		(*nodes_values)[this->nodes_count.GetHiddenLayersCount() + 1].resize(output_nodes_count, 0);
+		(*nodes_values)[this->nodes_count.GetHiddenLayersCount() + 1].shrink_to_fit();
 
-		(*nodes_error_values)[this->nodes_count.getHiddenLayersCount()].resize(outputNodesCount, 0);
-		(*nodes_error_values)[this->nodes_count.getHiddenLayersCount()].shrink_to_fit();
+		(*nodes_error_values)[this->nodes_count.GetHiddenLayersCount()].resize(output_nodes_count, 0);
+		(*nodes_error_values)[this->nodes_count.GetHiddenLayersCount()].shrink_to_fit();
 
 		(*nodes_weights)[0].resize(input_nodes_count);
 		(*nodes_weights)[0].shrink_to_fit();
 		//
-		for (size_t i = 0; i < (*nodes_weights)[this->nodes_count.getHiddenLayersCount()].size(); i++)
+		for (size_t i = 0; i < (*nodes_weights)[this->nodes_count.GetHiddenLayersCount()].size(); i++)
 		{
-			(*nodes_weights)[this->nodes_count.getHiddenLayersCount()][i].resize(outputNodesCount, additional_functions::RandomFunction(0.0, 1.0));
-			(*nodes_weights)[this->nodes_count.getHiddenLayersCount()][i].shrink_to_fit();
+			(*nodes_weights)[this->nodes_count.GetHiddenLayersCount()][i].resize(output_nodes_count, additional_functions::RandomFunction(0.0, 1.0));
+			(*nodes_weights)[this->nodes_count.GetHiddenLayersCount()][i].shrink_to_fit();
 		}
 		//Weights initialization(random values) cicles:
 		
-		for (size_t i = 0; i < this->nodes_count.getHiddenLayersCount() + 1; i++)
+		for (size_t i = 0; i < this->nodes_count.GetHiddenLayersCount() + 1; i++)
 		{
 			for (size_t k = 0; k < (*nodes_weights)[i].size(); k++)
 			{
@@ -63,15 +63,15 @@
 			return 2;
 		}
 
-		double var{};
-		for (size_t i = 0; i < this->nodes_count.getHiddenLayersCount() + 1; i++)
+		for (size_t i = 0; i < this->nodes_count.GetHiddenLayersCount() + 1; i++)
 		{
 			for (size_t j = 0; j < (*nodes_values)[i].size(); j++)
 			{
 				for (size_t k = 0; k < (*nodes_values)[i + 1].size(); k++)
 				{
-					input_file_stream.read((char*) & var, sizeof(double));
-					(*nodes_weights)[i][j][k] =  var;
+					static double weight_value{};
+					input_file_stream.read((char*) & weight_value, sizeof(double));
+					(*nodes_weights)[i][j][k] =  weight_value;
 				}
 			}
 		}
@@ -88,7 +88,7 @@
 		
 		output_file_stream.write((char*)& this->nodes_count, sizeof(this->nodes_count));
 		
-		for (size_t i = 0; i < this->nodes_count.getHiddenLayersCount() + 1; i++)
+		for (size_t i = 0; i < this->nodes_count.GetHiddenLayersCount() + 1; i++)
 		{
 			for (size_t j = 0; j < (*nodes_values)[i].size(); j++)
 			{
@@ -113,13 +113,13 @@
 
 		NodesCountStorage rww;
 		input_file_stream.read((char*)& rww, sizeof(rww)); //2nd line read network count storage class
-		if (rww.getInputNodesCount() != this->nodes_count.getInputNodesCount() && rww.getOutputNodesCount() != this->nodes_count.getOutputNodesCount()) { return 2; }
+		if (rww.GetInputNodesCount() != this->nodes_count.GetInputNodesCount() && rww.GetOutputNodesCount() != this->nodes_count.GetOutputNodesCount()) { return 2; }
 
 		for (size_t y = 0; y < input_data_massive_lenght; y++)
 		{
 			double tmp{};
 			//input layer initialization
-			for (size_t u = 0; u < rww.getInputNodesCount(); u++)
+			for (size_t u = 0; u < rww.GetInputNodesCount(); u++)
 			{
 				input_file_stream.read((char*)& tmp, sizeof(double));
 				(*nodes_values)[0][u] = tmp;
@@ -136,7 +136,7 @@
 						tmp = tmp + ((*nodes_weights)[i][k][j] * (*nodes_values)[i][k]);
 					}
 
-					(*nodes_values)[i + 1][j] = activationFunction(tmp, false);
+					(*nodes_values)[i + 1][j] = activation_function(tmp, false);
 
 					tmp = 0;
 				}
@@ -174,7 +174,7 @@
 				{
 					for (size_t k = 0; k < (*nodes_values)[i].size(); k++)
 					{
-						(*nodes_weights)[i][k][j] = (*nodes_weights)[i][k][j] + (learning_rate * (*nodes_error_values)[i][j] * activationFunction((*nodes_values)[i + 1][j], true) * (*nodes_values)[i][k]);
+						(*nodes_weights)[i][k][j] = (*nodes_weights)[i][k][j] + (learning_rate * (*nodes_error_values)[i][j] * activation_function((*nodes_values)[i + 1][j], true) * (*nodes_values)[i][k]);
 					}
 				}
 			}
@@ -194,14 +194,14 @@
 
 		NodesCountStorage rww;
 		input_file_stream.read((char*)& rww, sizeof(rww)); //2nd line read network count storage class
-		if (rww.getInputNodesCount() != this->nodes_count.getInputNodesCount() && rww.getOutputNodesCount() != this->nodes_count.getOutputNodesCount()) { return 2; }
+		if (rww.GetInputNodesCount() != this->nodes_count.GetInputNodesCount() && rww.GetOutputNodesCount() != this->nodes_count.GetOutputNodesCount()) { return 2; }
 
 		for (size_t y = 0; y < input_data_massive_lenght; y++)
 		{
 			double tmp{};
 			//Get input data from file
 			std::vector<double> input_data;
-			for (size_t u = 0; u < rww.getInputNodesCount(); u++)
+			for (size_t u = 0; u < rww.GetInputNodesCount(); u++)
 			{
 				input_file_stream.read((char*)& tmp, sizeof(double));
 				input_data.push_back(tmp);
@@ -213,7 +213,7 @@
 			//Get expected values from file
 			std::vector<double> expectedValues;
 			
-			for (size_t i = 0; i < rww.getOutputNodesCount(); i++)
+			for (size_t i = 0; i < rww.GetOutputNodesCount(); i++)
 			{
 				input_file_stream.read((char*)& tmp, sizeof(double));
 				expectedValues.push_back(tmp);
@@ -228,7 +228,7 @@
 				{
 					for (size_t k = 0; k < (*nodes_values)[i].size(); k++)
 					{
-						(*nodes_weights)[i][k][j] = (*nodes_weights)[i][k][j] + (learning_rate * (*nodes_error_values)[i][j] * activationFunction((*nodes_values)[i + 1][j], true) * (*nodes_values)[i][k]);
+						(*nodes_weights)[i][k][j] = (*nodes_weights)[i][k][j] + (learning_rate * (*nodes_error_values)[i][j] * activation_function((*nodes_values)[i + 1][j], true) * (*nodes_values)[i][k]);
 					}
 				}
 			}
@@ -248,9 +248,9 @@
 		this->FeedForward();
 
 		static std::vector<double>* outputValues = new std::vector<double>;
-		for (size_t i = 0; i < (*nodes_values)[this->nodes_count.getTotalLayersCount() - 1].size(); i++)
+		for (size_t i = 0; i < (*nodes_values)[this->nodes_count.GetTotalLayersCount() - 1].size(); i++)
 		{
-			outputValues->push_back((*nodes_values)[this->nodes_count.getTotalLayersCount() - 1][i]);
+			outputValues->push_back((*nodes_values)[this->nodes_count.GetTotalLayersCount() - 1][i]);
 		}
 
 		return outputValues;
@@ -267,7 +267,7 @@
 
 		NodesCountStorage rww;
 		input_file_stream.read((char*)& rww, sizeof(rww)); //2nd line read network count storage class
-		if (rww.getInputNodesCount() != this->nodes_count.getInputNodesCount() && rww.getOutputNodesCount() != this->nodes_count.getOutputNodesCount()) { return 2; }
+		if (rww.GetInputNodesCount() != this->nodes_count.GetInputNodesCount() && rww.GetOutputNodesCount() != this->nodes_count.GetOutputNodesCount()) { return 2; }
 		
 		
 		std::ofstream output_file_stream;
@@ -279,7 +279,7 @@
 		{
 			
 			std::vector<double> input_values;
-			for (size_t j = 0; j < rww.getInputNodesCount(); i++)
+			for (size_t j = 0; j < rww.GetInputNodesCount(); i++)
 			{
 				input_values.push_back(0);
 				input_file_stream.read((char*)& input_values[i], sizeof(double));
@@ -287,10 +287,10 @@
 			this->SetData(input_values);
 			this->FeedForward();
 
-			for (size_t j = 0; j < rww.getOutputNodesCount(); i++)
+			for (size_t j = 0; j < rww.GetOutputNodesCount(); i++)
 			{
 				input_values.push_back(0);
-				output_file_stream.write((char*)& (*nodes_values)[this->nodes_count.getTotalLayersCount() - 1][j], sizeof(double));
+				output_file_stream.write((char*)& (*nodes_values)[this->nodes_count.GetTotalLayersCount() - 1][j], sizeof(double));
 			}
 		}
 		return 0;
@@ -309,7 +309,7 @@
 					tmp = tmp + ((*nodes_weights)[i][k][j] * (*nodes_values)[i][k]);
 				}
 
-				(*nodes_values)[i + 1][j] = activationFunction(tmp, false);
+				(*nodes_values)[i + 1][j] = activation_function(tmp, false);
 
 				tmp = 0;
 			}
@@ -318,13 +318,13 @@
 	void network_core::NeuralNet::FeedBack(const std::vector<double>& expected_values)
 	{
 		//Calc output layer errors
-		for (size_t i = 0; i < this->nodes_count.getOutputNodesCount(); i++)
+		for (size_t i = 0; i < this->nodes_count.GetOutputNodesCount(); i++)
 		{
-			(*nodes_error_values)[this->nodes_count.getTotalLayersCount() - 2][i] = expected_values[i] - (*nodes_values)[this->nodes_count.getTotalLayersCount() - 1][i];
+			(*nodes_error_values)[this->nodes_count.GetTotalLayersCount() - 2][i] = expected_values[i] - (*nodes_values)[this->nodes_count.GetTotalLayersCount() - 1][i];
 		}
 		
 		//Calc all other layers errors
-		for (size_t i = this->nodes_count.getTotalLayersCount() - 2; i > 0; i--)
+		for (size_t i = this->nodes_count.GetTotalLayersCount() - 2; i > 0; i--)
 		{
 			for (size_t j = 0; j < (*nodes_values)[i].size(); j++)
 			{
@@ -347,7 +347,7 @@
 			{
 				for (size_t k = 0; k < (*nodes_values)[i].size(); k++)
 				{
-					(*nodes_weights)[i][k][j] = (*nodes_weights)[i][k][j] + (learning_rate * (*nodes_error_values)[i][j] * activationFunction((*nodes_values)[i + 1][j], true) * (*nodes_values)[i][k]);
+					(*nodes_weights)[i][k][j] = (*nodes_weights)[i][k][j] + (learning_rate * (*nodes_error_values)[i][j] * activation_function((*nodes_values)[i + 1][j], true) * (*nodes_values)[i][k]);
 				}
 			}
 		}
@@ -356,7 +356,7 @@
 	__int64 network_core::NeuralNet::SetData(const std::vector<double> &input_data) // Return value is difference between network input layer size() and input data size();
 	{
 		
-		if (input_data.size() != this->nodes_count.getInputNodesCount()) return (__int64)this->nodes_count.getInputNodesCount() - input_data.size();
+		if (input_data.size() != this->nodes_count.GetInputNodesCount()) return (__int64)this->nodes_count.GetInputNodesCount() - input_data.size();
 
 		//Core part:
 		for (size_t i = 0; i < (*nodes_values)[0].size() && i < input_data.size(); i++)
@@ -368,7 +368,7 @@
 	
 	void network_core::NeuralNet::WeightsReinitialisation(const double lower_limit, const double upper_limit)
 	{
-		for (size_t i = 0; i < this->nodes_count.getHiddenLayersCount() + 1; i++)
+		for (size_t i = 0; i < this->nodes_count.GetHiddenLayersCount() + 1; i++)
 		{
 			for (size_t j = 0; j < (*nodes_values)[i].size(); j++)
 			{
@@ -381,7 +381,7 @@
 	}
 	void network_core::NeuralNet::SetWeights(const double value)
 	{
-		for (size_t i = 0; i < this->nodes_count.getHiddenLayersCount() + 1; i++)
+		for (size_t i = 0; i < this->nodes_count.GetHiddenLayersCount() + 1; i++)
 		{
 			for (size_t j = 0; j < (*nodes_values)[i].size(); j++)
 			{
@@ -405,9 +405,9 @@
 	void network_core::NeuralNet::PrintResult() const
 	{
 		std::cout << "_______________________________________________________" << std::endl;
-		for (size_t i = 0; i < this->nodes_count.getOutputNodesCount(); i++)
+		for (size_t i = 0; i < this->nodes_count.GetOutputNodesCount(); i++)
 		{
-			std::cout << i + 1 << ". " << (*nodes_values)[this->nodes_count.getHiddenLayersCount() + 1][i] << std::endl;
+			std::cout << i + 1 << ". " << (*nodes_values)[this->nodes_count.GetHiddenLayersCount() + 1][i] << std::endl;
 		}
 		std::cout << "_______________________________________________________" << std::endl;
 	}
@@ -435,7 +435,7 @@
 	
 
 	template <class T>
-	inline T network_core::NeuralNet::activationFunction(const T value, const bool returnDerivativeValueInstead) const
+	inline T network_core::NeuralNet::activation_function(const T value, const bool returnDerivativeValueInstead) const
 	{
 		const double e = 2.718281828459045235360287471352; //euler's number
 		//Tanh:
@@ -472,65 +472,65 @@
 	{
 		this->input_nodes_count = 0;
 		this->hidden_nodes_count = 0;
-		this->outputNodesCount = 0;
-		this->hiddenLayersCount = 0;
-		this->totalLayersCount = 0;
+		this->output_nodes_count = 0;
+		this->hidden_layers_count = 0;
+		this->total_layers_count = 0;
 	}
 
 	auto network_core::NodesCountStorage::operator==(const NodesCountStorage& ex) const
 	{
-		return (input_nodes_count == ex.input_nodes_count) && (hidden_nodes_count == ex.hidden_nodes_count) && (outputNodesCount == ex.outputNodesCount) && (hiddenLayersCount == ex.hiddenLayersCount);
+		return (input_nodes_count == ex.input_nodes_count) && (hidden_nodes_count == ex.hidden_nodes_count) && (output_nodes_count == ex.output_nodes_count) && (hidden_layers_count == ex.hidden_layers_count);
 	}
 	bool network_core::NodesCountStorage::operator!=(const NodesCountStorage& ex) const
 	{
-		return (input_nodes_count != ex.input_nodes_count) && (hidden_nodes_count != ex.hidden_nodes_count) && (outputNodesCount != ex.outputNodesCount) && (hiddenLayersCount != ex.hiddenLayersCount);
+		return (input_nodes_count != ex.input_nodes_count) && (hidden_nodes_count != ex.hidden_nodes_count) && (output_nodes_count != ex.output_nodes_count) && (hidden_layers_count != ex.hidden_layers_count);
 	}
 	
-	size_t network_core::NodesCountStorage::getInputNodesCount() const
+	size_t network_core::NodesCountStorage::GetInputNodesCount() const
 	{
 		return this->input_nodes_count;
 	}
-	size_t network_core::NodesCountStorage::getHiddenNodesCount() const
+	size_t network_core::NodesCountStorage::GetHiddenNodesCount() const
 	{
 		return this->hidden_nodes_count;
 	}
-	size_t network_core::NodesCountStorage::getOutputNodesCount() const
+	size_t network_core::NodesCountStorage::GetOutputNodesCount() const
 	{
-		return this->outputNodesCount;
+		return this->output_nodes_count;
 	}
-	size_t network_core::NodesCountStorage::getHiddenLayersCount() const
+	size_t network_core::NodesCountStorage::GetHiddenLayersCount() const
 	{
-		return this->hiddenLayersCount;
+		return this->hidden_layers_count;
 	}
-	size_t network_core::NodesCountStorage::getTotalLayersCount() const
+	size_t network_core::NodesCountStorage::GetTotalLayersCount() const
 	{
-		return this->totalLayersCount;
+		return this->total_layers_count;
 	}
 	
-	void network_core::NodesCountStorage::setInputNodesCount(const size_t value)
+	void network_core::NodesCountStorage::SetInputNodesCount(const size_t value)
 	{
 		this->input_nodes_count = value;
-		this->totalLayersCount = this->hiddenLayersCount + (size_t) 2;
+		this->total_layers_count = this->hidden_layers_count + (size_t) 2;
 	}
-	void network_core::NodesCountStorage::setHiddenNodesCount(const size_t value)
+	void network_core::NodesCountStorage::SetHiddenNodesCount(const size_t value)
 	{
 		this->hidden_nodes_count = value;
-		this->totalLayersCount = this->hiddenLayersCount + (size_t)2;
+		this->total_layers_count = this->hidden_layers_count + (size_t)2;
 	}
-	void network_core::NodesCountStorage::setOutputNodesCount(const size_t value)
+	void network_core::NodesCountStorage::SetOutputNodesCount(const size_t value)
 	{
-		this->outputNodesCount = value;
-		this->totalLayersCount = this->hiddenLayersCount + (size_t)2;
+		this->output_nodes_count = value;
+		this->total_layers_count = this->hidden_layers_count + (size_t)2;
 	}
-	void network_core::NodesCountStorage::setHiddenLayersCount(const size_t value)
+	void network_core::NodesCountStorage::SetHiddenLayersCount(const size_t value)
 	{
-		this->hiddenLayersCount = value;
-		this->totalLayersCount = this->hiddenLayersCount + (size_t)2;
+		this->hidden_layers_count = value;
+		this->total_layers_count = this->hidden_layers_count + (size_t)2;
 	}
 
-	void network_core::NodesCountStorage::print()
+	void network_core::NodesCountStorage::Print()
 	{
-		std::cout << "Input nodes: " << this->getInputNodesCount() << "  |  Hidden nodes: " << this->getHiddenNodesCount() << "  |  Output nodes: " << this->getOutputNodesCount() << "  |  Hidden layers: " << this->getHiddenLayersCount() << std::endl;
+		std::cout << "Input nodes: " << this->GetInputNodesCount() << "  |  Hidden nodes: " << this->GetHiddenNodesCount() << "  |  Output nodes: " << this->GetOutputNodesCount() << "  |  Hidden layers: " << this->GetHiddenLayersCount() << std::endl;
 	}
 	
 	network_core::DataMassiveMaker::DataMassiveMaker()
@@ -551,20 +551,20 @@
 		network_core::NodesCountStorage ncs;
 		input_file_stream.read((char*)& ncs, sizeof(ncs));
 		
-		ncs.print();
+		ncs.Print();
 
 		double value;
 		std::cout.setf(std::ios::fixed);
 		for (size_t i = 0; i < massive_length; i++)
 		{
 			std::cout << "\nInput data: " << std::endl;
-			for (size_t j = 0; j < ncs.getInputNodesCount(); j++)
+			for (size_t j = 0; j < ncs.GetInputNodesCount(); j++)
 			{
 				input_file_stream.read((char*)& value, sizeof(double));
 				std::cout << std::setw(15) << std::left << value;
 			}
 			std::cout << "\nExpected value respectevly: " << std::endl;
-			for (size_t j = 0; j < ncs.getOutputNodesCount(); j++)
+			for (size_t j = 0; j < ncs.GetOutputNodesCount(); j++)
 			{
 				input_file_stream.read((char*)& value, sizeof(double));
 				std::cout << std::setw(15) << std::left << value;
@@ -585,8 +585,8 @@
 		output_file_stream.write((char*)& massive_length, sizeof(size_t));
 		
 		network_core::NodesCountStorage ncs;
-		ncs.setInputNodesCount(input_data_length);
-		ncs.setOutputNodesCount(outputDataSize);
+		ncs.SetInputNodesCount(input_data_length);
+		ncs.SetOutputNodesCount(outputDataSize);
 		output_file_stream.write((char*)& ncs, sizeof(ncs));
 		
 		for (size_t i = 0; i < massive_length; i++)

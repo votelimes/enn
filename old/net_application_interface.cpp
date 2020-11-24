@@ -146,7 +146,7 @@ void net_application_interface::NetApplicationInterface::Start()
 		//Getrw
 		if (command_index == 7 ) {
 			if (this->net1) {
-				if (parametrs_storage.size() == this->net1->nodes_count.getInputNodesCount()) {
+				if (parametrs_storage.size() == this->net1->nodes_count.GetInputNodesCount()) {
 					
 					std::vector<double> inputData;
 					for (size_t i = 0; i < parametrs_storage.size(); i++)
@@ -180,11 +180,11 @@ void net_application_interface::NetApplicationInterface::Start()
 		//PRINTNI
 		if (command_index == 9 && parametrs_storage.size() == 0) {
 			if (this->net1) {
-				std::cout << "Input nodes: " << this->net1->nodes_count.getInputNodesCount() << std::endl;
-				std::cout << "Hidden nodes: " << this->net1->nodes_count.getHiddenNodesCount() << std::endl;
-				std::cout << "Output nodes: " << this->net1->nodes_count.getOutputNodesCount() << std::endl;
-				std::cout << "Hidden layers: " << this->net1->nodes_count.getHiddenLayersCount() << std::endl;
-				std::cout << "Total layers: " << this->net1->nodes_count.getTotalLayersCount() << std::endl;
+				std::cout << "Input nodes: " << this->net1->nodes_count.GetInputNodesCount() << std::endl;
+				std::cout << "Hidden nodes: " << this->net1->nodes_count.GetHiddenNodesCount() << std::endl;
+				std::cout << "Output nodes: " << this->net1->nodes_count.GetOutputNodesCount() << std::endl;
+				std::cout << "Hidden layers: " << this->net1->nodes_count.GetHiddenLayersCount() << std::endl;
+				std::cout << "Total layers: " << this->net1->nodes_count.GetTotalLayersCount() << std::endl;
 				std::cout << "Learning rate: " << this->net1->GetLearningRate() << std::endl;
 			}
 			else std::cout << "Create network first." << std::endl;

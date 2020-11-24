@@ -40,9 +40,9 @@ namespace network_core {
 		
 		size_t input_nodes_count;
 		size_t hidden_nodes_count;
-		size_t outputNodesCount;
-		size_t hiddenLayersCount;
-		size_t totalLayersCount;
+		size_t output_nodes_count;
+		size_t hidden_layers_count;
+		size_t total_layers_count;
 	
 
 	//SECTION: METHODS
@@ -53,18 +53,18 @@ namespace network_core {
 		auto operator==(const NodesCountStorage& ex) const;
 		bool operator!=(const NodesCountStorage& ex) const;
 
-		size_t getInputNodesCount() const;
-		size_t getHiddenNodesCount() const;
-		size_t getOutputNodesCount() const;
-		size_t getHiddenLayersCount() const;
-		size_t getTotalLayersCount() const;
+		size_t GetInputNodesCount() const;
+		size_t GetHiddenNodesCount() const;
+		size_t GetOutputNodesCount() const;
+		size_t GetHiddenLayersCount() const;
+		size_t GetTotalLayersCount() const;
 
-		void setInputNodesCount(const size_t value);
-		void setHiddenNodesCount(const size_t value);
-		void setOutputNodesCount(const size_t value);
-		void setHiddenLayersCount(const size_t value);
+		void SetInputNodesCount(const size_t value);
+		void SetHiddenNodesCount(const size_t value);
+		void SetOutputNodesCount(const size_t value);
+		void SetHiddenLayersCount(const size_t value);
 
-		void print();
+		void Print();
 	};
 	
 	class NeuralNet
@@ -89,7 +89,7 @@ namespace network_core {
 	private:
 		
 		template <class T>
-		inline T activationFunction(const T value, const bool returnDerivativereturnDerivativeValueInstead) const;
+		inline T activation_function(const T value, const bool returnDerivativereturnDerivativeValueInstead) const;
 		
 		void FeedForward();
 		void FeedBack(const std::vector<double>& expValues);
@@ -99,7 +99,7 @@ namespace network_core {
 
 	public: 
 		
-		NeuralNet(const size_t input_nodes_count, const size_t hidden_nodes_count, const size_t outputNodesCount, const size_t hiddenLayersCount); //Kernel constructor
+		NeuralNet(const size_t input_nodes_count, const size_t hidden_nodes_count, const size_t output_nodes_count, const size_t hidden_layers_count); //Kernel constructor
 			
 		__int64 ReadWeightsFile(const std::string weightsStorageFileName); // returns 1 if file can not be open, 0 if it opens
 		__int64 WriteWeightsFile(const std::string weightsStorageFileName) const; // returns 1 if file can not be open, 0 if it opens
