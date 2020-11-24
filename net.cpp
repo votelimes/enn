@@ -2,7 +2,7 @@
 
 	
 	//Kernel class:
-	ann::NeuralNet::NeuralNet(const size_t inputNodesCount, const size_t hiddenNodesCount, const size_t outputNodesCount, const size_t hiddenLayersCount) // //Kernel constructor, hiddenNodesCount should be the largest
+	network_core::NeuralNet::NeuralNet(const size_t inputNodesCount, const size_t hiddenNodesCount, const size_t outputNodesCount, const size_t hiddenLayersCount) // //Kernel constructor, hiddenNodesCount should be the largest
 	{
 		//Fill variables:
 		
@@ -30,7 +30,7 @@
 		//
 		for (size_t i = 0; i < (*nodes_weights)[this->nodes_count.getHiddenLayersCount()].size(); i++)
 		{
-			(*nodes_weights)[this->nodes_count.getHiddenLayersCount()][i].resize(outputNodesCount, afunctions::RandomFunction(0.0, 1.0));
+			(*nodes_weights)[this->nodes_count.getHiddenLayersCount()][i].resize(outputNodesCount, additional_functions::RandomFunction(0.0, 1.0));
 			(*nodes_weights)[this->nodes_count.getHiddenLayersCount()][i].shrink_to_fit();
 		}
 		//Weights initialization(random values) cicles:
@@ -41,14 +41,14 @@
 			{
 				for (size_t j = 0; j < (*nodes_weights)[i][k].size(); j++)
 				{
-					(*nodes_weights)[i][k][j] = afunctions::RandomFunction(0.0, 1.0);
+					(*nodes_weights)[i][k][j] = additional_functions::RandomFunction(0.0, 1.0);
 				}
 			}
 		}
 		//
 	} // //Kernel constructor
 
-	__int64 ann::NeuralNet::ReadWeightsFile(const std::string weights_storage_file_name) //returns 2 if layers nodes count does not match, returns 1 if file can not be open, 0 if it opens
+	__int64 network_core::NeuralNet::ReadWeightsFile(const std::string weights_storage_file_name) //returns 2 if layers nodes count does not match, returns 1 if file can not be open, 0 if it opens
 	{
 		std::ifstream input_file_stream;
 
@@ -77,7 +77,7 @@
 		}
 		return 0;
 	}
-	__int64 ann::NeuralNet::WriteWeightsFile(const std::string weights_storage_file_name) const // returns 1 if file can not be open, 0 if it opens
+	__int64 network_core::NeuralNet::WriteWeightsFile(const std::string weights_storage_file_name) const // returns 1 if file can not be open, 0 if it opens
 	{
 		std::ofstream output_file_stream;
 		output_file_stream.open(weights_storage_file_name, std::ios::binary);
@@ -101,7 +101,7 @@
 		return 0;
 	}
 	
-	__int64 ann::NeuralNet::StudyFile(const std::string& dataset_file_name)
+	__int64 network_core::NeuralNet::StudyFile(const std::string& dataset_file_name)
 	{
 		std::ifstream input_file_stream;
 	
@@ -182,7 +182,7 @@
 		}
 		return 0;
 	}
-	__int64 ann::NeuralNet::StudyFileMT(const std::string& dataset_file_name)
+	__int64 network_core::NeuralNet::StudyFileMT(const std::string& dataset_file_name)
 	{
 		std::ifstream input_file_stream;
 
@@ -236,12 +236,12 @@
 		}
 		return 0;
 	}
-	__int8 ann::NeuralNet::StudyOnce(const std::vector<double> &input_data){
+	__int8 network_core::NeuralNet::StudyOnce(const std::vector<double> &input_data){
 
 		return 0;
 	}
 
-	std::vector<double>* ann::NeuralNet::ProduceResult(const std::vector<double>& input_values)
+	std::vector<double>* network_core::NeuralNet::ProduceResult(const std::vector<double>& input_values)
 	{
 		if (this->SetData(input_values)) { return nullptr; }
 		
@@ -255,7 +255,7 @@
 
 		return outputValues;
 	}
-	__int64 ann::NeuralNet::ProduceResult(const std::string input_data_file_name, const std::string output_data_file_name)
+	__int64 network_core::NeuralNet::ProduceResult(const std::string input_data_file_name, const std::string output_data_file_name)
 	{
 		std::ifstream input_file_stream;
 
@@ -296,7 +296,7 @@
 		return 0;
 	}
 	
-	void ann::NeuralNet::FeedForward()
+	void network_core::NeuralNet::FeedForward()
 	{
 		double tmp{};
 
@@ -315,7 +315,7 @@
 			}
 		}
 	}
-	void ann::NeuralNet::FeedBack(const std::vector<double>& expected_values)
+	void network_core::NeuralNet::FeedBack(const std::vector<double>& expected_values)
 	{
 		//Calc output layer errors
 		for (size_t i = 0; i < this->nodes_count.getOutputNodesCount(); i++)
@@ -339,7 +339,7 @@
 		}
 
 	}
-	void ann::NeuralNet::WeightsReadjustment()
+	void network_core::NeuralNet::WeightsReadjustment()
 	{
 		for (size_t i = 0; i < (*nodes_weights).size(); i++)
 		{
@@ -353,7 +353,7 @@
 		}
 	}
 
-	__int64 ann::NeuralNet::SetData(const std::vector<double> &input_data) // Return value is difference between network input layer size() and input data size();
+	__int64 network_core::NeuralNet::SetData(const std::vector<double> &input_data) // Return value is difference between network input layer size() and input data size();
 	{
 		
 		if (input_data.size() != this->nodes_count.getInputNodesCount()) return (__int64)this->nodes_count.getInputNodesCount() - input_data.size();
@@ -366,7 +366,7 @@
 		return 0;
 	}
 	
-	void ann::NeuralNet::WeightsReinitialisation(const double lower_limit, const double upper_limit)
+	void network_core::NeuralNet::WeightsReinitialisation(const double lower_limit, const double upper_limit)
 	{
 		for (size_t i = 0; i < this->nodes_count.getHiddenLayersCount() + 1; i++)
 		{
@@ -374,12 +374,12 @@
 			{
 				for (size_t k = 0; k < (*nodes_values)[i + 1].size(); k++)
 				{
-					(*nodes_weights)[i][j][k] = afunctions::RandomFunction(lower_limit, upper_limit);
+					(*nodes_weights)[i][j][k] = additional_functions::RandomFunction(lower_limit, upper_limit);
 				}
 			}
 		}
 	}
-	void ann::NeuralNet::SetWeights(const double value)
+	void network_core::NeuralNet::SetWeights(const double value)
 	{
 		for (size_t i = 0; i < this->nodes_count.getHiddenLayersCount() + 1; i++)
 		{
@@ -392,17 +392,17 @@
 			}
 		}
 	}
-	void ann::NeuralNet::SetLearningRate(const double value)
+	void network_core::NeuralNet::SetLearningRate(const double value)
 	{
 		this->learning_rate = value;
 	}
 
-	double ann::NeuralNet::GetLearningRate() const
+	double network_core::NeuralNet::GetLearningRate() const
 	{
 		return this->learning_rate;
 	}
 	
-	void ann::NeuralNet::PrintResult() const
+	void network_core::NeuralNet::PrintResult() const
 	{
 		std::cout << "_______________________________________________________" << std::endl;
 		for (size_t i = 0; i < this->nodes_count.getOutputNodesCount(); i++)
@@ -411,7 +411,7 @@
 		}
 		std::cout << "_______________________________________________________" << std::endl;
 	}
-	void ann::NeuralNet::PrintWeights() const
+	void network_core::NeuralNet::PrintWeights() const
 	{
 		
 		std::cout.setf(std::ios::fixed);
@@ -435,7 +435,7 @@
 	
 
 	template <class T>
-	inline T ann::NeuralNet::activationFunction(const T value, const bool returnDerivativeValueInstead) const
+	inline T network_core::NeuralNet::activationFunction(const T value, const bool returnDerivativeValueInstead) const
 	{
 		const double e = 2.718281828459045235360287471352; //euler's number
 		//Tanh:
@@ -468,7 +468,7 @@
 	
 
 	//Additional classes: 
-	ann::NodesCountStorage::NodesCountStorage()
+	network_core::NodesCountStorage::NodesCountStorage()
 	{
 		this->inputNodesCount = 0;
 		this->hiddenNodesCount = 0;
@@ -477,70 +477,70 @@
 		this->totalLayersCount = 0;
 	}
 
-	auto ann::NodesCountStorage::operator==(const NodesCountStorage& ex) const
+	auto network_core::NodesCountStorage::operator==(const NodesCountStorage& ex) const
 	{
 		return (inputNodesCount == ex.inputNodesCount) && (hiddenNodesCount == ex.hiddenNodesCount) && (outputNodesCount == ex.outputNodesCount) && (hiddenLayersCount == ex.hiddenLayersCount);
 	}
-	bool ann::NodesCountStorage::operator!=(const NodesCountStorage& ex) const
+	bool network_core::NodesCountStorage::operator!=(const NodesCountStorage& ex) const
 	{
 		return (inputNodesCount != ex.inputNodesCount) && (hiddenNodesCount != ex.hiddenNodesCount) && (outputNodesCount != ex.outputNodesCount) && (hiddenLayersCount != ex.hiddenLayersCount);
 	}
 	
-	size_t ann::NodesCountStorage::getInputNodesCount() const
+	size_t network_core::NodesCountStorage::getInputNodesCount() const
 	{
 		return this->inputNodesCount;
 	}
-	size_t ann::NodesCountStorage::getHiddenNodesCount() const
+	size_t network_core::NodesCountStorage::getHiddenNodesCount() const
 	{
 		return this->hiddenNodesCount;
 	}
-	size_t ann::NodesCountStorage::getOutputNodesCount() const
+	size_t network_core::NodesCountStorage::getOutputNodesCount() const
 	{
 		return this->outputNodesCount;
 	}
-	size_t ann::NodesCountStorage::getHiddenLayersCount() const
+	size_t network_core::NodesCountStorage::getHiddenLayersCount() const
 	{
 		return this->hiddenLayersCount;
 	}
-	size_t ann::NodesCountStorage::getTotalLayersCount() const
+	size_t network_core::NodesCountStorage::getTotalLayersCount() const
 	{
 		return this->totalLayersCount;
 	}
 	
-	void ann::NodesCountStorage::setInputNodesCount(const size_t value)
+	void network_core::NodesCountStorage::setInputNodesCount(const size_t value)
 	{
 		this->inputNodesCount = value;
 		this->totalLayersCount = this->hiddenLayersCount + (size_t) 2;
 	}
-	void ann::NodesCountStorage::setHiddenNodesCount(const size_t value)
+	void network_core::NodesCountStorage::setHiddenNodesCount(const size_t value)
 	{
 		this->hiddenNodesCount = value;
 		this->totalLayersCount = this->hiddenLayersCount + (size_t)2;
 	}
-	void ann::NodesCountStorage::setOutputNodesCount(const size_t value)
+	void network_core::NodesCountStorage::setOutputNodesCount(const size_t value)
 	{
 		this->outputNodesCount = value;
 		this->totalLayersCount = this->hiddenLayersCount + (size_t)2;
 	}
-	void ann::NodesCountStorage::setHiddenLayersCount(const size_t value)
+	void network_core::NodesCountStorage::setHiddenLayersCount(const size_t value)
 	{
 		this->hiddenLayersCount = value;
 		this->totalLayersCount = this->hiddenLayersCount + (size_t)2;
 	}
 
-	void ann::NodesCountStorage::print()
+	void network_core::NodesCountStorage::print()
 	{
 		std::cout << "Input nodes: " << this->getInputNodesCount() << "  |  Hidden nodes: " << this->getHiddenNodesCount() << "  |  Output nodes: " << this->getOutputNodesCount() << "  |  Hidden layers: " << this->getHiddenLayersCount() << std::endl;
 	}
 	
-	ann::DataMassiveMaker::DataMassiveMaker()
+	network_core::DataMassiveMaker::DataMassiveMaker()
 	{
 		this->massiveSize = 0;
 		this->inputDataSize = 0;
 		this->expectedValuesSize = 0;
 	}
 
-	__int64 ann::DataMassiveMaker::printNumbersMassive(std::string dataset_file_name) const
+	__int64 network_core::DataMassiveMaker::printNumbersMassive(std::string dataset_file_name) const
 	{
 		std::ifstream input_file_stream;
 		input_file_stream.open(dataset_file_name, std::ios::binary);
@@ -548,7 +548,7 @@
 		size_t massiveSize;
 		input_file_stream.read((char*)& massiveSize, sizeof(size_t));
 
-		ann::NodesCountStorage ncs;
+		network_core::NodesCountStorage ncs;
 		input_file_stream.read((char*)& ncs, sizeof(ncs));
 		
 		ncs.print();
@@ -576,7 +576,7 @@
 		return 0;
 	}
 
-	__int64 ann::DataMassiveMaker::evenNumbersMassive(const size_t inputDataSize, const size_t outputDataSize, const size_t massiveSize, const std::string dataset_file_name, const __int64 lower_limit, const __int64 upper_limit) const
+	__int64 network_core::DataMassiveMaker::evenNumbersMassive(const size_t inputDataSize, const size_t outputDataSize, const size_t massiveSize, const std::string dataset_file_name, const __int64 lower_limit, const __int64 upper_limit) const
 	{
 		std::ofstream output_file_stream;
 		output_file_stream.open(dataset_file_name, std::ios::binary);
@@ -584,7 +584,7 @@
 
 		output_file_stream.write((char*)& massiveSize, sizeof(size_t));
 		
-		ann::NodesCountStorage ncs;
+		network_core::NodesCountStorage ncs;
 		ncs.setInputNodesCount(inputDataSize);
 		ncs.setOutputNodesCount(outputDataSize);
 		output_file_stream.write((char*)& ncs, sizeof(ncs));
@@ -593,7 +593,7 @@
 		{
 			__int64 varInt{};
 			
-			varInt = afunctions::RandomFunction(static_cast<__int64>(lower_limit), static_cast<__int64>(upper_limit));
+			varInt = additional_functions::RandomFunction(static_cast<__int64>(lower_limit), static_cast<__int64>(upper_limit));
 			
 			double if1{};
 			if (varInt % 2 == 0) if1 = 1.0;
@@ -608,7 +608,7 @@
 	}
 	
 	//Additional functions:
-	inline double afunctions::RandomFunction(const double lower_limit, const double upper_limit)
+	inline double additional_functions::RandomFunction(const double lower_limit, const double upper_limit)
  {
 	 
 	 std::random_device rd;
@@ -620,7 +620,7 @@
 	 rv = uid(gen);
 	 return rv > 0 ? rv = uid(gen) : rv;
  }
-	inline __int64 afunctions::RandomFunction(const __int64 lower_limit, const __int64 upper_limit)
+	inline __int64 additional_functions::RandomFunction(const __int64 lower_limit, const __int64 upper_limit)
  {
 	
 	std::random_device rd;

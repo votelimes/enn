@@ -11,7 +11,7 @@
 #include <algorithm>
 #include <thread>
 
-namespace ann {
+namespace network_core {
 	
 	class DataMassiveMaker 
 	{
@@ -125,11 +125,11 @@ namespace ann {
 
 
 } // namespace nnet
-namespace afunctions {
+namespace additional_functions {
 	
 	inline double RandomFunction(const double lowerLimit, const double upperLimit);
 	inline __int64 RandomFunction(const __int64 lowerLimit, const __int64 upperLimit);
 }
 
-// namespace afunctions
+// namespace additional_functions
 #endif // NET_H_

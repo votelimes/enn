@@ -2,15 +2,15 @@
 #define NET_APPLICATION_INTERFACE_H_
 #include "net.h"
 
-namespace nai {
+namespace net_application_interface {
 	class NetApplicationInterface
 	{
 		//SECTION: DATA
 
-		std::vector<std::string> commandsList;
+		std::vector<std::string> commands_list;
 		std::vector<std::string> commandsDescription;
 
-		ann::NeuralNet *net1;
+		network_core::NeuralNet *net1;
 
 		long double trainingsCount;
 		
@@ -18,21 +18,21 @@ namespace nai {
 
 	private:
 
-		inline __int64 findCommand(const std::string command) const;
-		inline __int64  checkParametrsCount(const std::string &command, size_t parametrsCount) const;
+		inline __int64 FindCommand(const std::string command) const;
+		inline __int64  CheckParametrsCount(const std::string &command, size_t parametrsCount) const;
 
-		inline void toUpperCase(std::string& paramString);
+		inline void ToUpperCase(std::string& paramString);
 
-		inline std::string useHelp() const;
-		inline std::string successfullyExecuted() const;
-		inline void cls() const;
+		inline std::string UseHelp() const;
+		inline std::string SuccessfullyExecuted() const;
+		inline void Cls() const;
 
 	public:
 		
 		NetApplicationInterface();
 		~NetApplicationInterface();
 
-		void doWork();
+		void Start();
 	};
-} //namespace nai
+} //namespace net_application_interface
 #endif //NET_APPLICATION_INTERFACE_H_
