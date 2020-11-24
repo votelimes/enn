@@ -48,17 +48,17 @@
 		//
 	} // //Kernel constructor
 
-	__int64 ann::NeuralNet::ReadWeightsFile(const std::string weightsStorageFileName) //returns 2 if layers nodes count does not match, returns 1 if file can not be open, 0 if it opens
+	__int64 ann::NeuralNet::ReadWeightsFile(const std::string weights_storage_file_name) //returns 2 if layers nodes count does not match, returns 1 if file can not be open, 0 if it opens
 	{
-		std::ifstream ifs;
+		std::ifstream input_file_stream;
 
-		ifs.open(weightsStorageFileName, std::ios::binary);
-		if (!ifs.is_open()) {
+		input_file_stream.open(weights_storage_file_name, std::ios::binary);
+		if (!input_file_stream.is_open()) {
 			return 1;
 		}
 
 		NodesCountStorage rww;
-		ifs.read((char*)&rww, sizeof(rww));
+		input_file_stream.read((char*)&rww, sizeof(rww));
 		if (rww != this->nodes_count) {
 			return 2;
 		}
@@ -70,17 +70,17 @@
 			{
 				for (size_t k = 0; k < (*nodes_values)[i + 1].size(); k++)
 				{
-					ifs.read((char*) & var, sizeof(double));
+					input_file_stream.read((char*) & var, sizeof(double));
 					(*nodes_weights)[i][j][k] =  var;
 				}
 			}
 		}
 		return 0;
 	}
-	__int64 ann::NeuralNet::WriteWeightsFile(const std::string weightsStorageFileName) const // returns 1 if file can not be open, 0 if it opens
+	__int64 ann::NeuralNet::WriteWeightsFile(const std::string weights_storage_file_name) const // returns 1 if file can not be open, 0 if it opens
 	{
 		std::ofstream output_file_stream;
-		output_file_stream.open(weightsStorageFileName, std::ios::binary);
+		output_file_stream.open(weights_storage_file_name, std::ios::binary);
 		
 		if (!output_file_stream.is_open()) {
 			return 1;
@@ -103,16 +103,16 @@
 	
 	__int64 ann::NeuralNet::StudyFile(const std::string& dataset_file_name)
 	{
-		std::ifstream ifs;
+		std::ifstream input_file_stream;
 	
-		ifs.open(dataset_file_name, std::ios::binary);
-		if (!ifs.is_open()) { return 1; }
+		input_file_stream.open(dataset_file_name, std::ios::binary);
+		if (!input_file_stream.is_open()) { return 1; }
 		
 		size_t input_data_massive_lenght{};
-		ifs.read((char*)& input_data_massive_lenght, sizeof(size_t)); //1st line read count of examples
+		input_file_stream.read((char*)& input_data_massive_lenght, sizeof(size_t)); //1st line read count of examples
 
 		NodesCountStorage rww;
-		ifs.read((char*)& rww, sizeof(rww)); //2nd line read network count storage class
+		input_file_stream.read((char*)& rww, sizeof(rww)); //2nd line read network count storage class
 		if (rww.getInputNodesCount() != this->nodes_count.getInputNodesCount() && rww.getOutputNodesCount() != this->nodes_count.getOutputNodesCount()) { return 2; }
 
 		for (size_t y = 0; y < input_data_massive_lenght; y++)
@@ -121,7 +121,7 @@
 			//input layer initialization
 			for (size_t u = 0; u < rww.getInputNodesCount(); u++)
 			{
-				ifs.read((char*)& tmp, sizeof(double));
+				input_file_stream.read((char*)& tmp, sizeof(double));
 				(*nodes_values)[0][u] = tmp;
 			}
 			tmp = 0;
@@ -145,7 +145,7 @@
 			////Calculate error procent for output layer:
 			for (size_t i = 0; i < (*nodes_values)[(*nodes_values).size() - 1].size(); i++)
 			{
-				ifs.read((char*)& tmp, sizeof(double));
+				input_file_stream.read((char*)& tmp, sizeof(double));
 				(*nodes_error_values)[(*nodes_error_values).size() - 1][i] = tmp - (*nodes_values)[(*nodes_values).size() - 1][i];
 			}
 			tmp = 0;
@@ -184,30 +184,30 @@
 	}
 	__int64 ann::NeuralNet::StudyFileMT(const std::string& dataset_file_name)
 	{
-		std::ifstream ifs;
+		std::ifstream input_file_stream;
 
-		ifs.open(dataset_file_name, std::ios::binary);
-		if (!ifs.is_open()) { return 1; }
+		input_file_stream.open(dataset_file_name, std::ios::binary);
+		if (!input_file_stream.is_open()) { return 1; }
 
 		size_t input_data_massive_lenght{};
-		ifs.read((char*)& input_data_massive_lenght, sizeof(size_t)); //1st line read count of examples
+		input_file_stream.read((char*)& input_data_massive_lenght, sizeof(size_t)); //1st line read count of examples
 
 		NodesCountStorage rww;
-		ifs.read((char*)& rww, sizeof(rww)); //2nd line read network count storage class
+		input_file_stream.read((char*)& rww, sizeof(rww)); //2nd line read network count storage class
 		if (rww.getInputNodesCount() != this->nodes_count.getInputNodesCount() && rww.getOutputNodesCount() != this->nodes_count.getOutputNodesCount()) { return 2; }
 
 		for (size_t y = 0; y < input_data_massive_lenght; y++)
 		{
 			double tmp{};
 			//Get input data from file
-			std::vector<double> inputData;
+			std::vector<double> input_data;
 			for (size_t u = 0; u < rww.getInputNodesCount(); u++)
 			{
-				ifs.read((char*)& tmp, sizeof(double));
-				inputData.push_back(tmp);
+				input_file_stream.read((char*)& tmp, sizeof(double));
+				input_data.push_back(tmp);
 			}
 			//Set input data to network
-			this->SetData(inputData);
+			this->SetData(input_data);
 			//Feed forward
 			this->FeedForward();
 			//Get expected values from file
@@ -215,7 +215,7 @@
 			
 			for (size_t i = 0; i < rww.getOutputNodesCount(); i++)
 			{
-				ifs.read((char*)& tmp, sizeof(double));
+				input_file_stream.read((char*)& tmp, sizeof(double));
 				expectedValues.push_back(tmp);
 			}
 			//Calculate error procent for all layers
@@ -257,22 +257,22 @@
 	}
 	__int64 ann::NeuralNet::ProduceResult(const std::string input_data_file_name, const std::string output_data_file_name)
 	{
-		std::ifstream ifs;
+		std::ifstream input_file_stream;
 
-		ifs.open(input_data_file_name, std::ios::binary);
-		if (!ifs.is_open()) { return 1; }
+		input_file_stream.open(input_data_file_name, std::ios::binary);
+		if (!input_file_stream.is_open()) { return 1; }
 
 		size_t input_data_massive_lenght{};
-		ifs.read((char*)& input_data_massive_lenght, sizeof(size_t)); //1st line read count of examples
+		input_file_stream.read((char*)& input_data_massive_lenght, sizeof(size_t)); //1st line read count of examples
 
 		NodesCountStorage rww;
-		ifs.read((char*)& rww, sizeof(rww)); //2nd line read network count storage class
+		input_file_stream.read((char*)& rww, sizeof(rww)); //2nd line read network count storage class
 		if (rww.getInputNodesCount() != this->nodes_count.getInputNodesCount() && rww.getOutputNodesCount() != this->nodes_count.getOutputNodesCount()) { return 2; }
 		
 		
 		std::ofstream output_file_stream;
 		output_file_stream.open(output_data_file_name, std::ios::binary);
-		if (!ifs.is_open()) { return 3; }
+		if (!input_file_stream.is_open()) { return 3; }
 		output_file_stream.write((char*)& input_data_massive_lenght, sizeof(size_t));
 		output_file_stream.write((char*)& rww, sizeof(rww)); 
 		for (size_t i = 0; i < input_data_massive_lenght; i++)
@@ -282,7 +282,7 @@
 			for (size_t j = 0; j < rww.getInputNodesCount(); i++)
 			{
 				input_values.push_back(0);
-				ifs.read((char*)& input_values[i], sizeof(double));
+				input_file_stream.read((char*)& input_values[i], sizeof(double));
 			}
 			this->SetData(input_values);
 			this->FeedForward();
@@ -353,15 +353,15 @@
 		}
 	}
 
-	__int64 ann::NeuralNet::SetData(const std::vector<double> &inputData) // Return value is difference between network input layer size() and input data size();
+	__int64 ann::NeuralNet::SetData(const std::vector<double> &input_data) // Return value is difference between network input layer size() and input data size();
 	{
 		
-		if (inputData.size() != this->nodes_count.getInputNodesCount()) return (__int64)this->nodes_count.getInputNodesCount() - inputData.size();
+		if (input_data.size() != this->nodes_count.getInputNodesCount()) return (__int64)this->nodes_count.getInputNodesCount() - input_data.size();
 
 		//Core part:
-		for (size_t i = 0; i < (*nodes_values)[0].size() && i < inputData.size(); i++)
+		for (size_t i = 0; i < (*nodes_values)[0].size() && i < input_data.size(); i++)
 		{
-			(*nodes_values)[0][i] = inputData[i];
+			(*nodes_values)[0][i] = input_data[i];
 		}
 		return 0;
 	}
@@ -542,14 +542,14 @@
 
 	__int64 ann::DataMassiveMaker::printNumbersMassive(std::string dataset_file_name) const
 	{
-		std::ifstream ifs;
-		ifs.open(dataset_file_name, std::ios::binary);
+		std::ifstream input_file_stream;
+		input_file_stream.open(dataset_file_name, std::ios::binary);
 		
 		size_t massiveSize;
-		ifs.read((char*)& massiveSize, sizeof(size_t));
+		input_file_stream.read((char*)& massiveSize, sizeof(size_t));
 
 		ann::NodesCountStorage ncs;
-		ifs.read((char*)& ncs, sizeof(ncs));
+		input_file_stream.read((char*)& ncs, sizeof(ncs));
 		
 		ncs.print();
 
@@ -560,13 +560,13 @@
 			std::cout << "\nInput data: " << std::endl;
 			for (size_t j = 0; j < ncs.getInputNodesCount(); j++)
 			{
-				ifs.read((char*)& value, sizeof(double));
+				input_file_stream.read((char*)& value, sizeof(double));
 				std::cout << std::setw(15) << std::left << value;
 			}
 			std::cout << "\nExpected value respectevly: " << std::endl;
 			for (size_t j = 0; j < ncs.getOutputNodesCount(); j++)
 			{
-				ifs.read((char*)& value, sizeof(double));
+				input_file_stream.read((char*)& value, sizeof(double));
 				std::cout << std::setw(15) << std::left << value;
 			}
 			std::cout << "\n_______________" << std::endl;
