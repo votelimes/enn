@@ -38,10 +38,6 @@ nai::NetApplicationInterface::NetApplicationInterface()
 
 }
 
-nai::NetApplicationInterface::~NetApplicationInterface()
-{
-}
-
 void nai::NetApplicationInterface::doWork()
 {
 	while (true)
