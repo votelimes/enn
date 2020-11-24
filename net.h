@@ -77,9 +77,9 @@ namespace ann {
 
 	private: 
 		
-		std::vector<std::vector<std::vector<double>>>* nodesWeights;
-	    std::vector<std::vector<double>>* nodesValues;
-	    std::vector<std::vector<double>>* nodesErrorValues;
+		std::vector<std::vector<std::vector<double>>>* nodes_weights;
+	    std::vector<std::vector<double>>* nodes_values;
+	    std::vector<std::vector<double>>* nodes_error_values;
 		double learningRate;
 		
 		
@@ -106,6 +106,7 @@ namespace ann {
 		
 		__int64 studyNetworkFile(const std::string &fileName);
 		__int64 studyNetworkFileMT(const std::string& fileName);
+		__int8 StudyOnce(const std::vector<double> &input_data);
 
 		std::vector<double>* produceResult(const std::vector<double>& inputValues);
 		__int64 produceResult(const std::string inputDataFileName, const std::string outputDataFileName);
