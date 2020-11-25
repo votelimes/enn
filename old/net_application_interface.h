@@ -8,20 +8,20 @@ namespace net_application_interface {
 		//SECTION: DATA
 
 		std::vector<std::string> commands_list;
-		std::vector<std::string> commandsDescription;
+		std::vector<std::string> commands_description;
 
-		network_core::NeuralNet *net1;
+		network_core::NeuralNet *core_network;
 
-		long double trainingsCount;
+		long double trainings_count;
 		
 		//SECTION: METHODS
 
 	private:
 
 		inline __int64 FindCommand(const std::string command) const;
-		inline __int64  CheckParametrsCount(const std::string &command, size_t parametrsCount) const;
+		inline __int64  CheckParametrsCount(const std::string &command, size_t parametrs_count) const;
 
-		inline void ToUpperCase(std::string& paramString);
+		inline void ToUpperCase(std::string& editable_string);
 
 		inline std::string UseHelp() const;
 		inline std::string SuccessfullyExecuted() const;

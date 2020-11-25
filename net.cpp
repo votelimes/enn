@@ -59,11 +59,12 @@
 
 		NodesCountStorage file_nodes_count;
 		input_file_stream.read((char*)&file_nodes_count, sizeof(file_nodes_count));
+		
 		if (file_nodes_count != this->nodes_count) {
 			return 2;
 		}
 
-		for (size_t i = 0; i < this->nodes_count.GetHiddenLayersCount() + 1; i++)
+		for (auto i = 0; i < this->nodes_count.GetHiddenLayersCount() + 1; i++)
 		{
 			for (size_t j = 0; j < (*nodes_values)[i].size(); j++)
 			{
@@ -75,6 +76,7 @@
 				}
 			}
 		}
+		
 		return 0;
 	}
 	__int64 network_core::NeuralNet::WriteWeightsFile(const std::string weights_storage_file_name) const // returns 1 if file can not be open, 0 if it opens
@@ -180,6 +182,7 @@
 			}
 
 		}
+		
 		return 0;
 	}
 	__int64 network_core::NeuralNet::StudyFileMT(const std::string& dataset_file_name)
@@ -211,15 +214,15 @@
 			//Feed forward
 			this->FeedForward();
 			//Get expected values from file
-			std::vector<double> expectedValues;
+			std::vector<double> expected_values;
 			
 			for (auto i = 0; i < file_nodes_count.GetOutputNodesCount(); i++)
 			{
 				input_file_stream.read((char*)& file_stream_buffer, sizeof(double));
-				expectedValues.push_back(file_stream_buffer);
+				expected_values.push_back(file_stream_buffer);
 			}
 			//Calculate error procent for all layers
-			this->FeedBack(expectedValues);
+			this->FeedBack(expected_values);
 
 			//Adjust weights:
 			for (auto i = 0; i < (*nodes_weights).size(); i++)
