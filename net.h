@@ -92,10 +92,11 @@ namespace network_core {
 		inline T activation_function(const T value, const bool returnDerivativereturnDerivativeValueInstead) const;
 		
 		void FeedForward();
-		void FeedBack(const std::vector<double>& expValues);
+		template <class T>
+		void FeedBack(const std::vector<T>& expValues);
 		void WeightsReadjustment();
-
-		__int64 SetData(const std::vector<double>& inputData);
+		template <class T>
+		__int64 SetData(const std::vector<T>& inputData);
 
 	public: 
 		
@@ -106,9 +107,11 @@ namespace network_core {
 		
 		__int64 StudyFile(const std::string &file_name);
 		__int64 StudyFileMT(const std::string& file_name);
-		__int8 StudyOnce(const std::vector<double> &input_data);
+		template <class T>
+		void StudyOnce(const std::vector<T> &input_data, const std::vector<T> &expected_values);
 
-		std::vector<double>* ProduceResult(const std::vector<double>& inputValues);
+		template <class T>
+		std::vector<T>* ProduceResult(const std::vector<T>& inputValues);
 		__int64 ProduceResult(const std::string inputDataFileName, const std::string outputDataFileName);
 
 		void SetWeights(const double value);

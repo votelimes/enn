@@ -48,7 +48,7 @@
 		//
 	} // //Kernel constructor
 
-	__int64 network_core::NeuralNet::ReadWeightsFile(const std::string weights_storage_file_name) //returns 2 if layers nodes count does not match, returns 1 if file can not be open, 0 if it opens
+	__int64 network_core::NeuralNet::ReadWeightsFile(const std::string weights_storage_file_name) // Returns 2 if layers nodes count does not match, returns 1 if file can not be open, 0 if it opens
 	{
 		std::ifstream input_file_stream;
 
@@ -79,7 +79,7 @@
 		
 		return 0;
 	}
-	__int64 network_core::NeuralNet::WriteWeightsFile(const std::string weights_storage_file_name) const // returns 1 if file can not be open, 0 if it opens
+	__int64 network_core::NeuralNet::WriteWeightsFile(const std::string weights_storage_file_name) const // Returns 1 if file can not be open, 0 if it opens
 	{
 		std::ofstream output_file_stream;
 		output_file_stream.open(weights_storage_file_name, std::ios::binary);
@@ -239,12 +239,16 @@
 		}
 		return 0;
 	}
-	__int8 network_core::NeuralNet::StudyOnce(const std::vector<double> &input_data){
-
-		return 0;
+	template <class T>
+	void network_core::NeuralNet::StudyOnce(const std::vector<T> &input_data, const std::vector<T> &expected_values){
+		
+		this->SetData(input_data);
+		this->FeedForward();
+		this->FeedBack(expected_values);
 	}
-
-	std::vector<double>* network_core::NeuralNet::ProduceResult(const std::vector<double>& input_values)
+	
+	template <class T>
+	std::vector<T>* network_core::NeuralNet::ProduceResult(const std::vector<T>& input_values)
 	{
 		if (this->SetData(input_values)) { return nullptr; }
 		
@@ -318,7 +322,8 @@
 			}
 		}
 	}
-	void network_core::NeuralNet::FeedBack(const std::vector<double>& expected_values)
+	template <class T>
+	void network_core::NeuralNet::FeedBack(const std::vector<T>& expected_values)
 	{
 		//Calc output layer errors
 		for (auto i = 0; i < this->nodes_count.GetOutputNodesCount(); i++)
@@ -355,8 +360,8 @@
 			}
 		}
 	}
-
-	__int64 network_core::NeuralNet::SetData(const std::vector<double> &input_data) // Return value is difference between network input layer size() and input data size();
+	template <class T>
+	__int64 network_core::NeuralNet::SetData(const std::vector<T> &input_data) // Return value is difference between network input layer size() and input data size();
 	{
 		
 		if (input_data.size() != this->nodes_count.GetInputNodesCount()) return (__int64)this->nodes_count.GetInputNodesCount() - input_data.size();
