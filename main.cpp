@@ -1,4 +1,4 @@
-#include "neural_net.h"
+#include "main.h"
 
 int main()
 {
