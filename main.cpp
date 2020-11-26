@@ -1,4 +1,4 @@
-#include "main.h"
+#include <inc/anet_core.h>
 
 int main()
 {

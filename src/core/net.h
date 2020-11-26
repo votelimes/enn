@@ -110,8 +110,7 @@ namespace network_core {
 		template <class T>
 		void StudyOnce(const std::vector<T> &input_data, const std::vector<T> &expected_values);
 
-		template <class T>
-		std::vector<T>* ProduceResult(const std::vector<T>& inputValues);
+		std::vector<double>* ProduceResult(const std::vector<double>& inputValues);
 		__int64 ProduceResult(const std::string inputDataFileName, const std::string outputDataFileName);
 
 		void SetWeights(const double value);

@@ -1,4 +1,4 @@
-#include "net_application_interface.h"
+#include <src/interface/application_interface.h>
 
 net_application_interface::NetApplicationInterface::NetApplicationInterface()
 {
@@ -37,6 +37,7 @@ net_application_interface::NetApplicationInterface::NetApplicationInterface()
 	this->core_network = NULL;
 
 }
+
 
 void net_application_interface::NetApplicationInterface::Start()
 {
@@ -158,7 +159,7 @@ void net_application_interface::NetApplicationInterface::Start()
 						strst >> tmp;
 						inputData.push_back(tmp);
 					}
-					std::vector<double>* outputDataP = this->core_network->ProduceResult(inputData);
+					std::vector<double> *outputDataP = this->core_network->ProduceResult(inputData);
 
 					
 				}

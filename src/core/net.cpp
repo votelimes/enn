@@ -1,4 +1,4 @@
-#include "net.h"
+#include <src/core/net.h>
 
 	
 	//Kernel class:
@@ -247,8 +247,7 @@
 		this->FeedBack(expected_values);
 	}
 	
-	template <class T>
-	std::vector<T>* network_core::NeuralNet::ProduceResult(const std::vector<T>& input_values)
+	std::vector<double>* network_core::NeuralNet::ProduceResult(const std::vector<double>& input_values)
 	{
 		if (this->SetData(input_values)) { return nullptr; }
 		

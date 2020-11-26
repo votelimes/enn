@@ -1,6 +1,6 @@
 #ifndef NET_APPLICATION_INTERFACE_H_
 #define NET_APPLICATION_INTERFACE_H_
-#include "net.h"
+#include <src/core/net.h>
 
 namespace net_application_interface {
 	class NetApplicationInterface
