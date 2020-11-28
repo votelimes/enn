@@ -239,13 +239,6 @@
 		}
 		return 0;
 	}
-	template <class T>
-	void network_core::NeuralNet::StudyOnce(const std::vector<T> &input_data, const std::vector<T> &expected_values){
-		
-		this->SetData(input_data);
-		this->FeedForward();
-		this->FeedBack(expected_values);
-	}
 	
 	std::vector<double>* network_core::NeuralNet::ProduceResult(const std::vector<double>& input_values)
 	{
@@ -321,31 +314,7 @@
 			}
 		}
 	}
-	template <class T>
-	void network_core::NeuralNet::FeedBack(const std::vector<T>& expected_values)
-	{
-		//Calc output layer errors
-		for (auto i = 0; i < this->nodes_count.GetOutputNodesCount(); i++)
-		{
-			(*nodes_error_values)[this->nodes_count.GetTotalLayersCount() - 2][i] = expected_values[i] - (*nodes_values)[this->nodes_count.GetTotalLayersCount() - 1][i];
-		}
-		
-		//Calc all other layers errors
-		for (auto i = this->nodes_count.GetTotalLayersCount() - 2; i > 0; i--)
-		{
-			for (auto j = 0; j < (*nodes_values)[i].size(); j++)
-			{
-				double shift_collector{};
-				for (auto k = 0; k < (*nodes_values)[i + 1].size(); k++)
-				{
-					shift_collector = shift_collector + ((*nodes_weights)[i][j][k] * (*nodes_error_values)[i][k]);
-				}
-
-				(*nodes_error_values)[i - 1][j] = shift_collector;
-			}
-		}
-
-	}
+	
 	void network_core::NeuralNet::WeightsReadjustment()
 	{
 		for (auto i = 0; i < (*nodes_weights).size(); i++)
@@ -358,21 +327,7 @@
 				}
 			}
 		}
-	}
-	template <class T>
-	__int64 network_core::NeuralNet::SetData(const std::vector<T> &input_data) // Return value is difference between network input layer size() and input data size();
-	{
-		
-		if (input_data.size() != this->nodes_count.GetInputNodesCount()) return (__int64)this->nodes_count.GetInputNodesCount() - input_data.size();
-
-		//Core part:
-		for (auto i = 0; i < (*nodes_values)[0].size() && i < input_data.size(); i++)
-		{
-			(*nodes_values)[0][i] = input_data[i];
-		}
-		return 0;
-	}
-	
+	}	
 	void network_core::NeuralNet::WeightsReinitialisation(const double lower_limit, const double upper_limit)
 	{
 		for (auto i = 0; i < this->nodes_count.GetHiddenLayersCount() + 1; i++)
@@ -615,28 +570,28 @@
 	}
 	
 	//Additional functions:
-	inline double additional_functions::RandomFunction(const double lower_limit, const double upper_limit)
- {
-	 
-	 std::random_device rd;
-	 std::mt19937 gen(rd());
-	 
-	 std::uniform_real_distribution<double> uid(lower_limit, upper_limit);
-	 
-	 double rv;
-	 rv = uid(gen);
-	 return rv > 0 ? rv = uid(gen) : rv;
- }
-	inline __int64 additional_functions::RandomFunction(const __int64 lower_limit, const __int64 upper_limit)
- {
-	
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	
-	std::uniform_int_distribution<__int64> uid(lower_limit, upper_limit);
-	
-	__int64 rv;
-	rv = uid(gen);
-	return rv > 0 ? rv = uid(gen) : rv;
- }
+	double additional_functions::RandomFunction(const double lower_limit, const double upper_limit)
+	{
+		
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		
+		std::uniform_real_distribution<double> uid(lower_limit, upper_limit);
+		
+		double rv;
+		rv = uid(gen);
+		return rv > 0 ? rv = uid(gen) : rv;
+	}
+	__int64 additional_functions::RandomFunction(const __int64 lower_limit, const __int64 upper_limit)
+	{
+		
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		
+		std::uniform_int_distribution<__int64> uid(lower_limit, upper_limit);
+		
+		__int64 rv;
+		rv = uid(gen);
+		return rv > 0 ? rv = uid(gen) : rv;
+	}
 

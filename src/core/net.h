@@ -10,6 +10,13 @@
 #include <iomanip>
 #include <algorithm>
 #include <thread>
+#include <bitset>
+
+// types defenitions
+
+typedef long long int64;
+
+//
 
 namespace network_core {
 	
@@ -92,26 +99,61 @@ namespace network_core {
 		inline T activation_function(const T value, const bool returnDerivativereturnDerivativeValueInstead) const;
 		
 		void FeedForward();
-		template <class T>
-		void FeedBack(const std::vector<T>& expValues);
+		template <class T> void FeedBack(const std::vector<T>& expected_values)
+		{
+			//Calc output layer errors
+			for (auto i = 0; i < this->nodes_count.GetOutputNodesCount(); i++)
+			{
+				(*nodes_error_values)[this->nodes_count.GetTotalLayersCount() - 2][i] = expected_values[i] - (*nodes_values)[this->nodes_count.GetTotalLayersCount() - 1][i];
+			}
+			
+			//Calc all other layers errors
+			for (auto i = this->nodes_count.GetTotalLayersCount() - 2; i > 0; i--)
+			{
+				for (auto j = 0; j < (*nodes_values)[i].size(); j++)
+				{
+					double shift_collector{};
+					for (auto k = 0; k < (*nodes_values)[i + 1].size(); k++)
+					{
+						shift_collector = shift_collector + ((*nodes_weights)[i][j][k] * (*nodes_error_values)[i][k]);
+					}
+
+					(*nodes_error_values)[i - 1][j] = shift_collector;
+				}
+			}
+		}
 		void WeightsReadjustment();
-		template <class T>
-		__int64 SetData(const std::vector<T>& inputData);
+		template <class T> __int64 SetData(const std::vector<T>& input_data)
+		{
+			
+			if (input_data.size() != this->nodes_count.GetInputNodesCount()) return (__int64)this->nodes_count.GetInputNodesCount() - input_data.size();
+
+			//Core part:
+			for (auto i = 0; i < (*nodes_values)[0].size() && i < input_data.size(); i++)
+			{
+				(*nodes_values)[0][i] = input_data[i];
+			}
+			return 0;
+		}
 
 	public: 
 		
 		NeuralNet(const size_t input_nodes_count, const size_t hidden_nodes_count, const size_t output_nodes_count, const size_t hidden_layers_count); //Kernel constructor
 			
-		__int64 ReadWeightsFile(const std::string weightsStorageFileName); // returns 1 if file can not be open, 0 if it opens
-		__int64 WriteWeightsFile(const std::string weightsStorageFileName) const; // returns 1 if file can not be open, 0 if it opens
+		__int64 ReadWeightsFile(const std::string weights_storage_file_name); // returns 1 if file can not be open, 0 if it opens
+		__int64 WriteWeightsFile(const std::string weights_storage_file_name) const; // returns 1 if file can not be open, 0 if it opens
 		
-		__int64 StudyFile(const std::string &file_name);
-		__int64 StudyFileMT(const std::string& file_name);
-		template <class T>
-		void StudyOnce(const std::vector<T> &input_data, const std::vector<T> &expected_values);
+		__int64 StudyFile(const std::string &dataset_file_name);
+		__int64 StudyFileMT(const std::string& dataset_file_name);
+		template <class T1, class T2> void StudyOnce(const std::vector<T1> &input_data, const std::vector<T2> &expected_values){
+		
+			this->SetData(input_data);
+			this->FeedForward();
+			this->FeedBack(expected_values);
+		}
 
 		std::vector<double>* ProduceResult(const std::vector<double>& inputValues);
-		__int64 ProduceResult(const std::string inputDataFileName, const std::string outputDataFileName);
+		__int64 ProduceResult(const std::string input_data_file_name, const std::string output_data_file_name);
 
 		void SetWeights(const double value);
 		void SetLearningRate(const double value);
@@ -129,8 +171,8 @@ namespace network_core {
 } // namespace nnet
 namespace additional_functions {
 	
-	inline double RandomFunction(const double lower_limit, const double upper_limit);
-	inline __int64 RandomFunction(const __int64 lower_limit, const __int64 upper_limit);
+	double RandomFunction(const double lower_limit, const double upper_limit);
+	__int64 RandomFunction(const __int64 lower_limit, const __int64 upper_limit);
 }
 
 // namespace additional_functions
