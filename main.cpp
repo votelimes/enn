@@ -4,7 +4,12 @@
 
 void even_numbers_test(){
 
-	network_core::NeuralNet net_core(8, 5, 2, 1);
+	const size_t input_layer_nodes_count{16};
+	const size_t hidden_layer_nodes_count{5};
+	const size_t hidden_layers_count{1};
+	const size_t output_layer_nodes_count{2};
+
+	network_core::NeuralNet net_core(input_layer_nodes_count, hidden_layer_nodes_count, output_layer_nodes_count, hidden_layers_count);
 
 	const size_t iterrations_count = 1000;
 
@@ -12,11 +17,14 @@ void even_numbers_test(){
 	{
 		int input_value = additional_functions::RandomFunction((__int64)0, (__int64)127);
 		
-		auto binary_string = std::bitset<8>(input_value).to_string();
+		input_value = 90;
+		
+		auto binary_string = std::bitset<input_layer_nodes_count>(input_value).to_string();
+		
 
 		std::vector<int64> input_data;
 
-		std::for_each(binary_string.begin(), binary_string.end(), [&input_data] (auto &symbol)
+		std::for_each(binary_string.begin(), binary_string.end(), [&] (auto &symbol)
 		{
 			input_data.push_back(symbol - '0');
 		});

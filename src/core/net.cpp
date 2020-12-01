@@ -1,44 +1,58 @@
 #include <src/core/net.h>
 
 	
-	//Kernel class:
+	// Kernel class:
 	network_core::NeuralNet::NeuralNet(const size_t input_nodes_count, const size_t hidden_nodes_count, const size_t output_nodes_count, const size_t hidden_layers_count) // //Kernel constructor, hidden_nodes_count should be the largest
 	{
-		//Fill variables:
+		if (hidden_layers_count == 0 or output_nodes_count == 0 or input_nodes_count == 0) {
+			throw "No one of layers/nodes parameters can be null.";
+		}
 		
+		// Fill variables:
 		this->nodes_count.SetInputNodesCount(input_nodes_count);
 		this->nodes_count.SetHiddenNodesCount(hidden_nodes_count);
 		this->nodes_count.SetOutputNodesCount(output_nodes_count);
 		this->nodes_count.SetHiddenLayersCount(hidden_layers_count);
 		this->learning_rate = 0.1;
+
+		// Create and normalize arrays
+		auto max_nodes = std::max({input_nodes_count, hidden_nodes_count, output_nodes_count});
 		
-		//Create and normalize arrays
-		this->nodes_weights = new std::vector<std::vector<std::vector<double>>>(hidden_layers_count + 1, std::vector<std::vector<double>>(hidden_nodes_count, std::vector<double>(hidden_nodes_count, 0)));
-		this->nodes_values = new std::vector<std::vector<double>>(hidden_layers_count + 2, std::vector<double>(hidden_nodes_count, 0));
-		this->nodes_error_values = new std::vector<std::vector<double>>(hidden_layers_count + 1, std::vector<double>(hidden_nodes_count, 0));
+		this->nodes_weights = new std::vector<std::vector<std::vector<double>>>(this->nodes_count.GetTotalLayersCount() - 1, std::vector<std::vector<double>>(max_nodes, std::vector<double>(hidden_nodes_count, 0)));
+		this->nodes_values = new std::vector<std::vector<double>>(this->nodes_count.GetTotalLayersCount(), std::vector<double>(hidden_nodes_count, 0));
+		this->nodes_error_values = new std::vector<std::vector<double>>(this->nodes_count.GetTotalLayersCount() - 1, std::vector<double>(hidden_nodes_count, 0));
 
 		(*nodes_values)[0].resize(input_nodes_count, 0);
 		(*nodes_values)[0].shrink_to_fit();
-		(*nodes_values)[this->nodes_count.GetHiddenLayersCount() + 1].resize(output_nodes_count, 0);
-		(*nodes_values)[this->nodes_count.GetHiddenLayersCount() + 1].shrink_to_fit();
+		(*nodes_values)[this->nodes_count.GetTotalLayersCount() - 1].resize(output_nodes_count, 0);
+		(*nodes_values)[this->nodes_count.GetTotalLayersCount() - 1].shrink_to_fit();
 
-		(*nodes_error_values)[this->nodes_count.GetHiddenLayersCount()].resize(output_nodes_count, 0);
-		(*nodes_error_values)[this->nodes_count.GetHiddenLayersCount()].shrink_to_fit();
+		(*nodes_error_values)[this->nodes_count.GetTotalLayersCount() - 2].resize(output_nodes_count, 0);
+		(*nodes_error_values)[this->nodes_count.GetTotalLayersCount() - 2].shrink_to_fit();
 
 		(*nodes_weights)[0].resize(input_nodes_count);
 		(*nodes_weights)[0].shrink_to_fit();
-		//
-		for (auto i = 0; i < (*nodes_weights)[this->nodes_count.GetHiddenLayersCount()].size(); i++)
-		{
-			(*nodes_weights)[this->nodes_count.GetHiddenLayersCount()][i].resize(output_nodes_count, additional_functions::RandomFunction(0.0, 1.0));
-			(*nodes_weights)[this->nodes_count.GetHiddenLayersCount()][i].shrink_to_fit();
-		}
-		//Weights initialization(random values) cicles:
 		
-		for (auto i = 0; i < this->nodes_count.GetHiddenLayersCount() + 1; i++)
+		(*nodes_weights)[this->nodes_count.GetTotalLayersCount() - 2].resize(hidden_nodes_count);
+		(*nodes_weights)[this->nodes_count.GetTotalLayersCount() - 2].shrink_to_fit();
+		//
+		
+		// Weights initialization(random values) cicles:
+		
+		for (auto i = 0; i < this->nodes_count.GetTotalLayersCount() - 1; i++)
 		{
+			if (i not_eq 0 and i not_eq this->nodes_count.GetTotalLayersCount() - 2) {
+				(*nodes_weights)[i].resize(this->nodes_count.GetHiddenNodesCount());
+				(*nodes_weights)[i].shrink_to_fit();
+			}
+			
 			for (auto k = 0; k < (*nodes_weights)[i].size(); k++)
 			{
+				if (i == this->nodes_count.GetTotalLayersCount() - 2) {
+					(*nodes_weights)[i][k].resize(output_nodes_count);
+					(*nodes_weights)[i][k].shrink_to_fit();
+				}
+				
 				for (auto j = 0; j < (*nodes_weights)[i][k].size(); j++)
 				{
 					(*nodes_weights)[i][k][j] = additional_functions::RandomFunction(0.0, 1.0);
@@ -305,7 +319,9 @@
 			{
 				for (auto k = 0; k < (*nodes_weights)[i].size(); k++)
 				{
-					shift_collector = shift_collector + ((*nodes_weights)[i][k][j] * (*nodes_values)[i][k]);
+					// shift_collector = shift_collector + ((*nodes_weights)[i][k][j] * (*nodes_values)[i][k]);
+					double tmp = (*nodes_values)[i][k] * (*nodes_weights)[i][k][j];
+					shift_collector = tmp + shift_collector;
 				}
 
 				(*nodes_values)[i + 1][j] = activation_function(shift_collector, false);
@@ -429,7 +445,7 @@
 	
 	
 
-	//Additional classes: 
+	// Additional classes: 
 	network_core::NodesCountStorage::NodesCountStorage()
 	{
 		this->input_nodes_count = 0;
@@ -569,7 +585,7 @@
 		return 0;
 	}
 	
-	//Additional functions:
+	// Additional functions:
 	double additional_functions::RandomFunction(const double lower_limit, const double upper_limit)
 	{
 		

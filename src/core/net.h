@@ -12,10 +12,12 @@
 #include <thread>
 #include <bitset>
 
+
 // types defenitions
 
 typedef long long int64;
-
+typedef std::vector<std::vector<double>> vector_2D;
+typedef std::vector<std::vector<std::vector<double>>> vector_3D;
 //
 
 namespace network_core {
